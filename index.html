@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hướng Dẫn Sử Dụng Gmail, Google Meet & Google Classroom</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --blue: #1a73e8;
+    --blue-light: #e8f0fe;
+    --blue-dark: #0d47a1;
+    --green: #0f9d58;
+    --green-light: #e6f4ea;
+    --red: #d93025;
+    --red-light: #fce8e6;
+    --yellow: #f9ab00;
+    --yellow-light: #fef7e0;
+    --gray-50: #f8f9fa;
+    --gray-100: #f1f3f4;
+    --gray-200: #e8eaed;
+    --gray-400: #9aa0a6;
+    --gray-600: #5f6368;
+    --gray-800: #3c4043;
+    --gray-900: #202124;
+    --meet-green: #00897b;
+    --classroom-green: #1e7e34;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12), 0 4px 8px rgba(0,0,0,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: #fff;
+    color: var(--gray-900);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 50%, #00897b 100%);
+    padding: 60px 40px 50px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .cover-logo-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .cover-logo {
+    width: 56px; height: 56px;
+    border-radius: 14px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .cover h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.3;
+    position: relative; z-index: 1;
+  }
+  .cover p {
+    font-size: 15px;
+    opacity: 0.88;
+    max-width: 520px;
+    margin: 0 auto 28px;
+    position: relative; z-index: 1;
+  }
+  .cover-tags {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    position: relative; z-index: 1;
+  }
+  .cover-tag {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* ── NAV / TOC ── */
+  .toc {
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 24px 40px;
+  }
+  .toc h2 {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--gray-400);
+    margin-bottom: 14px;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+  }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    text-decoration: none;
+    color: var(--gray-800);
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .toc-item:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+  .toc-num {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  /* ── CONTENT ── */
+  .content { padding: 0 40px 60px; max-width: 900px; margin: 0 auto; }
+
+  /* ── PART HEADER ── */
+  .part-header {
+    margin: 48px 0 28px;
+    padding: 28px 28px 24px;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .part-header.gmail { background: linear-gradient(135deg, #e8f0fe 0%, #fce8e6 100%); border: 1.5px solid #c5cae9; }
+  .part-header.meet  { background: linear-gradient(135deg, #e0f2f1 0%, #e8f5e9 100%); border: 1.5px solid #80cbc4; }
+  .part-header.classroom { background: linear-gradient(135deg, #e8f5e9 0%, #f3e5f5 100%); border: 1.5px solid #a5d6a7; }
+  .part-header-inner { display: flex; align-items: flex-start; gap: 18px; }
+  .part-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+  }
+  .part-icon.gmail { background: white; }
+  .part-icon.meet { background: white; }
+  .part-icon.classroom { background: white; }
+  .part-header .part-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 4px;
+  }
+  .part-header h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--gray-900);
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .part-header .part-desc {
+    font-size: 14px;
+    color: var(--gray-600);
+  }
+
+  /* ── STEPS ── */
+  .steps { display: flex; flex-direction: column; gap: 20px; margin-bottom: 12px; }
+
+  .step-card {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .step-badge {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    font-weight: 800;
+    flex-shrink: 0;
+    color: white;
+  }
+  .badge-blue { background: var(--blue); }
+  .badge-green { background: var(--meet-green); }
+  .badge-classroom { background: #1e7e34; }
+  .badge-red { background: var(--red); }
+
+  .step-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--gray-900);
+  }
+  .step-subtitle {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: 1px;
+  }
+  .step-body { padding: 16px 20px; }
+
+  /* ── MOCKUP SCREENS ── */
+  .screen-wrap {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 14px 0;
+  }
+  .screen-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #28ca41; }
+  .screen-url {
+    flex: 1;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 11px;
+    color: var(--gray-600);
+    font-family: monospace;
+  }
+
+  /* ── FORM MOCKUP ── */
+  .mock-form {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid var(--gray-200);
+  }
+  .mock-form-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+  }
+  .mock-form-sub {
+    font-size: 13px;
+    color: var(--gray-600);
+    margin-bottom: 16px;
+  }
+  .mock-field {
+    border: 1.5px solid var(--gray-200);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--gray-800);
+    position: relative;
+  }
+  .mock-field.active { border-color: var(--blue); }
+  .mock-field label {
+    display: block;
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-bottom: 2px;
+    font-weight: 600;
+  }
+  .mock-field span { color: var(--gray-900); }
+  .mock-btn-row { display: flex; gap: 10px; margin-top: 16px; align-items: center; }
+  .mock-btn {
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: default;
+  }
+  .mock-btn-primary { background: var(--blue); color: white; }
+  .mock-btn-secondary { background: white; color: var(--blue); border: 1px solid var(--gray-200); }
+  .mock-link { font-size: 12px; color: var(--blue); margin-left: auto; }
+
+  /* ── GMAIL INBOX MOCKUP ── */
+  .inbox-wrap {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .inbox-toolbar {
+    background: white;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .inbox-search {
+    flex: 1;
+    background: var(--gray-100);
+    border-radius: 24px;
+    padding: 8px 16px;
+    font-size: 13px;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .inbox-row {
+    display: grid;
+    grid-template-columns: 40px 160px 1fr 80px;
+    align-items: center;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+    gap: 10px;
+  }
+  .inbox-row.unread { background: var(--blue-light); font-weight: 600; }
+  .inbox-from { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .inbox-subject { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--gray-600); }
+  .inbox-date { font-size: 11px; color: var(--gray-400); text-align: right; }
+  .star { color: var(--gray-300); font-size: 14px; }
+
+  /* ── MEET MOCKUP ── */
+  .meet-screen {
+    background: #1a1a2e;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+  }
+  .meet-video-grid {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+  }
+  .meet-tile {
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+  }
+  .meet-tile.t1 { background: #2d4a7a; }
+  .meet-tile.t2 { background: #1a3a2a; }
+  .meet-tile.t3 { background: #4a2d1a; }
+  .meet-tile.t4 { background: #2a1a4a; }
+  .meet-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+  }
+  .meet-name {
+    position: absolute;
+    bottom: 6px; left: 8px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .meet-controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.7));
+    padding: 16px 20px 12px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    align-items: center;
+    z-index: 2;
+  }
+  .meet-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .meet-btn.on { background: rgba(255,255,255,0.2); }
+  .meet-btn.off { background: #d93025; }
+  .meet-btn.end { background: #d93025; padding: 0 18px; width: auto; border-radius: 22px; color: white; font-size: 13px; font-weight: 600; }
+
+  /* ── CLASSROOM MOCKUP ── */
+  .classroom-wrap {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .classroom-header {
+    background: #1e7e34;
+    color: white;
+    padding: 16px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .classroom-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; right: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .classroom-header h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .classroom-header p { font-size: 12px; opacity: 0.8; }
+  .classroom-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 16px;
+    gap: 0;
+  }
+  .class-tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-400);
+    border-bottom: 2px solid transparent;
+    cursor: default;
+  }
+  .class-tab.active { color: #1e7e34; border-color: #1e7e34; }
+  .assignment-list { padding: 12px 0; }
+  .assignment-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .assign-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .assign-info h4 { font-size: 13px; font-weight: 600; color: var(--gray-900); margin-bottom: 2px; }
+  .assign-info p { font-size: 11px; color: var(--gray-400); }
+  .assign-badge {
+    margin-left: auto;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .badge-new { background: var(--blue-light); color: var(--blue); }
+  .badge-due { background: var(--red-light); color: var(--red); }
+  .badge-done { background: var(--green-light); color: var(--green); }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin: 12px 0;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .info-box.tip { background: var(--blue-light); border-left: 3px solid var(--blue); }
+  .info-box.warn { background: var(--yellow-light); border-left: 3px solid var(--yellow); }
+  .info-box.success { background: var(--green-light); border-left: 3px solid var(--green); }
+  .info-box.danger { background: var(--red-light); border-left: 3px solid var(--red); }
+  .info-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--gray-800);
+    padding: 2px 0;
+  }
+  .check-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--green-light);
+    color: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+  .arrow-circle {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--blue-light);
+    color: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── HIGHLIGHT TAG ── */
+  .tag {
+    display: inline-block;
+    background: var(--blue-light);
+    color: var(--blue-dark);
+    padding: 1px 7px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: monospace;
+  }
+  .tag.green { background: var(--green-light); color: #1b5e20; }
+  .tag.red { background: var(--red-light); color: #b71c1c; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--gray-200);
+    margin: 40px 0;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--gray-900);
+    color: white;
+    text-align: center;
+    padding: 28px 40px;
+    font-size: 13px;
+  }
+  .footer p { opacity: 0.6; margin-top: 6px; font-size: 12px; }
+
+  /* ── PRINT ── */
+  @media print {
+    .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .part-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .step-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .meet-screen { display: none; }
+  }
+
+  @media (max-width: 600px) {
+    .cover { padding: 40px 20px; }
+    .cover h1 { font-size: 22px; }
+    .content { padding: 0 16px 40px; }
+    .toc { padding: 20px; }
+    .inbox-row { grid-template-columns: 30px 100px 1fr; }
+    .inbox-date { display: none; }
+    .meet-video-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ COVER ════════ -->
+<div class="cover">
+  <div class="cover-logo-row">
+    <div class="cover-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="white"/><path d="M6 9.5L16 16.5L26 9.5V22.5C26 23.33 25.33 24 24.5 24H7.5C6.67 24 6 23.33 6 22.5V9.5Z" fill="#EA4335" opacity="0.1"/><path d="M6 9.5C6 8.67 6.67 8 7.5 8H24.5C25.33 8 26 8.67 26 9.5L16 16.5L6 9.5Z" fill="#EA4335"/><path d="M6 9.5L16 16.5L26 9.5V22.5C26 23.33 25.33 24 24.5 24H7.5C6.67 24 6 23.33 6 22.5V9.5Z" fill="#34A853"/><path d="M6 22.5V9.5L16 16.5" fill="#4285F4"/><path d="M26 22.5V9.5L16 16.5" fill="#FBBC04"/></svg>
+    </div>
+    <div class="cover-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="white"/><path d="M4 10C4 8.9 4.9 8 6 8H20C21.1 8 22 8.9 22 10V22C22 23.1 21.1 24 20 24H6C4.9 24 4 23.1 4 22V10Z" fill="#00897B"/><path d="M22 13L28 10V22L22 19V13Z" fill="#00897B"/><circle cx="13" cy="16" r="3" fill="white" opacity="0.9"/></svg>
+    </div>
+    <div class="cover-logo">
+      <svg width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="white"/><rect x="4" y="4" width="24" height="24" rx="3" fill="#0F9D58"/><text x="16" y="21" text-anchor="middle" fill="white" font-size="14" font-weight="800" font-family="sans-serif">GC</text></svg>
+    </div>
+  </div>
+  <h1>Hướng Dẫn Sử Dụng<br>Gmail · Google Meet · Google Classroom</h1>
+  <p>Tài liệu hướng dẫn chi tiết từng bước dành cho học sinh & phụ huynh học trực tuyến</p>
+  <div class="cover-tags">
+    <span class="cover-tag">📧 Tạo tài khoản Gmail</span>
+    <span class="cover-tag">🎥 Tham gia Google Meet</span>
+    <span class="cover-tag">📚 Học trên Classroom</span>
+    <span class="cover-tag">✏️ Nộp bài tập</span>
+  </div>
+</div>
+
+<!-- ════════ MỤC LỤC ════════ -->
+<div class="toc">
+  <h2>Mục lục</h2>
+  <div class="toc-grid">
+    <a href="#part1" class="toc-item">
+      <span class="toc-num" style="background:#fce8e6;color:#d93025;">1</span>
+      Tạo tài khoản Gmail
+    </a>
+    <a href="#part2" class="toc-item">
+      <span class="toc-num" style="background:#e8f0fe;color:#1a73e8;">2</span>
+      Đăng nhập Gmail
+    </a>
+    <a href="#part3" class="toc-item">
+      <span class="toc-num" style="background:#e0f2f1;color:#00897b;">3</span>
+      Tham gia Google Meet
+    </a>
+    <a href="#part4" class="toc-item">
+      <span class="toc-num" style="background:#e0f2f1;color:#00897b;">4</span>
+      Sử dụng Google Meet
+    </a>
+    <a href="#part5" class="toc-item">
+      <span class="toc-num" style="background:#e6f4ea;color:#0f9d58;">5</span>
+      Tham gia Google Classroom
+    </a>
+    <a href="#part6" class="toc-item">
+      <span class="toc-num" style="background:#e6f4ea;color:#0f9d58;">6</span>
+      Làm bài & Nộp bài
+    </a>
+  </div>
+</div>
+
+<!-- ════════ CONTENT ════════ -->
+<div class="content">
+
+<!-- ══════════════════════════════════
+     PHẦN 1: TẠO GMAIL
+══════════════════════════════════ -->
+<div id="part1" class="part-header gmail">
+  <div class="part-header-inner">
+    <div class="part-icon gmail">
+      <svg width="28" height="28" viewBox="0 0 32 32"><path d="M6 9.5C6 8.67 6.67 8 7.5 8H24.5C25.33 8 26 8.67 26 9.5L16 16.5L6 9.5Z" fill="#EA4335"/><path d="M6 9.5L16 16.5L26 9.5V22.5C26 23.33 25.33 24 24.5 24H7.5C6.67 24 6 23.33 6 22.5V9.5Z" fill="#34A853"/><path d="M6 22.5V9.5L16 16.5" fill="#4285F4"/><path d="M26 22.5V9.5L16 16.5" fill="#FBBC04"/></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 1</div>
+      <h2>Cách tạo tài khoản Gmail</h2>
+      <p class="part-desc">Tạo địa chỉ email Google miễn phí để sử dụng tất cả các dịch vụ học trực tuyến</p>
+    </div>
+  </div>
+</div>
+
+<div class="info-box tip">
+  <span class="info-icon">💡</span>
+  <div><strong>Lưu ý trước khi bắt đầu:</strong> Bạn cần một thiết bị có kết nối internet (điện thoại, máy tính bảng hoặc máy tính). Việc tạo Gmail hoàn toàn <strong>miễn phí</strong>.</div>
+</div>
+
+<div class="steps">
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">1</span>
+      <div>
+        <div class="step-title">Mở trình duyệt và vào trang tạo tài khoản</div>
+        <div class="step-subtitle">Truy cập accounts.google.com/signup</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="screen-wrap">
+        <div class="screen-bar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="screen-url">🔒 accounts.google.com/signup</span>
+        </div>
+        <div style="background:white;border-radius:8px;padding:20px;border:1px solid #e8eaed;">
+          <div style="text-align:center;margin-bottom:16px;">
+            <svg width="48" height="48" viewBox="0 0 48 48" style="margin-bottom:8px;"><rect width="48" height="48" rx="8" fill="#fff"/><path d="M10 15.5C10 13.84 11.34 12.5 13 12.5H35C36.66 12.5 38 13.84 38 15.5L24 24L10 15.5Z" fill="#EA4335"/><path d="M10 15.5L24 24L38 15.5V32.5C38 34.16 36.66 35.5 35 35.5H13C11.34 35.5 10 34.16 10 32.5V15.5Z" fill="#34A853" opacity="0.8"/></svg>
+            <div style="font-size:20px;font-weight:700;color:#202124;">Tạo tài khoản Google</div>
+            <div style="font-size:13px;color:#5f6368;">Dùng cho Gmail, Meet, Classroom và nhiều hơn nữa</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+            <div class="mock-field"><label>Họ</label><span>Nguyễn</span></div>
+            <div class="mock-field active"><label>Tên</label><span>Văn An |</span></div>
+          </div>
+          <div class="mock-field" style="margin-bottom:10px;"><label>Tên người dùng</label><span>nguyenvanan2024</span><span style="font-size:11px;color:#5f6368;">@gmail.com</span></div>
+          <div class="mock-field" style="margin-bottom:10px;"><label>Mật khẩu</label><span>••••••••••</span></div>
+          <div class="mock-field" style="margin-bottom:14px;"><label>Xác nhận mật khẩu</label><span>••••••••••</span></div>
+          <div class="mock-btn-row">
+            <span class="mock-btn mock-btn-secondary">Đăng nhập</span>
+            <span class="mock-btn mock-btn-primary" style="margin-left:auto;">Tiếp theo →</span>
+          </div>
+        </div>
+      </div>
+      <ul class="checklist" style="margin-top:12px;">
+        <li><span class="check-circle">✓</span> Mở Chrome / Safari / Cốc Cốc trên điện thoại hoặc máy tính</li>
+        <li><span class="check-circle">✓</span> Gõ vào thanh địa chỉ: <span class="tag">accounts.google.com/signup</span> rồi nhấn Enter</li>
+        <li><span class="check-circle">✓</span> Trang "Tạo tài khoản Google" hiện ra như hình trên</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">2</span>
+      <div>
+        <div class="step-title">Điền thông tin cá nhân</div>
+        <div class="step-subtitle">Nhập họ tên và chọn tên người dùng (địa chỉ email)</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> <strong>Họ:</strong> Nhập họ của bạn (VD: Nguyễn)</li>
+        <li><span class="check-circle">✓</span> <strong>Tên:</strong> Nhập tên của bạn (VD: Văn An)</li>
+        <li><span class="check-circle">✓</span> <strong>Tên người dùng:</strong> Đây là địa chỉ email (VD: nguyenvanan2024). Nếu đã có người dùng tên đó, Google sẽ gợi ý tên khác</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag">Tiếp theo</span></li>
+      </ul>
+      <div class="info-box warn" style="margin-top:12px;">
+        <span class="info-icon">⚠️</span>
+        <div>Tên người dùng chỉ được dùng <strong>chữ cái, số và dấu chấm (.)</strong>. Không dùng dấu tiếng Việt, khoảng trắng hay ký tự đặc biệt.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">3</span>
+      <div>
+        <div class="step-title">Đặt mật khẩu</div>
+        <div class="step-subtitle">Tạo mật khẩu mạnh để bảo vệ tài khoản</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Nhập mật khẩu vào ô <strong>Mật khẩu</strong> (tối thiểu 8 ký tự)</li>
+        <li><span class="check-circle">✓</span> Nhập lại mật khẩu vào ô <strong>Xác nhận</strong> (phải giống hệt)</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag">Tiếp theo</span></li>
+      </ul>
+      <div class="info-box success" style="margin-top:12px;">
+        <span class="info-icon">🔐</span>
+        <div><strong>Mật khẩu tốt nên có:</strong> Chữ hoa + chữ thường + số + ký tự đặc biệt. VD: <span class="tag">HocTot@2024</span>. Hãy ghi mật khẩu ra giấy và cất cẩn thận!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">4</span>
+      <div>
+        <div class="step-title">Xác minh số điện thoại (nếu được yêu cầu)</div>
+        <div class="step-subtitle">Google gửi mã xác nhận qua SMS</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Nhập số điện thoại Việt Nam (VD: 0912345678)</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag">Gửi</span> — Google sẽ nhắn tin mã 6 số vào điện thoại bạn</li>
+        <li><span class="check-circle">✓</span> Nhập mã 6 số nhận được vào ô xác minh</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag">Xác minh</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">5</span>
+      <div>
+        <div class="step-title">Điền thông tin cá nhân bổ sung & Đồng ý điều khoản</div>
+        <div class="step-subtitle">Ngày sinh và giới tính</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Chọn <strong>Ngày sinh</strong>: ngày / tháng / năm</li>
+        <li><span class="check-circle">✓</span> Chọn <strong>Giới tính</strong>: Nam / Nữ / Không muốn tiết lộ</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag">Tiếp theo</span></li>
+        <li><span class="check-circle">✓</span> Đọc điều khoản và nhấn <span class="tag">Tôi đồng ý</span></li>
+      </ul>
+      <div class="info-box success" style="margin-top:12px;">
+        <span class="info-icon">🎉</span>
+        <div><strong>Xong rồi!</strong> Tài khoản Gmail của bạn đã được tạo thành công. Địa chỉ email của bạn là: <span class="tag">[tên bạn chọn]@gmail.com</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end steps -->
+
+<hr class="divider" id="part2">
+
+<!-- ══════════════════════════════════
+     PHẦN 2: ĐĂNG NHẬP GMAIL
+══════════════════════════════════ -->
+<div class="part-header gmail">
+  <div class="part-header-inner">
+    <div class="part-icon gmail">
+      <svg width="28" height="28" viewBox="0 0 32 32"><path d="M6 9.5C6 8.67 6.67 8 7.5 8H24.5C25.33 8 26 8.67 26 9.5L16 16.5L6 9.5Z" fill="#EA4335"/><path d="M6 9.5L16 16.5L26 9.5V22.5C26 23.33 25.33 24 24.5 24H7.5C6.67 24 6 23.33 6 22.5V9.5Z" fill="#34A853" opacity="0.8"/></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 2</div>
+      <h2>Đăng nhập và sử dụng Gmail</h2>
+      <p class="part-desc">Cách đăng nhập vào Gmail và nhận link tham gia khóa học từ giáo viên</p>
+    </div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">1</span>
+      <div>
+        <div class="step-title">Đăng nhập Gmail</div>
+        <div class="step-subtitle">Truy cập gmail.com và đăng nhập</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Mở trình duyệt, vào <span class="tag">gmail.com</span></li>
+        <li><span class="check-circle">✓</span> Nhập địa chỉ email của bạn (VD: nguyenvanan2024@gmail.com)</li>
+        <li><span class="check-circle">✓</span> Nhập mật khẩu → Nhấn <span class="tag">Tiếp theo</span></li>
+        <li><span class="check-circle">✓</span> Hộp thư đến (Inbox) sẽ hiện ra</li>
+      </ul>
+      <div class="screen-wrap" style="margin-top:14px;">
+        <div class="screen-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="screen-url">🔒 mail.google.com</span>
+        </div>
+        <div class="inbox-wrap">
+          <div class="inbox-toolbar">
+            <div class="inbox-search">
+              <span>🔍</span> <span style="color:#9aa0a6;">Tìm kiếm thư</span>
+            </div>
+          </div>
+          <div class="inbox-row" style="font-size:12px;color:#5f6368;background:#f8f9fa;font-weight:600;">
+            <div></div><div>Người gửi</div><div>Tiêu đề / Nội dung</div><div>Ngày</div>
+          </div>
+          <div class="inbox-row unread">
+            <span class="star">★</span>
+            <div class="inbox-from">Cô Lan - Toán 6A</div>
+            <div class="inbox-subject"><strong>Link Google Meet buổi học hôm nay</strong> — Các em nhấn vào link này để vào lớp: meet.google.com/abc-def...</div>
+            <div class="inbox-date">8:30</div>
+          </div>
+          <div class="inbox-row unread">
+            <span class="star">☆</span>
+            <div class="inbox-from">Thầy Hùng - Văn 6A</div>
+            <div class="inbox-subject"><strong>Mã lớp Classroom: xyz789</strong> — Các em vào classroom.google.com và nhập mã lớp...</div>
+            <div class="inbox-date">Hôm qua</div>
+          </div>
+          <div class="inbox-row">
+            <span class="star">☆</span>
+            <div class="inbox-from">Google</div>
+            <div class="inbox-subject">Chào mừng bạn đến với Google! — Tài khoản của bạn đã sẵn sàng...</div>
+            <div class="inbox-date">3 ngày</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-blue">2</span>
+      <div>
+        <div class="step-title">Tìm và mở email từ giáo viên</div>
+        <div class="step-subtitle">Nhận link Meet hoặc mã lớp Classroom</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Nhìn vào danh sách thư → Tìm email <strong>in đậm</strong> (chưa đọc) từ giáo viên</li>
+        <li><span class="check-circle">✓</span> Nhấn vào email để mở</li>
+        <li><span class="check-circle">✓</span> Tìm <strong>link Google Meet</strong> (dạng meet.google.com/xxx-xxx-xxx) hoặc <strong>mã lớp Classroom</strong></li>
+        <li><span class="check-circle">✓</span> Nhấn vào link hoặc sao chép mã lớp</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" id="part3">
+
+<!-- ══════════════════════════════════
+     PHẦN 3: THAM GIA GOOGLE MEET
+══════════════════════════════════ -->
+<div class="part-header meet">
+  <div class="part-header-inner">
+    <div class="part-icon meet">
+      <svg width="28" height="28" viewBox="0 0 32 32"><path d="M4 10C4 8.9 4.9 8 6 8H20C21.1 8 22 8.9 22 10V22C22 23.1 21.1 24 20 24H6C4.9 24 4 23.1 4 22V10Z" fill="#00897B"/><path d="M22 13L28 10V22L22 19V13Z" fill="#00897B"/><circle cx="13" cy="16" r="3" fill="white" opacity="0.9"/></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 3</div>
+      <h2>Tham gia lớp học qua Google Meet</h2>
+      <p class="part-desc">Sử dụng link từ email giáo viên để vào phòng học trực tuyến</p>
+    </div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">1</span>
+      <div>
+        <div class="step-title">Mở link Google Meet từ email giáo viên</div>
+        <div class="step-subtitle">Nhấn trực tiếp vào link trong email</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Mở email từ giáo viên trong Gmail</li>
+        <li><span class="check-circle">✓</span> Tìm dòng link dạng: <span class="tag">meet.google.com/abc-def-ghi</span></li>
+        <li><span class="check-circle">✓</span> Nhấn vào link đó</li>
+        <li><span class="check-circle">✓</span> Trình duyệt tự mở trang Google Meet</li>
+      </ul>
+      <div class="info-box tip" style="margin-top:10px;">
+        <span class="info-icon">📱</span>
+        <div><strong>Nếu dùng điện thoại:</strong> Hãy tải ứng dụng <strong>Google Meet</strong> trước (miễn phí trên App Store / CH Play), sau đó nhấn link sẽ tự mở app.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">2</span>
+      <div>
+        <div class="step-title">Cấp quyền Micro và Camera</div>
+        <div class="step-subtitle">Cho phép trình duyệt sử dụng thiết bị</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Khi trình duyệt hỏi <em>"Cho phép meet.google.com sử dụng micro?"</em> → Nhấn <span class="tag green">Cho phép</span></li>
+        <li><span class="check-circle">✓</span> Khi hỏi về <em>camera</em> → Nhấn <span class="tag green">Cho phép</span></li>
+        <li><span class="check-circle">✓</span> Trang xem trước (preview) hiện ra — bạn thấy hình của mình</li>
+      </ul>
+      <div class="info-box warn" style="margin-top:10px;">
+        <span class="info-icon">⚠️</span>
+        <div>Nếu lỡ nhấn <span class="tag red">Chặn</span>, nhấn vào biểu tượng 🔒 trên thanh địa chỉ để thay đổi lại.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">3</span>
+      <div>
+        <div class="step-title">Tham gia phòng học</div>
+        <div class="step-subtitle">Nhấn "Tham gia ngay" để vào lớp</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Trang xem trước hiện ra với tên bạn và hình camera</li>
+        <li><span class="check-circle">✓</span> Kiểm tra micro 🎤 và camera 📷 (bật/tắt theo ý muốn)</li>
+        <li><span class="check-circle">✓</span> Nhấn nút <span class="tag green">Tham gia ngay</span> màu xanh</li>
+        <li><span class="check-circle">✓</span> Nếu giáo viên chưa mở lớp, màn hình hiển thị <em>"Đang chờ được chấp nhận"</em> — hãy đợi</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" id="part4">
+
+<!-- ══════════════════════════════════
+     PHẦN 4: SỬ DỤNG GOOGLE MEET
+══════════════════════════════════ -->
+<div class="part-header meet">
+  <div class="part-header-inner">
+    <div class="part-icon meet">
+      <svg width="28" height="28" viewBox="0 0 32 32"><path d="M4 10C4 8.9 4.9 8 6 8H20C21.1 8 22 8.9 22 10V22C22 23.1 21.1 24 20 24H6C4.9 24 4 23.1 4 22V10Z" fill="#00897B"/><path d="M22 13L28 10V22L22 19V13Z" fill="#00897B"/></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 4</div>
+      <h2>Hướng dẫn sử dụng Google Meet trong lớp học</h2>
+      <p class="part-desc">Các nút điều khiển và tính năng quan trọng khi học trực tuyến</p>
+    </div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">1</span>
+      <div>
+        <div class="step-title">Màn hình chính khi đang học</div>
+        <div class="step-subtitle">Giao diện phòng họp và các nút điều khiển</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="meet-screen" style="margin-bottom:16px;">
+        <div class="meet-video-grid">
+          <div class="meet-tile t1">
+            <div class="meet-avatar" style="background:#1a73e8;">GV</div>
+            <div class="meet-name">Cô Lan (Giáo viên)</div>
+          </div>
+          <div class="meet-tile t2">
+            <div class="meet-avatar" style="background:#0f9d58;">An</div>
+            <div class="meet-name">Văn An (Bạn)</div>
+          </div>
+          <div class="meet-tile t3">
+            <div class="meet-avatar" style="background:#f9ab00;color:#fff;">Bình</div>
+            <div class="meet-name">Minh Bình</div>
+          </div>
+          <div class="meet-tile t4">
+            <div class="meet-avatar" style="background:#ea4335;">Linh</div>
+            <div class="meet-name">Thu Linh</div>
+          </div>
+        </div>
+        <div class="meet-controls">
+          <div class="meet-btn on" title="Tắt/bật micro">🎤</div>
+          <div class="meet-btn off" title="Camera đang tắt">📷</div>
+          <div class="meet-btn on" title="Chat">💬</div>
+          <div class="meet-btn on" title="Thành viên">👥</div>
+          <div class="meet-btn end">Rời cuộc gọi</div>
+        </div>
+      </div>
+
+      <!-- Button guide table -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;">
+          <div style="font-size:22px;margin-bottom:6px;">🎤</div>
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Micro (Bật/Tắt)</div>
+          <div style="font-size:12px;color:#5f6368;">Nhấn để tắt/bật micro. Khi tắt, biểu tượng có gạch đỏ. Tắt micro khi không phát biểu để tránh tạp âm.</div>
+        </div>
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;">
+          <div style="font-size:22px;margin-bottom:6px;">📷</div>
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Camera (Bật/Tắt)</div>
+          <div style="font-size:12px;color:#5f6368;">Nhấn để bật/tắt camera. Khi tắt, người khác thấy tên bạn thay vì hình ảnh.</div>
+        </div>
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;">
+          <div style="font-size:22px;margin-bottom:6px;">💬</div>
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Chat trong cuộc họp</div>
+          <div style="font-size:12px;color:#5f6368;">Nhấn để mở khung chat. Nhắn tin hỏi giáo viên mà không làm gián đoạn bài giảng.</div>
+        </div>
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:12px;">
+          <div style="font-size:22px;margin-bottom:6px;">✋</div>
+          <div style="font-weight:700;font-size:13px;margin-bottom:4px;">Giơ tay phát biểu</div>
+          <div style="font-size:12px;color:#5f6368;">Nhấn biểu tượng ✋ ở menu "..." để báo hiệu muốn phát biểu mà không ngắt lời giáo viên.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">2</span>
+      <div>
+        <div class="step-title">Các quy tắc lớp học trực tuyến</div>
+        <div class="step-subtitle">Cách học hiệu quả và lịch sự trên Google Meet</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> <strong>Vào lớp sớm 5 phút</strong> trước giờ học để kiểm tra kết nối</li>
+        <li><span class="check-circle">✓</span> <strong>Tắt micro</strong> khi không phát biểu, tránh tiếng ồn làm phiền lớp</li>
+        <li><span class="check-circle">✓</span> <strong>Bật camera</strong> khi giáo viên yêu cầu để thể hiện sự tham gia</li>
+        <li><span class="check-circle">✓</span> <strong>Giơ tay</strong> (nhấn ✋) khi muốn phát biểu, đừng ngắt lời</li>
+        <li><span class="check-circle">✓</span> <strong>Nhắn chat</strong> nếu không nghe rõ thay vì nói to</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag red">Rời cuộc gọi</span> khi kết thúc buổi học</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-green">3</span>
+      <div>
+        <div class="step-title">Xử lý sự cố thường gặp</div>
+        <div class="step-subtitle">Khi gặp vấn đề kỹ thuật trong giờ học</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="background:#fce8e6;border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;color:#c5221f;margin-bottom:4px;">❌ Không nghe thấy âm thanh</div>
+          <div style="font-size:13px;color:#5f6368;">→ Kiểm tra loa/tai nghe → Kiểm tra âm lượng máy → Thoát và vào lại Meet</div>
+        </div>
+        <div style="background:#fce8e6;border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;color:#c5221f;margin-bottom:4px;">❌ Hình ảnh bị lag / giật</div>
+          <div style="font-size:13px;color:#5f6368;">→ Tắt camera để giảm tải mạng → Đóng các tab trình duyệt khác → Di chuyển gần router WiFi hơn</div>
+        </div>
+        <div style="background:#fce8e6;border-radius:10px;padding:12px 14px;">
+          <div style="font-weight:700;font-size:13px;color:#c5221f;margin-bottom:4px;">❌ Bị đuổi ra / không vào được</div>
+          <div style="font-size:13px;color:#5f6368;">→ Đảm bảo đăng nhập đúng Gmail → Nhắn giáo viên qua chat/tin nhắn để được chấp nhận lại</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" id="part5">
+
+<!-- ══════════════════════════════════
+     PHẦN 5: THAM GIA GOOGLE CLASSROOM
+══════════════════════════════════ -->
+<div class="part-header classroom">
+  <div class="part-header-inner">
+    <div class="part-icon classroom">
+      <svg width="28" height="28" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="4" fill="#0F9D58"/><text x="16" y="22" text-anchor="middle" fill="white" font-size="13" font-weight="800" font-family="sans-serif">GC</text></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 5</div>
+      <h2>Tham gia lớp học trên Google Classroom</h2>
+      <p class="part-desc">Đăng ký vào lớp học, xem bài giảng và bài tập từ giáo viên</p>
+    </div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">1</span>
+      <div>
+        <div class="step-title">Truy cập Google Classroom</div>
+        <div class="step-subtitle">Vào classroom.google.com hoặc dùng ứng dụng</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Mở trình duyệt, gõ <span class="tag">classroom.google.com</span> → Enter</li>
+        <li><span class="check-circle">✓</span> Đăng nhập bằng Gmail của bạn nếu chưa đăng nhập</li>
+        <li><span class="check-circle">✓</span> Trang chủ Classroom hiện ra với các lớp đã tham gia</li>
+      </ul>
+      <div class="info-box tip" style="margin-top:10px;">
+        <span class="info-icon">📱</span>
+        <div>Trên điện thoại: Tải app <strong>Google Classroom</strong> trên App Store / CH Play. Đăng nhập bằng Gmail và dùng tương tự.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">2</span>
+      <div>
+        <div class="step-title">Nhập mã lớp để tham gia</div>
+        <div class="step-subtitle">Dùng mã lớp do giáo viên cung cấp</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Trên trang chủ Classroom, nhấn nút <span class="tag green">+</span> ở góc trên bên phải</li>
+        <li><span class="check-circle">✓</span> Chọn <strong>"Tham gia lớp học"</strong></li>
+        <li><span class="check-circle">✓</span> Nhập mã lớp 6-7 ký tự từ giáo viên (VD: <span class="tag">xyz789a</span>)</li>
+        <li><span class="check-circle">✓</span> Nhấn <span class="tag green">Tham gia</span></li>
+        <li><span class="check-circle">✓</span> Lớp học xuất hiện trên trang chủ của bạn</li>
+      </ul>
+      <div class="screen-wrap" style="margin-top:14px;">
+        <div class="screen-bar">
+          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
+          <span class="screen-url">🔒 classroom.google.com</span>
+        </div>
+        <div class="classroom-wrap">
+          <div class="classroom-header">
+            <h3>Toán 6A — Học kỳ I 2024</h3>
+            <p>Cô giáo: Nguyễn Thị Lan · 28 học sinh</p>
+          </div>
+          <div class="classroom-tabs">
+            <div class="class-tab active">Bảng tin</div>
+            <div class="class-tab">Bài tập trên lớp</div>
+            <div class="class-tab">Thành viên</div>
+          </div>
+          <div class="assignment-list">
+            <div class="assignment-item">
+              <div class="assign-icon" style="background:#e8f0fe;">📢</div>
+              <div class="assign-info">
+                <h4>Thông báo: Lịch kiểm tra giữa kỳ</h4>
+                <p>Cô Lan · 1 ngày trước</p>
+              </div>
+              <span class="assign-badge badge-new">Mới</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assign-icon" style="background:#fce8e6;">📝</div>
+              <div class="assign-info">
+                <h4>Bài tập: Phương trình bậc nhất</h4>
+                <p>Hạn nộp: Thứ 6, 15/11 · 100 điểm</p>
+              </div>
+              <span class="assign-badge badge-due">Hết hạn sớm</span>
+            </div>
+            <div class="assignment-item">
+              <div class="assign-icon" style="background:#e6f4ea;">✅</div>
+              <div class="assign-info">
+                <h4>Bài kiểm tra 15 phút — Chương 2</h4>
+                <p>Đã nộp · 85/100 điểm</p>
+              </div>
+              <span class="assign-badge badge-done">Đã xong</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">3</span>
+      <div>
+        <div class="step-title">Khám phá các tab trong lớp học</div>
+        <div class="step-subtitle">Bảng tin, Bài tập và Thành viên</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:#f8f9fa;border-radius:10px;border:1px solid #e8eaed;">
+          <div style="font-size:24px;flex-shrink:0;">📢</div>
+          <div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:3px;">Tab Bảng tin</div>
+            <div style="font-size:13px;color:#5f6368;">Thông báo từ giáo viên, thông tin lịch học, nhắc nhở bài tập sắp đến hạn.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:#f8f9fa;border-radius:10px;border:1px solid #e8eaed;">
+          <div style="font-size:24px;flex-shrink:0;">📚</div>
+          <div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:3px;">Tab Bài tập trên lớp</div>
+            <div style="font-size:13px;color:#5f6368;">Toàn bộ bài tập, đề kiểm tra, tài liệu học tập được tổ chức theo chủ đề/chương.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:#f8f9fa;border-radius:10px;border:1px solid #e8eaed;">
+          <div style="font-size:24px;flex-shrink:0;">👥</div>
+          <div>
+            <div style="font-weight:700;font-size:14px;margin-bottom:3px;">Tab Thành viên</div>
+            <div style="font-size:13px;color:#5f6368;">Danh sách giáo viên và các bạn học trong lớp.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider" id="part6">
+
+<!-- ══════════════════════════════════
+     PHẦN 6: LÀM BÀI & NỘP BÀI
+══════════════════════════════════ -->
+<div class="part-header classroom">
+  <div class="part-header-inner">
+    <div class="part-icon classroom">
+      <svg width="28" height="28" viewBox="0 0 32 32"><rect x="2" y="2" width="28" height="28" rx="4" fill="#0F9D58"/><path d="M10 16l4 4 8-8" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div>
+      <div class="part-num">Phần 6</div>
+      <h2>Làm bài tập và nộp bài trên Google Classroom</h2>
+      <p class="part-desc">Xem đề, làm bài trực tiếp hoặc tải file lên để nộp cho giáo viên</p>
+    </div>
+  </div>
+</div>
+
+<div class="steps">
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">1</span>
+      <div>
+        <div class="step-title">Mở bài tập cần làm</div>
+        <div class="step-subtitle">Trong tab "Bài tập trên lớp"</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Vào lớp học → Nhấn tab <strong>Bài tập trên lớp</strong></li>
+        <li><span class="check-circle">✓</span> Nhấn vào tên bài tập (VD: "Bài tập: Phương trình bậc nhất")</li>
+        <li><span class="check-circle">✓</span> Đọc hướng dẫn và yêu cầu của giáo viên</li>
+        <li><span class="check-circle">✓</span> Kiểm tra <strong>hạn nộp bài</strong> ở bên phải</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">2</span>
+      <div>
+        <div class="step-title">Làm bài tập dạng trắc nghiệm / Google Form</div>
+        <div class="step-subtitle">Làm và nộp trực tiếp trên máy</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Nhấn <strong>Mở bài kiểm tra</strong> — một trang Google Form mở ra</li>
+        <li><span class="check-circle">✓</span> Đọc kỹ từng câu hỏi, nhấn chọn đáp án (trắc nghiệm) hoặc gõ câu trả lời</li>
+        <li><span class="check-circle">✓</span> Kéo xuống cuối bài → Nhấn nút <span class="tag green">Gửi</span></li>
+        <li><span class="check-circle">✓</span> Trang xác nhận "Phản hồi đã ghi lại" xuất hiện = đã nộp thành công</li>
+      </ul>
+      <div class="info-box warn" style="margin-top:10px;">
+        <span class="info-icon">⚠️</span>
+        <div>Một số bài kiểm tra chỉ cho làm <strong>1 lần</strong>. Hãy kiểm tra lại tất cả câu trước khi nhấn Gửi!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">3</span>
+      <div>
+        <div class="step-title">Nộp bài tập dạng file (ảnh chụp / Word / PDF)</div>
+        <div class="step-subtitle">Tải file bài làm lên Classroom</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Mở bài tập → Kéo xuống phần <strong>"Bài làm của bạn"</strong></li>
+        <li><span class="check-circle">✓</span> Nhấn nút <span class="tag green">+ Thêm hoặc tạo</span></li>
+        <li><span class="check-circle">✓</span> Chọn <strong>"Tệp"</strong> để tải file từ máy lên</li>
+        <li><span class="check-circle">✓</span> Chọn file bài làm (ảnh .jpg, tài liệu .docx, .pdf...)</li>
+        <li><span class="check-circle">✓</span> Sau khi file đã tải lên → Nhấn nút <span class="tag green">Nộp bài</span> màu xanh lá</li>
+        <li><span class="check-circle">✓</span> Trạng thái chuyển thành <strong>"Đã nộp"</strong> = thành công</li>
+      </ul>
+
+      <div style="margin-top:14px;background:#f8f9fa;border:1px solid #e8eaed;border-radius:10px;overflow:hidden;">
+        <div style="background:#1e7e34;color:white;padding:10px 16px;font-size:13px;font-weight:700;">📤 Khu vực nộp bài — Minh hoạ</div>
+        <div style="padding:14px 16px;">
+          <div style="font-size:13px;font-weight:600;color:#202124;margin-bottom:10px;">Bài làm của bạn</div>
+          <div style="border:1.5px dashed #c5cae9;border-radius:8px;padding:16px;text-align:center;margin-bottom:12px;">
+            <div style="font-size:28px;margin-bottom:6px;">📎</div>
+            <div style="font-size:12px;color:#5f6368;">Kéo thả file vào đây hoặc nhấn để chọn file</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;background:white;border:1px solid #e8eaed;border-radius:8px;padding:10px 12px;margin-bottom:10px;">
+            <span style="font-size:18px;">📄</span>
+            <span style="font-size:13px;font-weight:500;flex:1;">bai_tap_chuong2_nguyenvanan.jpg</span>
+            <span style="font-size:11px;color:#9aa0a6;">120 KB</span>
+            <span style="color:#d93025;font-size:12px;cursor:pointer;">✕</span>
+          </div>
+          <button style="width:100%;background:#1e7e34;color:white;border:none;border-radius:8px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;">✅ Nộp bài</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">4</span>
+      <div>
+        <div class="step-title">Kiểm tra điểm và nhận xét từ giáo viên</div>
+        <div class="step-subtitle">Xem kết quả sau khi giáo viên chấm bài</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Vào lớp học → Tab <strong>Bài tập trên lớp</strong></li>
+        <li><span class="check-circle">✓</span> Mở lại bài tập đã nộp</li>
+        <li><span class="check-circle">✓</span> Nếu giáo viên đã chấm, bạn thấy điểm số ở góc phải (VD: <span class="tag green">85/100</span>)</li>
+        <li><span class="check-circle">✓</span> Cuộn xuống để xem <strong>nhận xét</strong> của giáo viên</li>
+        <li><span class="check-circle">✓</span> Bạn có thể trả lời nhận xét bằng cách nhấn <strong>Trả lời riêng tư</strong></li>
+      </ul>
+      <div class="info-box success" style="margin-top:10px;">
+        <span class="info-icon">🌟</span>
+        <div>Bạn cũng sẽ nhận được <strong>thông báo qua Gmail</strong> khi giáo viên trả bài và có điểm mới!</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-header">
+      <span class="step-badge badge-classroom">5</span>
+      <div>
+        <div class="step-title">Đặt câu hỏi cho giáo viên qua Classroom</div>
+        <div class="step-subtitle">Nhắn riêng tư hoặc bình luận bài</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <ul class="checklist">
+        <li><span class="check-circle">✓</span> Mở bài tập muốn hỏi → Kéo xuống dưới cùng</li>
+        <li><span class="check-circle">✓</span> Tìm ô <strong>"Bình luận của lớp"</strong> hoặc <strong>"Nhận xét riêng tư"</strong></li>
+        <li><span class="check-circle">✓</span> Dùng <strong>Bình luận của lớp</strong> để cả lớp đọc được câu hỏi của bạn</li>
+        <li><span class="check-circle">✓</span> Dùng <strong>Nhận xét riêng tư</strong> để chỉ giáo viên thấy</li>
+        <li><span class="check-circle">✓</span> Gõ câu hỏi → Nhấn biểu tượng gửi ➤</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── SUMMARY BOX ── -->
+<div style="background:linear-gradient(135deg,#e8f0fe 0%,#e6f4ea 50%,#e0f2f1 100%);border-radius:16px;padding:28px;margin-top:40px;border:1.5px solid #c5cae9;">
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-size:32px;margin-bottom:8px;">🎓</div>
+    <div style="font-family:'Nunito',sans-serif;font-size:20px;font-weight:800;color:#202124;">Bạn đã sẵn sàng học trực tuyến!</div>
+    <div style="font-size:13px;color:#5f6368;margin-top:4px;">Tóm tắt 5 bước quan trọng nhất</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;">
+    <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:24px;margin-bottom:6px;">📧</div>
+      <div style="font-size:12px;font-weight:700;color:#202124;">Tạo Gmail</div>
+      <div style="font-size:11px;color:#5f6368;margin-top:2px;">accounts.google.com/signup</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:24px;margin-bottom:6px;">🔑</div>
+      <div style="font-size:12px;font-weight:700;color:#202124;">Đăng nhập</div>
+      <div style="font-size:11px;color:#5f6368;margin-top:2px;">gmail.com</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:24px;margin-bottom:6px;">🎥</div>
+      <div style="font-size:12px;font-weight:700;color:#202124;">Vào Meet</div>
+      <div style="font-size:11px;color:#5f6368;margin-top:2px;">Nhấn link từ email GV</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:24px;margin-bottom:6px;">📚</div>
+      <div style="font-size:12px;font-weight:700;color:#202124;">Vào Classroom</div>
+      <div style="font-size:11px;color:#5f6368;margin-top:2px;">classroom.google.com + mã lớp</div>
+    </div>
+    <div style="background:white;border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(0,0,0,0.08);">
+      <div style="font-size:24px;margin-bottom:6px;">✅</div>
+      <div style="font-size:12px;font-weight:700;color:#202124;">Nộp bài</div>
+      <div style="font-size:11px;color:#5f6368;margin-top:2px;">Tab Bài tập → Nộp bài</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<!-- ── FOOTER ── -->
+<div class="footer">
+  <div style="font-size:15px;font-weight:700;">Hướng dẫn Học trực tuyến với Google</div>
+  <p>Gmail · Google Meet · Google Classroom · Dành cho học sinh và phụ huynh</p>
+  <p style="margin-top:8px;font-size:11px;">Các tên sản phẩm Google là thương hiệu của Google LLC. Tài liệu được tạo cho mục đích giáo dục.</p>
+</div>
+
+</body>
+</html>
