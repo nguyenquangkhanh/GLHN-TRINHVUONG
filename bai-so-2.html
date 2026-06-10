@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bài tập 2 – Ơn Gọi Hôn Nhân</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --cream: #F9F5EF;
+      --gold: #B8860B;
+      --gold-light: #D4A820;
+      --burgundy: #7A1E2E;
+      --burgundy-light: #9E2D40;
+      --charcoal: #2C2C2C;
+      --muted: #6B6560;
+      --surface: #FFFFFF;
+      --border: #E2D9CF;
+      --correct: #2D6A4F;
+      --correct-bg: #D8F3DC;
+      --wrong: #9B2226;
+      --wrong-bg: #FFE0E0;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 40px);
+      color: var(--burgundy);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--burgundy));
+      margin: 16px auto 0;
+      border-radius: 2px;
+    }
+
+    /* Progress */
+    .progress-bar-wrap {
+      max-width: 680px;
+      margin: 0 auto 24px;
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--burgundy));
+      border-radius: 99px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    /* Question card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 28px 24px;
+      max-width: 680px;
+      margin: 0 auto 20px;
+      display: none;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .card.active { display: block; }
+
+    .q-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .q-num {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--burgundy);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .q-level {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+      margin-bottom: 6px;
+    }
+    .level-easy { background: #E8F5E9; color: #2D6A4F; }
+    .level-medium { background: #FFF3CD; color: #856404; }
+    .level-hard { background: #FFE4E4; color: #9B2226; }
+
+    .q-text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.55;
+      color: var(--charcoal);
+    }
+
+    /* Options */
+    .options { display: flex; flex-direction: column; gap: 10px; }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+      font-size: 15px;
+      line-height: 1.5;
+      background: var(--cream);
+    }
+    .option:hover:not(.disabled) {
+      border-color: var(--gold);
+      background: #FFF9ED;
+    }
+    .option .opt-letter {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: background 0.18s, color 0.18s;
+    }
+    .option.selected { border-color: var(--gold); background: #FFF9ED; }
+    .option.selected .opt-letter { background: var(--gold); color: #fff; }
+    .option.correct { border-color: var(--correct); background: var(--correct-bg); }
+    .option.correct .opt-letter { background: var(--correct); color: #fff; }
+    .option.wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+    .option.wrong .opt-letter { background: var(--wrong); color: #fff; }
+    .option.disabled { cursor: default; pointer-events: none; }
+
+    /* Feedback */
+    .feedback {
+      display: none;
+      margin-top: 16px;
+      padding: 13px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .feedback.correct { background: var(--correct-bg); color: var(--correct); border: 1px solid #95d5b2; }
+    .feedback.wrong { background: var(--wrong-bg); color: var(--wrong); border: 1px solid #f4b8b8; }
+    .feedback.show { display: block; }
+
+    /* Buttons */
+    .card-footer {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 22px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    button:active { transform: scale(0.97); }
+    .btn-check {
+      background: var(--burgundy);
+      color: #fff;
+    }
+    .btn-check:hover { background: var(--burgundy-light); }
+    .btn-next {
+      background: var(--gold);
+      color: #fff;
+      display: none;
+    }
+    .btn-next:hover { background: var(--gold-light); }
+
+    /* Result screen */
+    #result-screen {
+      display: none;
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    #result-screen h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--burgundy);
+      margin-bottom: 12px;
+    }
+    .score-ring {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: conic-gradient(var(--burgundy) 0%, var(--gold) var(--pct, 0%), var(--border) var(--pct, 0%));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 24px auto;
+      position: relative;
+    }
+    .score-ring::after {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      background: var(--surface);
+      border-radius: 50%;
+    }
+    .score-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--burgundy);
+      position: relative;
+      z-index: 1;
+    }
+    .result-msg { font-size: 15px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+    .result-stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 28px;
+    }
+    .stat-item { text-align: center; }
+    .stat-val { font-size: 22px; font-weight: 700; color: var(--charcoal); }
+    .stat-lbl { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .btn-restart {
+      background: var(--burgundy);
+      color: #fff;
+      padding: 12px 28px;
+      font-size: 15px;
+    }
+    .btn-restart:hover { background: var(--burgundy-light); }
+
+    @media (max-width: 500px) {
+      .card { padding: 20px 16px; }
+      .q-text { font-size: 15px; }
+      .option { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Giáo Lý Hôn Nhân &amp; Gia Đình</div>
+  <h1>Bài 2: Ơn Gọi Hôn Nhân<br>trong Chương Trình của Thiên Chúa</h1>
+  <p>30 câu trắc nghiệm từ dễ đến khó — chọn đáp án rồi kiểm tra kết quả</p>
+  <div class="divider"></div>
+</header>
+
+<div class="progress-bar-wrap">
+  <div class="progress-meta">
+    <span id="prog-label">Câu 1 / 30</span>
+    <span id="prog-score">Điểm: 0</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="prog-fill"></div>
+  </div>
+</div>
+
+<div id="quiz-container"></div>
+<div id="result-screen">
+  <h2>Kết Quả Của Bạn</h2>
+  <div class="score-ring" id="score-ring">
+    <span class="score-num" id="score-pct">0%</span>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item">
+      <div class="stat-val" id="res-correct" style="color:var(--correct)">0</div>
+      <div class="stat-lbl">Đúng</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val" id="res-wrong" style="color:var(--wrong)">0</div>
+      <div class="stat-lbl">Sai</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val" id="res-total">30</div>
+      <div class="stat-lbl">Tổng câu</div>
+    </div>
+  </div>
+  <p class="result-msg" id="res-msg"></p>
+  <button class="btn-restart" onclick="restartQuiz()">🔄 Làm lại từ đầu</button>
+</div>
+
+<script>
+const questions = [
+  // --- DỄ (1–10) ---
+  {
+    level: "easy",
+    q: "Hôn nhân là gì?",
+    opts: [
+      "Một hợp đồng dân sự giữa hai người",
+      "Một giao ước ký kết giữa một người nam và một người nữ để sống yêu thương và giúp đỡ nhau",
+      "Một thủ tục pháp lý do nhà nước quy định",
+      "Một truyền thống văn hoá của cộng đồng"
+    ],
+    ans: 1,
+    explain: "Hôn nhân là giao ước ký kết giữa một người nam và một người nữ, với ý thức tự do và trách nhiệm, để sống yêu thương và giúp đỡ nhau trong tình nghĩa vợ chồng."
+  },
+  {
+    level: "easy",
+    q: "Ai đã thiết lập nên hôn nhân?",
+    opts: ["Xã hội loài người", "Nhà nước", "Chính Thiên Chúa", "Các nhà triết học cổ đại"],
+    ans: 2,
+    explain: "Chính Thiên Chúa đã lập nên hôn nhân khi dựng nên loài người có nam có nữ và mời gọi họ sống yêu thương."
+  },
+  {
+    level: "easy",
+    q: "Câu Kinh Thánh nào trích từ (1 Ga 4,8)?",
+    opts: [
+      "\"Người nam sẽ bỏ cha mẹ mà kết hợp với vợ mình, và cả hai sẽ nên một huyết nhục\"",
+      "\"Thiên Chúa là Tình Yêu\"",
+      "\"Hãy sinh sôi nảy nở cho nhiều\" ",
+      "\"Con cái là hồng ân Chúa ban\" "
+    ],
+    ans: 1,
+    explain: "(1 Ga 4,8) \"Thiên Chúa là Tình Yêu.\""
+  },
+  {
+    level: "easy",
+    q: "Hôn nhân hướng đến bao nhiêu mục đích chính?",
+    opts: ["Một mục đích", "Hai mục đích", "Ba mục đích", "Bốn mục đích"],
+    ans: 1,
+    explain: "Tự bản chất, hôn nhân hướng đến hai mục đích: lợi ích của đôi vợ chồng và sinh sản, giáo dục con cái."
+  },
+  {
+    level: "easy",
+    q: "Yếu tố căn bản của hôn nhân là gì?",
+    opts: ["Tài sản chung", "Tình yêu", "Sự đồng ý của cha mẹ", "Hôn lễ tôn giáo"],
+    ans: 1,
+    explain: "Tình yêu là yếu tố căn bản của hôn nhân vì hôn nhân được thiết lập do tình yêu và mục đích cuối cùng cũng chính là tình yêu."
+  },
+  {
+    level: "easy",
+    q: "Thiên Chúa tạo dựng con người như thế nào?",
+    opts: [
+      "Chỉ dựng nên người nam trước",
+      "Dựng nên con người có nam có nữ",
+      "Dựng nên con người không phân biệt giới tính",
+      "Dựng nên nhiều loại con người khác nhau"
+    ],
+    ans: 1,
+    explain: "Thiên Chúa tạo thành con người giống hình ảnh Thiên Chúa. Ngài tạo thành họ có nam có nữ (St 1,27)."
+  },
+  {
+    level: "easy",
+    q: "\"Con cái là ân huệ cao quý nhất của hôn nhân\" — câu này thuộc mục đích nào của hôn nhân?",
+    opts: [
+      "Yêu thương và bổ túc cho nhau",
+      "Sinh sản và giáo dục con cái",
+      "Lợi ích kinh tế gia đình",
+      "Hợp pháp hoá quan hệ tình cảm"
+    ],
+    ans: 1,
+    explain: "Con cái là ân huệ cao quý nhất của hôn nhân thuộc mục đích thứ hai: sinh sản và giáo dục con cái."
+  },
+  {
+    level: "easy",
+    q: "Sách nào trong Kinh Thánh kể lại câu chuyện Thiên Chúa tạo dựng người nam và người nữ?",
+    opts: ["Sách Xuất Hành", "Sách Sáng Thế", "Sách Đệ Nhị Luật", "Sách Gióp"],
+    ans: 1,
+    explain: "Sách Sáng Thế (St) kể lại việc Thiên Chúa tạo dựng con người có nam có nữ và dẫn đến kết hiệp hôn nhân."
+  },
+  {
+    level: "easy",
+    q: "Thiên Chúa phán gì sau khi tạo dựng con người có nam có nữ?",
+    opts: [
+      "\"Hãy phục tùng Ta\"",
+      "\"Hãy sinh sôi nảy nở cho nhiều, đầy mặt đất, và thống trị nó\"",
+      "\"Hãy xây dựng đền thờ cho Ta\"",
+      "\"Hãy giữ mình trong sạch\""
+    ],
+    ans: 1,
+    explain: "Thiên Chúa chúc phúc cho họ và phán: \"Hãy sinh sôi nảy nở cho nhiều, đầy mặt đất, và thống trị nó\" (St 1,28)."
+  },
+  {
+    level: "easy",
+    q: "Ơn gọi hôn nhân được khắc ghi ở đâu?",
+    opts: [
+      "Trong luật pháp của các quốc gia",
+      "Trong bản tính của người nam và người nữ do Đấng Tạo Hoá",
+      "Trong truyền thống văn hoá dân gian",
+      "Trong sách luật của Giáo Hội"
+    ],
+    ans: 1,
+    explain: "GLHTCG 1603: \"Ơn gọi hôn nhân được chính Đấng Tạo Hóa ghi khắc vào bản tính của người nam và người nữ.\""
+  },
+
+  // --- TRUNG BÌNH (11–20) ---
+  {
+    level: "medium",
+    q: "Theo sách Sáng Thế (St 2), Thiên Chúa đã làm gì để tạo nên người phụ nữ?",
+    opts: [
+      "Dựng nên bà từ bùn đất như người nam",
+      "Lấy một xương sườn của Ađam và đắp thịt lại thành người đàn bà",
+      "Truyền hơi thở vào một cơ thể đất sét",
+      "Tạo nên bà từ ánh sáng mặt trời"
+    ],
+    ans: 1,
+    explain: "Thiên Chúa khiến Ađam ngủ say, lấy một xương sườn của ông, đắp thịt lại và làm cho thành người đàn bà, rồi dẫn đến Ađam (St 2,21-22)."
+  },
+  {
+    level: "medium",
+    q: "Ađam đã nói gì khi nhìn thấy người đàn bà lần đầu tiên?",
+    opts: [
+      "\"Người này là tạo vật của Thiên Chúa\"",
+      "\"Phen này xương bởi xương tôi và thịt bởi thịt tôi\"",
+      "\"Người này sẽ là người bạn đời của tôi\"",
+      "\"Người này là ân huệ của Đấng Tạo Hóa\""
+    ],
+    ans: 1,
+    explain: "Ađam liền nói: \"Phen này xương bởi xương tôi và thịt bởi thịt tôi. Người này sẽ được gọi là người nữ, vì bởi người nam mà ra\" (St 2,23)."
+  },
+  {
+    level: "medium",
+    q: "Mầu nhiệm hiệp thông nào trong Thiên Chúa là mẫu gương cho tình yêu hôn nhân?",
+    opts: [
+      "Mầu nhiệm Nhập Thể của Ngôi Hai",
+      "Mầu nhiệm Ba Ngôi: Cha, Con và Thánh Thần",
+      "Mầu nhiệm Phục Sinh của Đức Kitô",
+      "Mầu nhiệm Hiện Xuống của Chúa Thánh Thần"
+    ],
+    ans: 1,
+    explain: "Thiên Chúa là Tình Yêu, sống mầu nhiệm hiệp thông giữa Ba Ngôi Vị: Cha, Con và Thánh Thần. Vì yêu mà dựng nên con người, Ngài mời gọi họ sống yêu thương và hiệp thông theo gương đó."
+  },
+  {
+    level: "medium",
+    q: "Sứ mạng chính yếu của đời sống gia đình là gì?",
+    opts: [
+      "Xây dựng kinh tế và nâng cao đời sống",
+      "Bảo toàn nòi giống, biểu lộ và truyền đạt tình yêu",
+      "Duy trì văn hoá dân tộc",
+      "Phục vụ cộng đồng và xã hội"
+    ],
+    ans: 1,
+    explain: "Sứ mạng của đời sống gia đình x. Familiaris Consortio."
+  },
+  {
+    level: "medium",
+    q: "Theo GLHTCG, hôn nhân hướng đến hai mục đích. Mục đích thứ nhất là gì?",
+    opts: [
+      "Lưu truyền nòi giống",
+      "Lợi ích của đôi vợ chồng (yêu thương và bổ túc cho nhau)",
+      "Giáo dục con cái trong đức tin",
+      "Phục vụ cộng đồng Giáo Hội"
+    ],
+    ans: 1,
+    explain: "Mục đích thứ nhất là lợi ích của đôi vợ chồng: trọn đời yêu thương và bổ túc cho nhau (x. GLHT 1601; GL 1055 §1)."
+  },
+  {
+    level: "medium",
+    q: "Tại sao trao tặng thân xác giữa vợ chồng chỉ có ý nghĩa khi có tình yêu?",
+    opts: [
+      "Vì đó là điều luật pháp yêu cầu",
+      "Vì sự trao tặng thân xác chỉ có ý nghĩa khi thể hiện sự tự hiến chính mình vì tình yêu",
+      "Vì cơ thể con người là vật thiêng liêng",
+      "Vì xã hội không chấp nhận điều khác"
+    ],
+    ans: 1,
+    explain: "Sự trao tặng thân xác giữa hai vợ chồng chỉ có ý nghĩa khi thể hiện sự tự hiến chính mình vì tình yêu."
+  },
+  {
+    level: "medium",
+    q: "Đối với người Công giáo, hạnh phúc thật trong hôn nhân là gì?",
+    opts: [
+      "Có đầy đủ vật chất và tiện nghi",
+      "Được sống trong tình thân mật với Thiên Chúa Tạo Hoá",
+      "Sinh được nhiều con cái khoẻ mạnh",
+      "Được cộng đồng tôn trọng và ngưỡng mộ"
+    ],
+    ans: 1,
+    explain: "Đối với người Công giáo, hạnh phúc thật là được sống trong tình thân mật với Thiên Chúa Tạo Hoá là Cha yêu thương chúng ta."
+  },
+  {
+    level: "medium",
+    q: "Tại sao Giáo Hội không chấp nhận hôn nhân đồng giới?",
+    opts: [
+      "Vì đó là phong tục mới du nhập từ nước ngoài",
+      "Vì trái tự nhiên và không đạt được mục đích hôn nhân",
+      "Vì luật dân sự không cho phép",
+      "Vì trái với truyền thống văn hoá phương Đông"
+    ],
+    ans: 1,
+    explain: "Giáo Hội không chấp nhận hôn nhân đồng giới vì trái tự nhiên và cũng không đạt được mục đích hôn nhân (x. Gaudium et Spes, số 50)."
+  },
+  {
+    level: "medium",
+    q: "Giáo dục con cái là quyền và trách nhiệm chính của ai?",
+    opts: [
+      "Nhà trường và xã hội",
+      "Nhà nước và chính phủ",
+      "Cha mẹ — đây không chỉ là quyền mà còn là trách nhiệm, nghĩa vụ cao cả và thiêng liêng",
+      "Giáo Hội và các linh mục"
+    ],
+    ans: 2,
+    explain: "Giáo dục con cái không chỉ là QUYỀN mà còn là TRÁCH NHIỆM, NGHĨA VỤ cao cả và thiêng liêng của Bố Mẹ và gần như không ai có thể thay thế được."
+  },
+  {
+    level: "medium",
+    q: "Câu \"Thiên Chúa là Tình Yêu\" được trích từ sách nào?",
+    opts: ["Mt 19,4-5", "St 1,27", "1 Ga 4,8", "Tv 127,3"],
+    ans: 2,
+    explain: "\"Thiên Chúa là Tình Yêu\" (1 Ga 4,8) — Thư thứ nhất của Thánh Gioan, chương 4, câu 8."
+  },
+
+  // --- KHÓ (21–30) ---
+  {
+    level: "hard",
+    q: "Theo văn kiện Gaudium et Spes số 50, hôn nhân và tình yêu phu thê đạt đến sự viên mãn khi nào?",
+    opts: [
+      "Khi đôi vợ chồng sống đủ 50 năm hôn nhân",
+      "Khi đôi vợ chồng hoàn toàn hoà hợp tâm lý",
+      "Trong việc sinh sản và giáo dục con cái",
+      "Khi cả hai vợ chồng đều được rước lễ mỗi ngày"
+    ],
+    ans: 2,
+    explain: "Theo Gaudium et Spes số 50, hôn nhân và tình yêu phu thê được định hướng đến việc sinh sản và giáo dục con cái — chính trong đó thể chế và tình yêu ấy đạt đến sự viên mãn của mình."
+  },
+  {
+    level: "hard",
+    q: "Tài liệu dẫn chiếu văn kiện nào của Đức Giáo Hoàng Gioan Phaolô II liên quan đến gia đình?",
+    opts: [
+      "Humanae Vitae",
+      "Familiaris Consortio",
+      "Amoris Laetitia",
+      "Laudato Si"
+    ],
+    ans: 1,
+    explain: "Bài giảng PPTX nhắc đến văn kiện \"Familiaris Consortio\" của Đức Giáo Hoàng Gioan Phaolô II về gia đình."
+  },
+  {
+    level: "hard",
+    q: "GLHTCG số nào định nghĩa hôn nhân là giao ước ký kết giữa người nam và người nữ?",
+    opts: ["GLHTCG 1600", "GLHTCG 1601", "GLHTCG 1603", "GLHTCG 1652"],
+    ans: 1,
+    explain: "GLHTCG 1601 định nghĩa hôn nhân và liệt kê hai mục đích: lợi ích của đôi vợ chồng và sinh sản, giáo dục con cái (x. GLHT 1601; GL 1055 §1)."
+  },
+  {
+    level: "hard",
+    q: "Khi tạo dựng, Thiên Chúa phán: \"Chúng ta hãy dựng nên con người theo hình ảnh giống như Ta, để chúng làm chủ...\" — câu này trích từ đâu?",
+    opts: ["St 1,26-28", "St 2,7-24", "Mt 19,4-5", "Tv 127,3"],
+    ans: 0,
+    explain: "Câu này trích từ Sáng Thế 1,26-28, đây là câu chuyện thứ nhất về việc tạo dựng con người có nam có nữ."
+  },
+  {
+    level: "hard",
+    q: "Theo tài liệu, điều gì khiến tình yêu vợ chồng thêm phong phú?",
+    opts: [
+      "Cuộc sống vật chất đầy đủ",
+      "Sự thành công trong sự nghiệp",
+      "Những hoa quả của đời sống luân lý, tinh thần và siêu nhiên được truyền lại cho con cái qua việc giáo dục",
+      "Việc tham gia nhiều hoạt động xã hội"
+    ],
+    ans: 2,
+    explain: "Tình yêu vợ chồng còn phong phú nhờ những hoa quả của đời sống luân lý, tinh thần và siêu nhiên được cha mẹ truyền lại cho con cái qua việc giáo dục."
+  },
+  {
+    level: "hard",
+    q: "Theo tài liệu, sự hiệp thông vợ chồng có nguồn gốc từ đâu?",
+    opts: [
+      "Từ hợp đồng hôn nhân do nhà nước ký kết",
+      "Từ sự thu hút tự nhiên về giới tính và sự bổ túc lẫn nhau giữa nam và nữ, được nuôi dưỡng nhờ những nỗ lực chia sẻ trọn bản thân",
+      "Từ lời cầu nguyện và nghi lễ tôn giáo",
+      "Từ áp lực xã hội và gia đình"
+    ],
+    ans: 1,
+    explain: "Sự hiệp thông vợ chồng ăn rễ sâu từ sự thu hút tự nhiên về giới tính và sự bổ túc lẫn nhau giữa nam và nữ, được nuôi dưỡng nhờ những nỗ lực chia sẻ trọn bản thân trong suốt cuộc đời."
+  },
+  {
+    level: "hard",
+    q: "GLHTCG số 1604 nói về điều gì?",
+    opts: [
+      "Bí tích Hôn Phối",
+      "Tình yêu là ơn gọi nền tảng và bẩm sinh của con người",
+      "Các điều kiện để hôn nhân hợp lệ",
+      "Quyền và nghĩa vụ của vợ chồng"
+    ],
+    ans: 1,
+    explain: "Tài liệu dẫn GLHTCG 1604 để khẳng định: \"Tình yêu là ơn gọi nền tảng và bẩm sinh của con người.\""
+  },
+  {
+    level: "hard",
+    q: "Hình ảnh hôn nhân xuất hiện ở đâu trong Kinh Thánh?",
+    opts: [
+      "Chỉ ở phần Cựu Ước",
+      "Chỉ ở phần Tân Ước",
+      "Từ những trang đầu (sách Sáng Thế) đến những trang cuối (sách Khải Huyền)",
+      "Chỉ trong các thư của Thánh Phaolô"
+    ],
+    ans: 2,
+    explain: "Hôn nhân được Kinh Thánh đề cập ngay từ những trang đầu (St 1,27-28; 2,18-25) và rồi hình ảnh hôn nhân lại được nhắc đến nơi những trang cuối (Kh 21,2.9.17)."
+  },
+  {
+    level: "hard",
+    q: "Khi hôn nhân được thực hiện theo ý định của Thiên Chúa, điều đó có ý nghĩa gì đối với người Công giáo?",
+    opts: [
+      "Hôn nhân trở thành nghĩa vụ tôn giáo bắt buộc",
+      "Hôn nhân chính là một con đường dẫn đến Thiên Chúa và đến hạnh phúc",
+      "Hôn nhân được miễn trừ mọi thử thách khó khăn",
+      "Hôn nhân đảm bảo ơn cứu độ cho cả gia đình"
+    ],
+    ans: 1,
+    explain: "Đối với người Công giáo, khi đôi bạn thực hiện hôn nhân và gia đình theo ý định của Thiên Chúa, thì hôn nhân chính là một con đường dẫn đến Thiên Chúa, cũng như dẫn đến hạnh phúc."
+  },
+  {
+    level: "hard",
+    q: "Thánh Vịnh 127,3 nói gì về con cái?",
+    opts: [
+      "\"Hãy dạy dỗ con cái trong đường lối Chúa\"",
+      "\"Con cái là hồng ân Chúa ban\"",
+      "\"Con cái là kế nghiệp của cha mẹ\"",
+      "\"Con cái phải vâng phục cha mẹ\""
+    ],
+    ans: 1,
+    explain: "Tv 127,3: \"Con cái là hồng ân Chúa ban\" — con cái không phải là quyền sở hữu mà là quà tặng Thiên Chúa ban."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = new Array(questions.length).fill(false);
+let correct = new Array(questions.length).fill(false);
+
+function levelLabel(l) {
+  if (l === "easy") return '<span class="q-level level-easy">Dễ</span>';
+  if (l === "medium") return '<span class="q-level level-medium">Trung bình</span>';
+  return '<span class="q-level level-hard">Khó</span>';
+}
+
+function buildCards() {
+  const container = document.getElementById('quiz-container');
+  questions.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'card' + (i === 0 ? ' active' : '');
+    card.id = 'card-' + i;
+    const letters = ['A', 'B', 'C', 'D'];
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${i + 1}</div>
+        <div>
+          ${levelLabel(q.level)}
+          <div class="q-text">${q.q}</div>
+        </div>
+      </div>
+      <div class="options" id="opts-${i}">
+        ${q.opts.map((o, j) => `
+          <div class="option" id="opt-${i}-${j}" onclick="selectOption(${i},${j})">
+            <span class="opt-letter">${letters[j]}</span>
+            <span>${o}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="feedback" id="fb-${i}"></div>
+      <div class="card-footer">
+        <button class="btn-check" id="check-${i}" onclick="checkAnswer(${i})" disabled>Kiểm tra</button>
+        <button class="btn-next" id="next-${i}" onclick="nextCard(${i})">${i < questions.length - 1 ? 'Câu tiếp →' : 'Xem kết quả'}</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+let selected = new Array(questions.length).fill(null);
+
+function selectOption(qi, oi) {
+  if (answered[qi]) return;
+  selected[qi] = oi;
+  document.querySelectorAll(`#opts-${qi} .option`).forEach((el, j) => {
+    el.classList.toggle('selected', j === oi);
+  });
+  document.getElementById('check-' + qi).disabled = false;
+}
+
+function checkAnswer(qi) {
+  if (answered[qi] || selected[qi] === null) return;
+  answered[qi] = true;
+  const q = questions[qi];
+  const isCorrect = selected[qi] === q.ans;
+  correct[qi] = isCorrect;
+  if (isCorrect) score++;
+
+  document.querySelectorAll(`#opts-${qi} .option`).forEach((el, j) => {
+    el.classList.add('disabled');
+    if (j === q.ans) el.classList.add('correct');
+    else if (j === selected[qi]) el.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('fb-' + qi);
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = (isCorrect ? '✅ ' : '❌ ') + q.explain;
+
+  document.getElementById('check-' + qi).style.display = 'none';
+  document.getElementById('next-' + qi).style.display = 'inline-block';
+  updateProgress(qi);
+}
+
+function nextCard(qi) {
+  document.getElementById('card-' + qi).classList.remove('active');
+  const next = qi + 1;
+  if (next < questions.length) {
+    document.getElementById('card-' + next).classList.add('active');
+    current = next;
+    updateProgress(next - 1);
+  } else {
+    showResult();
+  }
+}
+
+function updateProgress(qi) {
+  const done = answered.filter(Boolean).length;
+  const pct = Math.round((done / questions.length) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `Câu ${Math.min(qi + 2, questions.length)} / ${questions.length}`;
+  document.getElementById('prog-score').textContent = `Điểm: ${score}`;
+}
+
+function showResult() {
+  document.getElementById('quiz-container').style.display = 'none';
+  document.querySelector('.progress-bar-wrap').style.display = 'none';
+  const screen = document.getElementById('result-screen');
+  screen.style.display = 'block';
+
+  const pct = Math.round((score / questions.length) * 100);
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-ring').style.setProperty('--pct', pct + '%');
+  document.getElementById('res-correct').textContent = score;
+  document.getElementById('res-wrong').textContent = questions.length - score;
+
+  let msg = '';
+  if (pct === 100) msg = '🏆 Xuất sắc! Bạn nắm vững toàn bộ kiến thức về Ơn Gọi Hôn Nhân!';
+  else if (pct >= 80) msg = '🎉 Rất tốt! Bạn hiểu rõ về hôn nhân theo đức tin Công giáo.';
+  else if (pct >= 60) msg = '👍 Khá tốt! Hãy ôn lại một số phần để củng cố thêm kiến thức.';
+  else if (pct >= 40) msg = '📖 Bạn cần ôn tập thêm. Hãy đọc lại tài liệu và thử lại!';
+  else msg = '🙏 Đừng nản lòng! Hãy đọc kỹ tài liệu và làm lại bài quiz này.';
+  document.getElementById('res-msg').textContent = msg;
+}
+
+function restartQuiz() {
+  selected = new Array(questions.length).fill(null);
+  answered = new Array(questions.length).fill(false);
+  correct = new Array(questions.length).fill(false);
+  score = 0;
+  current = 0;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-container').style.display = 'block';
+  document.querySelector('.progress-bar-wrap').style.display = 'block';
+  document.querySelectorAll('.card').forEach((c, i) => {
+    c.classList.toggle('active', i === 0);
+  });
+  document.getElementById('prog-fill').style.width = '0%';
+  document.getElementById('prog-label').textContent = 'Câu 1 / 30';
+  document.getElementById('prog-score').textContent = 'Điểm: 0';
+  // rebuild to reset state
+  document.getElementById('quiz-container').innerHTML = '';
+  buildCards();
+}
+
+buildCards();
+</script>
+</body>
+</html>
