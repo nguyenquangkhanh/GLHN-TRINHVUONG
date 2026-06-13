@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLCB Bài 1 – Tin Chúa Là Cha, Đấng Sáng Tạo</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg,#fdf6ec 0%,#f0e0c0 100%);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 32px 16px 48px;
+    font-family: 'Segoe UI','Helvetica Neue',Arial,sans-serif;
+    font-size: 20pt;
+  }
+  #app { width: 100%; max-width: 760px; }
+  .header { text-align: center; margin-bottom: 0.8em; }
+  .header-eyebrow { font-size: 0.45em; letter-spacing: 3px; color: #b5855a; font-weight: 700; text-transform: uppercase; margin-bottom: 6px; }
+  .header h1 { font-size: 1.05em; font-weight: 800; color: #3a2a14; line-height: 1.3; }
+  .header p { font-size: 0.45em; color: #9a7a50; margin-top: 6px; }
+  .card { background: #fff; border-radius: 18px; padding: 1em 1.1em; box-shadow: 0 8px 40px rgba(140,90,30,0.10), 0 2px 8px rgba(140,90,30,0.06); }
+
+  .progress-meta { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.45em; color: #7a6a55; }
+  .progress-track { height: 7px; background: #e8dece; border-radius: 4px; overflow: hidden; margin-bottom: 0.7em; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg,#b5855a,#d4a76a); border-radius: 4px; transition: width 0.4s ease; }
+
+  .question-box { background: linear-gradient(135deg,#fdf6ec 0%,#f9eedc 100%); border: 1.5px solid #e2c99a; border-radius: 14px; padding: 0.7em 0.9em; margin-bottom: 0.7em; box-shadow: 0 2px 12px rgba(160,110,50,0.08); }
+  .question-eyebrow { font-size: 0.4em; letter-spacing: 2px; color: #b5855a; font-weight: 700; text-transform: uppercase; margin-bottom: 0.3em; }
+  .question-text { line-height: 1.5; color: #3a2a14; font-weight: 700; }
+
+  .options { display: flex; flex-direction: column; gap: 0.4em; }
+  .opt-btn { display: flex; align-items: flex-start; gap: 0.5em; padding: 0.5em 0.7em; background: #fff; border: 1.5px solid #ddd; border-radius: 10px; cursor: pointer; color: #2a2014; font-family: inherit; font-size: 0.7em; line-height: 1.4; text-align: left; transition: all 0.18s ease; width: 100%; }
+  .opt-btn:hover:not(:disabled) { background: #fdf0dc; }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: #eaf7ec; border: 2px solid #4caf7d; color: #1a6b3a; }
+  .opt-btn.wrong   { background: #fdecea; border: 2px solid #e06060; color: #8b1c1c; }
+  .opt-btn.selected-pending { background: #fef3e2; border: 2px solid #d4a76a; color: #7a4a10; }
+  .opt-label { min-width: 1.4em; height: 1.4em; border-radius: 50%; background: #f0e8d8; color: #9a7a50; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9em; flex-shrink: 0; margin-top: 0.1em; transition: all 0.18s; }
+  .opt-btn.correct   .opt-label { background: #4caf7d; color: #fff; }
+  .opt-btn.wrong     .opt-label { background: #e06060; color: #fff; }
+  .opt-btn.selected-pending .opt-label { background: #d4a76a; color: #fff; }
+  .opt-icon { margin-left: auto; font-size: 1.2em; flex-shrink: 0; }
+  .opt-text { flex: 1; }
+
+  .feedback { margin-top: 0.7em; text-align: right; animation: fadeIn 0.25s ease; }
+  .feedback-badge { display: inline-block; padding: 0.25em 0.6em; border-radius: 8px; font-size: 0.4em; font-weight: 700; margin-bottom: 0.5em; margin-right: 0.4em; }
+  .feedback-badge.ok  { background: #eaf7ec; color: #1a6b3a; }
+  .feedback-badge.err { background: #fdecea; color: #8b1c1c; }
+
+  .btn-primary { background: linear-gradient(135deg,#c8944a,#d4a76a); color: #fff; border: none; padding: 0.4em 1.1em; border-radius: 9px; cursor: pointer; font-family: inherit; font-size: 0.5em; font-weight: 700; box-shadow: 0 3px 12px rgba(180,120,50,0.22); transition: opacity 0.15s; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-outline { background: none; border: 1.5px solid #d4a76a; color: #b5855a; padding: 0.35em 0.9em; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.45em; font-weight: 600; margin-bottom: 0.6em; transition: background 0.15s; }
+  .btn-outline:hover { background: #fdf0dc; }
+  .btn-restart { background: linear-gradient(135deg,#c8944a,#d4a76a); color: #fff; border: none; padding: 0.5em 1.4em; border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 0.55em; font-weight: 700; box-shadow: 0 4px 16px rgba(180,120,50,0.25); }
+
+  .result { text-align: center; }
+  .result-medal { font-size: 2.2em; margin-bottom: 0.3em; }
+  .result h2 { font-size: 0.85em; color: #3a2a14; margin-bottom: 0.2em; }
+  .result-msg { font-size: 0.55em; font-weight: 700; margin-bottom: 0.7em; }
+  .result-score-box { background: linear-gradient(135deg,#fdf6ec,#f5e8cc); border: 1.5px solid #e2c99a; border-radius: 16px; padding: 1em 0.9em; margin-bottom: 0.8em; box-shadow: 0 2px 14px rgba(160,110,50,0.1); }
+  .result-number { font-size: 1.8em; font-weight: 800; color: #b5855a; }
+  .result-total { font-size: 0.8em; color: #9a7a50; }
+  .result-label { font-size: 0.5em; color: #7a6a55; margin-top: 0.2em; }
+  .result-bar-track { height: 10px; background: #e8dece; border-radius: 5px; margin-top: 0.6em; overflow: hidden; }
+  .result-bar-fill { height: 100%; background: linear-gradient(90deg,#b5855a,#d4a76a); border-radius: 5px; }
+
+  #wrong-list { text-align: left; margin-bottom: 0.7em; }
+  .wrong-item { background: #fdf4f4; border: 1.5px solid #f0c8c8; border-radius: 10px; padding: 0.6em 0.8em; margin-bottom: 0.5em; }
+  .wrong-item-num { font-size: 0.4em; color: #b5855a; font-weight: 700; margin-bottom: 0.2em; }
+  .wrong-item-q { font-size: 0.55em; color: #3a2a14; line-height: 1.5; margin-bottom: 0.4em; font-weight: 700; }
+  .wrong-item-yours { font-size: 0.5em; color: #c0392b; line-height: 1.4; margin-bottom: 0.2em; }
+  .wrong-item-ans   { font-size: 0.5em; color: #27ae60; line-height: 1.4; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { animation: fadeIn 0.35s ease; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="header-eyebrow">Bài trắc nghiệm giáo lý</div>
+    <h1>Tin Chúa Là Cha – Đấng Sáng Tạo</h1>
+    <p>25 câu hỏi</p>
+  </div>
+  <div class="card" id="main-card"></div>
+</div>
+
+<script>
+const LABELS = ["A","B","C","D"];
+
+const questions = [
+  {q:"Theo Sách Giáo lý Hội Thánh Công giáo, có thể nhận biết Thiên Chúa bằng cách nào?",opts:["Nhờ lý trí tự nhiên và nhờ Mặc khải siêu nhiên","Nhờ Kinh Thánh và nhờ các thiên thần","Nhờ khoa học và nhờ nghiên cứu","Nhờ trực giác và nhờ phép lạ"],ans:"A"},
+  {q:"Thánh Augustinô đã nói gì về khát vọng hạnh phúc của con người?",opts:["\"Hạnh phúc là sự hòa hợp tuyệt đối với thiên nhiên.\"","\"Chúa đã dựng nên chúng con cho Chúa, và tâm hồn chúng con không yên nghỉ cho đến khi được yên nghỉ trong Chúa.\"","\"Con người tự tạo ra hạnh phúc bằng lý trí của mình.\"","\"Khát vọng hạnh phúc chỉ là một ảo giác của tâm trí.\""],ans:"B"},
+  {q:"Hành động 'Mặc khải' của Thiên Chúa có nghĩa là gì?",opts:["Thiên Chúa trừng phạt con người bằng các thiên tai.","Thiên Chúa tạo ra vũ trụ từ hư vô.","Thiên Chúa chủ động bước tới, vén màn tỏ mình ra và cho biết kế hoạch yêu thương của Ngài.","Thiên Chúa giấu kín bản thân mình trong các đám mây."],ans:"C"},
+  {q:"Ai là 'Lời mặc khải trọn vẹn, cuối cùng và hoàn hảo nhất' của Thiên Chúa?",opts:["Thánh Phaolô","Tiên tri Môsê","Ông Ađam","Đức Giê-su Kitô"],ans:"D"},
+  {q:"Tác giả chính của Kinh Thánh là ai?",opts:["Thiên Chúa","Các Giám mục","Thánh Phêrô","Các tác giả người Do Thái"],ans:"A"},
+  {q:"Phần lớn Tân Ước được viết bằng ngôn ngữ nào?",opts:["Tiếng Do Thái","Tiếng A-ram","Tiếng Hy Lạp","Tiếng La-tinh"],ans:"C"},
+  {q:"Nội dung xuyên suốt của Kinh Thánh là gì?",opts:["Lịch sử của người Do Thái.","Kế hoạch cứu rỗi của Thiên Chúa dành cho nhân loại.","Những nguyên tắc sống của người Do Thái.","Tuyển tập các câu chuyện thần thoại Trung Đông."],ans:"B"},
+  {q:"Danh xưng 'Ta là Đấng Hiện Hữu' (YHWH) khẳng định đặc tính nào của Thiên Chúa?",opts:["Thiên Chúa tự mình hiện hữu, là cội nguồn vô thủy vô chung.","Thiên Chúa chỉ hiện diện trong thời Cựu Ước.","Thiên Chúa được tạo ra trước khi có vũ trụ.","Thiên Chúa hiện ra ở bụi gai bốc cháy."],ans:"A"},
+  {q:"Cuốn Kinh Thánh gồm?",opts:["Các Sách Cựu Ước, còn Tân Ước không nằm trong cuốn Kinh Thánh","Các Sách Cựu Ước, và một phần Tân Ước","Hai phần chính: Cựu Ước (46 cuốn) và Tân Ước (27 cuốn)","Hai phần chính: Cựu Ước (27 cuốn) và Tân Ước (46 cuốn)"],ans:"C"},
+  {q:"Theo mầu nhiệm Một Chúa Ba Ngôi, cụm từ 'Đồng bản thể' nghĩa là gì?",opts:["Ba Ngôi chia nhau bản thể Thiên Chúa mỗi Ngôi một phần ba.","Ba Ngôi Vị có cùng chung bản thể Thiên Chúa duy nhất.","Ba Ngôi có bản thể giống nhau nhưng là ba Chúa khác biệt.","Chỉ có Chúa Cha có bản thể, hai Ngôi kia lệ thuộc vào Chúa Cha."],ans:"B"},
+  {q:"Khái niệm 'Ngôi Vị' dùng để trả lời cho câu hỏi nào?",opts:["\"Đó là cái gì?\"","\"Đó là ai?\"","\"Khi nào điều đó xảy ra?\"","\"Làm thế nào điều đó tồn tại?\""],ans:"B"},
+  {q:"Sự khác biệt giữa Ba Ngôi Vị nằm ở đâu?",opts:["Quyền năng lớn nhỏ khác nhau.","Thời gian tồn tại của mỗi Ngôi Vị.","Nguồn gốc và mối tương quan nội tại giữa các Ngôi Vị.","Sứ vụ của từng Ngôi."],ans:"C"},
+  {q:"Chúa Cha đã làm gì cho con người?",opts:["Tạo dựng nên con người và ban hạnh phúc thật (sự sống đời đời).","Trực tiếp xuống thế chịu đóng đinh.","Chỉ tạo ra vũ trụ vô tri rồi để mặc nó tự vận hành.","Ngài từ chối tha thứ khi con người phạm tội."],ans:"A"},
+  {q:"Kinh Thánh nói đến những loài thụ tạo nào được Thiên Chúa tạo dựng giống hình ảnh Ngài?",opts:["Con người.","Con người và thiên thần.","Những loài có sinh khí.","Mọi loài vì Thiên Chúa tạo dựng mọi thứ đều tốt đẹp."],ans:"A"},
+  {q:"Trong con người, yếu tố nào đóng vai trò làm cho thân xác trở nên sống động?",opts:["Trái tim","Linh hồn","Dòng máu","Bản năng sinh tồn"],ans:"B"},
+  {q:"Sự công chính nguyên thủy trong Vườn Địa Đàng là tình trạng?",opts:["Sống hài hoà với Chúa và với thiên nhiên.","Sống hài hoà với Chúa, với bản thân và với động vật.","Sống hài hoà với Chúa, với chính mình, giữa nam nữ, với thiên nhiên.","Ông bà nguyên tổ sống ăn ngay ở lành."],ans:"C"},
+  {q:"Hành vi lạm dụng tự do, kiêu ngạo muốn tự định đoạt ranh giới thiện ác của Ađam và Evà được gọi là gì?",opts:["Tội lường gạt","Tội Tổ Tông","Tội do ma quỷ xúi dục","Tội nhẹ"],ans:"B"},
+  {q:"Đối với hậu duệ của Ađam, Tội Tổ Tông được hiểu theo nghĩa nào?",opts:["Là một hành vi trực tiếp ăn trái cấm do mỗi người chúng ta làm lúc còn nhỏ.","Là một tình trạng bị nhiễm, thiếu vắng sự thánh thiện nguyên thủy khi sinh ra.","Là án phạt tiền kiếp từ một kiếp sống khác.","Là một căn bệnh lây truyền qua đường máu."],ans:"B"},
+  {q:"Trong những hệ lụy do Tội Tổ Tông, 'Dục vọng' là gì?",opts:["Sự tăm tối hoàn toàn của lý trí không thể nhận biết chân lý.","Sự mất quân bình, ý chí yếu đuối dễ bị lôi kéo và hướng chiều về tội lỗi.","Cái chết thể lý của thân xác.","Sự rạn nứt trong tình yêu nam nữ."],ans:"B"},
+  {q:"Bí tích nào là phương thuốc tẩy sạch Tội Tổ Tông và ban lại đời sống ân sủng?",opts:["Bí tích Giải tội và Rửa tội","Bí tích Giải tội","Bí tích Rửa Tội","Bí tích Truyền Thánh Thể"],ans:"C"},
+  {q:"Lời hứa cứu độ đầu tiên của Thiên Chúa (Sáng Thế 3,15) sau khi nguyên tổ sa ngã được truyền thống gọi là gì?",opts:["Tiền Tin Mừng","Mười Điều Răn","Bài Giảng Trên Núi","Giao ước Cầu vồng"],ans:"A"},
+  {q:"Thánh Tôma Aquinô giải thích lý do vì sao Thiên Chúa lại cho phép sự dữ (Tội Tổ Tông) xảy ra?",opts:["Vì Thiên Chúa không đủ quyền năng kiểm soát ma quỷ.","Để trừng phạt con người cho thỏa cơn giận.","Để từ đó rút ra một điều thiện hảo lớn lao hơn: ơn Cứu chuộc của Chúa Giêsu.","Vì sự dữ là một phần tất yếu của quá trình tiến hóa."],ans:"C"},
+  {q:"Sau khi sa ngã, thái độ đầu tiên của Ađam và Evà đối với Thiên Chúa là gì?",opts:["Hối hận.","Sợ hãi và lẩn trốn Thiên Chúa.","Thách thức lại quyền năng của Chúa.","Không tỏ thái độ gì."],ans:"B"},
+  {q:"Sự khác biệt giới tính nam và nữ được hiểu thế nào theo kế hoạch tạo dựng?",opts:["Người nam cao trọng hơn người nữ vì được tạo ra trước.","Sự phân biệt giới tính là do tội lỗi của con người.","Người nữ được tạo ra để phục tùng người nam vô điều kiện.","Nam và nữ bình đẳng về phẩm giá, khác biệt để bổ túc cho nhau và cùng chia sẻ trách nhiệm."],ans:"D"},
+  {q:"Thiên Chúa có?",opts:["Một Bản thể + một Ngôi vị duy nhất","Ba Bản thể + Ba Ngôi vị","Một Bản thể + Ba Ngôi vị.","Ba Bản thể + Ba Ngôi vị"],ans:"C"},
+];
+
+let current=0, selected=null, revealed=false, answers=[], done=false, showWrong=false;
+const card = document.getElementById('main-card');
+
+function render(){ done ? renderResult() : renderQuiz(); }
+
+function renderQuiz(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  const optsHTML=q.opts.map((opt,i)=>{
+    const label=LABELS[i];
+    let cls='opt-btn', icon='';
+    if(revealed){
+      if(label===q.ans){cls+=' correct';icon='<span class="opt-icon">✓</span>';}
+      else if(label===selected){cls+=' wrong';icon='<span class="opt-icon">✗</span>';}
+    } else if(label===selected){ cls+=' selected-pending'; }
+    return `<button class="${cls}" ${revealed?'disabled':''} onclick="handleAnswer('${label}')">
+      <span class="opt-label">${label}</span><span class="opt-text">${esc(opt)}</span>${icon}
+    </button>`;
+  }).join('');
+
+  const feedHTML=revealed?`<div class="feedback">
+    <span class="feedback-badge ${selected===q.ans?'ok':'err'}">${selected===q.ans?'✓ Chính xác!':'✗ Đáp án đúng: '+q.ans}</span>
+    <button class="btn-primary" onclick="handleNext()">${current+1<questions.length?'Câu tiếp theo →':'Xem kết quả'}</button>
+  </div>`:'';
+
+  card.innerHTML=`<div class="fade-in">
+    <div class="progress-meta"><span>Câu ${current+1} / ${questions.length}</span><span>${pct}%</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="question-box">
+      <div class="question-eyebrow">Câu hỏi ${current+1}</div>
+      <p class="question-text">${esc(q.q)}</p>
+    </div>
+    <div class="options">${optsHTML}</div>
+    ${feedHTML}
+  </div>`;
+}
+
+function renderResult(){
+  const score=answers.filter(a=>a.selected===a.ans).length;
+  const pct=Math.round((score/questions.length)*100);
+  const wrong=answers.filter(a=>a.selected!==a.ans);
+  let medal='🥉',msg='Cần cố gắng thêm!',msgColor='#c0392b';
+  if(pct>=90){medal='🏆';msg='Xuất sắc!';msgColor='#c9860c';}
+  else if(pct>=70){medal='🥇';msg='Làm tốt lắm!';msgColor='#27ae60';}
+  else if(pct>=50){medal='🥈';msg='Khá tốt!';msgColor='#2980b9';}
+
+  const wBtn=wrong.length>0?`<button class="btn-outline" onclick="toggleWrong()">${showWrong?'Ẩn câu sai':'Xem '+wrong.length+' câu sai'}</button>`:'';
+  const wList=showWrong?`<div id="wrong-list">`+wrong.map(w=>{
+    const yi=LABELS.indexOf(w.selected),ai=LABELS.indexOf(w.ans);
+    return `<div class="wrong-item">
+      <div class="wrong-item-num">Câu ${w.idx}</div>
+      <p class="wrong-item-q">${esc(w.q)}</p>
+      <div class="wrong-item-yours">Bạn chọn (${w.selected}): ${esc(w.opts[yi])}</div>
+      <div class="wrong-item-ans">Đáp án (${w.ans}): ${esc(w.opts[ai])}</div>
+    </div>`;
+  }).join('')+`</div>`:'';
+
+  card.innerHTML=`<div class="result fade-in">
+    <div class="result-medal">${medal}</div>
+    <h2>Kết quả</h2>
+    <p class="result-msg" style="color:${msgColor}">${msg}</p>
+    <div class="result-score-box">
+      <div><span class="result-number">${score}</span><span class="result-total">/${questions.length}</span></div>
+      <div class="result-label">Trả lời đúng — ${pct}%</div>
+      <div class="result-bar-track"><div class="result-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${wBtn}${wList}
+    <button class="btn-restart" onclick="handleRestart()">Làm lại từ đầu</button>
+  </div>`;
+}
+
+function handleAnswer(label){ if(revealed)return; selected=label; revealed=true; render(); }
+function handleNext(){
+  const q=questions[current];
+  answers.push({idx:current+1,q:q.q,opts:q.opts,ans:q.ans,selected});
+  if(current+1>=questions.length){ done=true; }
+  else{ current++; selected=null; revealed=false; }
+  render();
+}
+function handleRestart(){ current=0;selected=null;revealed=false;answers=[];done=false;showWrong=false;render(); }
+function toggleWrong(){ showWrong=!showWrong; renderResult(); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+render();
+</script>
+</body>
+</html>
