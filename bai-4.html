@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài 4 – Tình Yêu & Tính Dục Trong Hôn Nhân</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-dark:  #6b0f1a;
+    --purple-mid:   #9b1b30;
+    --purple-light: #c0364f;
+    --purple-pale:  #f8e0e5;
+    --purple-mist:  #fdf0f3;
+    --gold:         #c9a227;
+    --gold-light:   #e8c94a;
+    --gold-pale:    #fdf8e7;
+    --cream:        #faf7f5;
+    --text-dark:    #2a0a10;
+    --text-mid:     #6b1525;
+    --text-soft:    #9a6070;
+    --green-ok:     #1a7a4a;
+    --green-bg:     #e8f7ee;
+    --green-border: #4caf7d;
+    --red-err:      #8b1c1c;
+    --red-bg:       #fdecea;
+    --red-border:   #e06060;
+  }
+
+  body {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #3a0009 0%, #6b0f1a 35%, #9b1b30 65%, #c0364f 100%);
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 36px 16px 56px;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  #app { width: 100%; max-width: 680px; }
+
+  /* Header */
+  .header { text-align: center; margin-bottom: 28px; }
+  .cross { font-size: 28px; margin-bottom: 8px; filter: drop-shadow(0 2px 8px rgba(201,162,39,0.5)); }
+  .header-eyebrow {
+    font-size: 11px; letter-spacing: 3.5px; color: var(--gold-light);
+    font-weight: 700; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 22px; font-weight: 800; color: #fff;
+    line-height: 1.35; text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .header p { font-size: 13px; color: rgba(255,255,255,0.65); margin-top: 7px; }
+
+  /* Card */
+  .card {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 28px 28px 26px;
+    box-shadow: 0 12px 48px rgba(80,5,15,0.30), 0 2px 10px rgba(80,5,15,0.15);
+    border: 1px solid rgba(201,162,39,0.2);
+  }
+
+  /* Progress */
+  .progress-meta { display: flex; justify-content: space-between; margin-bottom: 7px; font-size: 12.5px; color: var(--text-soft); font-weight: 600; }
+  .progress-track { height: 6px; background: var(--purple-pale); border-radius: 4px; overflow: hidden; margin-bottom: 22px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple-mid), var(--gold)); border-radius: 4px; transition: width 0.4s ease; }
+
+  /* Question */
+  .question-box {
+    background: linear-gradient(135deg, var(--purple-mist), #ede5f8);
+    border: 1.5px solid rgba(155,27,48,0.22);
+    border-left: 4px solid var(--gold);
+    border-radius: 14px; padding: 20px 22px; margin-bottom: 18px;
+    box-shadow: 0 2px 12px rgba(120,15,30,0.08);
+  }
+  .question-eyebrow {
+    font-size: 10.5px; letter-spacing: 2px; color: var(--purple-light);
+    font-weight: 700; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .question-text { font-size: 15.5px; line-height: 1.7; color: var(--text-dark); font-weight: 600; }
+
+  /* Options */
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .opt-btn {
+    display: flex; align-items: flex-start; gap: 13px;
+    padding: 13px 16px; background: #fff;
+    border: 1.5px solid #ddd4f0; border-radius: 11px;
+    cursor: pointer; color: var(--text-dark);
+    font-family: inherit; font-size: 14px; line-height: 1.55;
+    text-align: left; transition: all 0.18s ease; width: 100%;
+  }
+  .opt-btn:hover:not(:disabled) { background: var(--purple-mist); border-color: var(--purple-light); }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct { background: var(--green-bg); border: 2px solid var(--green-border); color: var(--green-ok); }
+  .opt-btn.wrong   { background: var(--red-bg);   border: 2px solid var(--red-border);   color: var(--red-err); }
+  .opt-btn.selected-pending { background: var(--gold-pale); border: 2px solid var(--gold); color: #5a3d00; }
+
+  .opt-label {
+    min-width: 28px; height: 28px; border-radius: 50%;
+    background: var(--purple-pale); color: var(--purple-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12.5px; flex-shrink: 0; margin-top: 1px;
+    transition: all 0.18s;
+  }
+  .opt-btn.correct         .opt-label { background: var(--green-border); color: #fff; }
+  .opt-btn.wrong           .opt-label { background: var(--red-border);   color: #fff; }
+  .opt-btn.selected-pending .opt-label { background: var(--gold);         color: #fff; }
+  .opt-icon { margin-left: auto; font-size: 18px; flex-shrink: 0; }
+  .opt-text { flex: 1; }
+
+  /* Feedback */
+  .feedback { margin-top: 18px; text-align: right; animation: fadeIn 0.25s ease; }
+  .feedback-badge { display: inline-block; padding: 7px 14px; border-radius: 8px; font-size: 13.5px; font-weight: 700; margin-bottom: 10px; margin-right: 8px; }
+  .feedback-badge.ok  { background: var(--green-bg);  color: var(--green-ok); }
+  .feedback-badge.err { background: var(--red-bg);    color: var(--red-err); }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--purple-mid), var(--purple-light));
+    color: #fff; border: none; padding: 11px 28px; border-radius: 10px;
+    cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+    box-shadow: 0 4px 14px rgba(92,49,153,0.35); transition: opacity 0.15s;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-outline {
+    background: none; border: 1.5px solid var(--purple-light); color: var(--purple-mid);
+    padding: 9px 20px; border-radius: 8px; cursor: pointer;
+    font-family: inherit; font-size: 14px; font-weight: 600;
+    margin-bottom: 14px; transition: background 0.15s;
+  }
+  .btn-outline:hover { background: var(--purple-pale); }
+  .btn-back {
+    background: none; border: none; color: var(--purple-light);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; padding: 0; margin-bottom: 18px; display: inline-flex; align-items: center; gap: 5px;
+  }
+  .btn-back:hover { color: var(--purple-mid); text-decoration: underline; }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--purple-mid), var(--purple-light));
+    color: #fff; border: none; padding: 12px 30px; border-radius: 10px;
+    cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+    box-shadow: 0 4px 16px rgba(92,49,153,0.3);
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, #a07a10, var(--gold));
+    color: #fff; border: none; padding: 12px 30px; border-radius: 10px;
+    cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 700;
+    box-shadow: 0 4px 16px rgba(160,120,10,0.3);
+  }
+
+  /* Result */
+  .result { text-align: center; }
+  .result-medal { font-size: 62px; margin-bottom: 10px; }
+  .result h2 { font-size: 26px; color: var(--text-dark); margin-bottom: 5px; }
+  .result-msg { font-size: 17px; font-weight: 700; margin-bottom: 22px; }
+  .result-score-box {
+    background: linear-gradient(135deg, var(--purple-mist), var(--gold-pale));
+    border: 1.5px solid rgba(201,162,39,0.4);
+    border-radius: 16px; padding: 26px 22px; margin-bottom: 22px;
+    box-shadow: 0 2px 14px rgba(92,49,153,0.1);
+  }
+  .result-number { font-size: 52px; font-weight: 800; color: var(--purple-mid); }
+  .result-total  { font-size: 22px; color: var(--text-soft); }
+  .result-label  { font-size: 14px; color: var(--text-soft); margin-top: 5px; }
+  .result-bar-track { height: 10px; background: var(--purple-pale); border-radius: 5px; margin-top: 16px; overflow: hidden; }
+  .result-bar-fill  { height: 100%; background: linear-gradient(90deg, var(--purple-mid), var(--gold)); border-radius: 5px; }
+  .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  /* Wrong list */
+  #wrong-list { text-align: left; margin-bottom: 18px; }
+  .wrong-item { background: var(--red-bg); border: 1.5px solid #f0c8c8; border-radius: 11px; padding: 14px 16px; margin-bottom: 10px; }
+  .wrong-item-num { font-size: 11px; color: var(--purple-mid); font-weight: 700; margin-bottom: 4px; }
+  .wrong-item-q   { font-size: 13.5px; color: var(--text-dark); line-height: 1.55; margin-bottom: 7px; font-weight: 600; }
+  .wrong-item-yours { font-size: 13px; color: #c0392b; line-height: 1.45; margin-bottom: 3px; }
+  .wrong-item-ans   { font-size: 13px; color: var(--green-ok); line-height: 1.45; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid var(--purple-pale); margin: 20px 0; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  .fade-in { animation: fadeIn 0.35s ease; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="cross">✝</div>
+    <div class="header-eyebrow">Giáo Lý Hôn Nhân Công Giáo</div>
+    <h1>Bài 4: Tình Yêu & Tính Dục<br>Trong Hôn Nhân</h1>
+    <p>24 câu hỏi</p>
+  </div>
+  <div class="card" id="main-card"></div>
+</div>
+
+<script>
+const LABELS = ["A","B","C","D"];
+
+const questions = [
+  {q:"Tính dục khác với giới tính ở điểm nào?",opts:["Giới tính là khuynh hướng sử dụng bản năng để yêu thương, còn tính dục chỉ là đặc điểm sinh lý phân biệt nam và nữ về mặt thể xác","Giới tính và tính dục thực chất là một, chỉ là hai cách gọi khác nhau của cùng một thực tại nơi con người","Tính dục là sử dụng giới tính để gặp gỡ, yêu thương; còn giới tính chỉ là đặc điểm phân biệt người nam với người nữ","Tính dục bao gồm toàn bộ ý nghĩa của giới tính, trong khi giới tính chỉ là một phần nhỏ của tính dục"],ans:"C"},
+  {q:"Điều gì phân biệt tính dục với tình dục theo bài học?",opts:["Tính dục bao hàm quan hệ bạn bè, người yêu, vợ chồng; còn tình dục nói riêng đến quan hệ vợ chồng","Tình dục là khái niệm rộng hơn, bao hàm toàn bộ các quan hệ nam nữ kể cả bạn bè và người yêu, trong khi tính dục chỉ giới hạn trong quan hệ vợ chồng chính thức","Tính dục và tình dục hoàn toàn đồng nghĩa, cả hai đều chỉ quan hệ vợ chồng trong hôn nhân hợp pháp","Tình dục chỉ mang ý nghĩa sinh lý thuần túy, còn tính dục mang đầy đủ ý nghĩa tâm linh và nhân linh sâu xa hơn"],ans:"A"},
+  {q:"Theo bài học, khi nào tính dục mới có giá trị nhân linh đích thực?",opts:["Khi được thực hiện phù hợp với quy định của pháp luật nhà nước và được xã hội thừa nhận","Khi mang lại hạnh phúc và niềm vui thỏa mãn cho cả hai bên trong mối quan hệ","Khi được thực hiện với sự đồng thuận tự do, không bị cưỡng ép hay áp lực từ bên ngoài","Khi là thành phần không thể thiếu của tình yêu và vợ chồng đã cam kết hiến thân trọn vẹn cho nhau suốt đời"],ans:"D"},
+  {q:"Tính dục phục vụ cho tình yêu trong đời sống vợ chồng thế nào?",opts:["Chỉ là phương tiện để duy trì sự gắn kết và ổn định của hôn nhân trước những thách thức cuộc sống","Là ngôn ngữ của tình yêu, giúp vợ chồng thông đạt với nhau sâu xa nhất, luôn mở ngỏ cho sự sống và diễn tả sự phong phú của Thiên Chúa","Trách nhiệm thiêng liêng mà vợ chồng phải thực hiện để cộng tác với Thiên Chúa trong việc truyền sinh và giáo dục con cái","Nhu cầu sinh lý tự nhiên cần được đáp ứng để duy trì sức khỏe thể lý và tâm lý của đôi vợ chồng"],ans:"B"},
+  {q:"Ngoài niềm hoan lạc, các hành vi tính dục còn giúp tình yêu vợ chồng đạt điều gì?",opts:["Giúp vợ chồng hiểu tâm lý của nhau và sống ổn định trong gia đình","Giúp hai người ngày càng hiểu biết nhau sâu sắc hơn về tính cách và lối sống","Giúp gia đình trở nên phồn thịnh và có điều kiện giáo dục con cái tốt hơn","Mở ngỏ cho sự sống và diễn tả sự phong phú của Thiên Chúa, góp phần xây dựng nền văn minh tình yêu"],ans:"D"},
+  {q:"Khi hành vi tính dục trong hôn nhân mà thiếu ý nghĩa bổ túc và trao hiến cho nhau, sẽ có nguy cơ gì?",opts:["Hôn nhân sẽ mất đi nền tảng thiêng liêng và dần trở nên trống rỗng về mặt tâm linh","Vợ chồng sẽ ngày càng xa cách nhau về tình cảm và mất đi sự gắn kết trong gia đình","Con người bị sử dụng như đồ vật, hạ thấp nhân phẩm, phát sinh nền văn minh hưởng thụ","Xã hội sẽ đối mặt với cuộc khủng hoảng đạo đức sâu sắc khi gia đình không còn là nền tảng vững chắc"],ans:"C"},
+  {q:"Nguyên tắc luân lý thứ nhất trong bài học khẳng định điều gì?",opts:["Hành vi tính dục chỉ được thực hiện nhằm mục đích sinh sản, mọi sự hưởng thụ khác đều là sai trái theo luân lý","Trong hôn nhân, các hành vi kết hợp thân mật và thanh khiết của vợ chồng đều cao quý và chính đáng","Vợ chồng phải kiểm soát nghiêm ngặt đời sống tính dục vì đây là lĩnh vực dễ dẫn đến tội lỗi và sa ngã nhất","Niềm hoan lạc trong đời sống vợ chồng chỉ được chấp nhận khi đôi bạn đang trong giai đoạn có thể sinh sản con cái"],ans:"B"},
+  {q:"Nguyên tắc luân lý thứ hai trong bài về thân xác hàm ý gì?",opts:["Luân lý Công giáo tôn trọng thân xác nhưng không quá đề cao hành vi giới tính vì thân xác không phải là tất cả con người","Thân xác là phần thấp kém của con người, cần được khuất phục hoàn toàn trước linh hồn để đạt đến sự thánh thiện","Hành vi giới tính trong hôn nhân tuy được chấp nhận nhưng không được khuyến khích vì dễ dẫn đến sự lệ thuộc vào xác thịt","Giá trị thân xác chỉ được Giáo hội thừa nhận khi thân xác phục vụ cho mục đích tâm linh và việc sinh sản theo đúng kế hoạch của Thiên Chúa"],ans:"A"},
+  {q:"Nguyên tắc luân lý thứ ba trong bài là gì?",opts:["Tôn trọng thân xác trong toàn thể con người","Mọi hành vi tính dục đều cao quý và chính đáng","Đời sống hôn nhân Công giáo phải là đời sống trong sạch và tiết độ","Hành vi tính dục cần nhắm mục đích rõ ràng là truyền sinh, cộng tác vào công trình tạo dựng của Thiên Chúa"],ans:"C"},
+  {q:"Tại sao thủ dâm là hành động sai trái theo bài học?",opts:["Vì đây là hành vi gây hại cho sức khỏe thể lý và để lại những hệ lụy tâm lý lâu dài cho người thực hiện","Vì sử dụng khả năng tình dục ngoài quan hệ vợ chồng bình thường, sai mục đích của tính dục là hiến thân và truyền sinh","Vì đây là hành vi chỉ phục vụ cho cá nhân mà không đóng góp gì cho gia đình và xã hội","Vì hành vi này thể hiện sự thiếu trưởng thành trong nhân cách và sự kém phát triển trong các mối tương quan liên vị"],ans:"B"},
+  {q:"Luân lý tính dục trong đời sống Hôn nhân là gì?",opts:["Những lời dạy dỗ và giáo huấn của Giáo Hội, giúp cho đôi vợ chồng sống sao cho xứng với ơn gọi của họ trong giao ước hôn nhân","Tính cách hợp pháp do chính Thiên Chúa thiết lập cho đời sống vợ chồng","Những điều răn và giới luật, giúp cho đôi vợ chồng sống sao cho đúng với giáo huấn của Giáo Hội","Cả A, B và C"],ans:"B"},
+  {q:"Theo bài học, \"nền văn minh tình yêu\" được xây dựng như thế nào?",opts:["Thông qua các chính sách xã hội hỗ trợ gia đình, giảm tỉ lệ ly hôn và tăng cường giáo dục về hôn nhân cho thế hệ trẻ","Khi các đôi vợ chồng sống hạnh phúc, nuôi dạy con cái tốt và trở thành tấm gương cho cộng đồng xung quanh","Khi xã hội đề cao giá trị gia đình, bảo vệ hôn nhân truyền thống và chống lại xu hướng suy đồi đạo đức hiện đại","Khi vợ chồng thành một xương một thịt và sự trao hiến diễn tả sự bổ sung lẫn nhau, làm cả hai được phong phú và tăng trưởng"],ans:"D"},
+  {q:"Sự kiện nào xác nhận giá trị của thân xác trong đức tin Công giáo?",opts:["Giáo huấn nhất quán của các Giáo hoàng qua nhiều thế kỷ về phẩm giá con người và sự thánh thiêng của thân xác","Truyền thống lâu dài của Giáo hội về bí tích Hôn phối và tầm quan trọng của gia đình trong kế hoạch cứu độ","Ngôi Hai nhập thể làm người, Đức Kitô phục sinh, và niềm tin xác loài người ngày sau sống lại","Lời Kinh Thánh dạy rằng con người được tạo dựng theo hình ảnh Thiên Chúa và được trao phẩm giá cao quý"],ans:"C"},
+  {q:"Vì sao sống trong sạch và tiết độ quan trọng trong đời sống hôn nhân?",opts:["Vì đây là điều kiện để vợ chồng được lãnh nhận các bí tích và tham dự đầy đủ vào đời sống Giáo hội","Vì đây là cách thể hiện sự tôn trọng lẫn nhau mà xã hội văn minh yêu cầu trong mọi mối quan hệ","Vì đây là phương tiện giúp vợ chồng tránh được những cám dỗ bên ngoài và bảo vệ lòng chung thủy","Vì là thước đo tinh thần xả kỷ, hiến thân vì hạnh phúc người mình yêu; là biểu lộ sự trưởng thành và tự chủ"],ans:"D"},
+  {q:"Ngoại tình được định nghĩa như thế nào theo bài học?",opts:["Quan hệ tính dục khi có ít nhất một người đã kết hôn, kể cả ước muốn trong lòng cũng bị Đức Kitô lên án","Quan hệ tính dục ngoài hôn nhân chỉ khi cả hai người đều đã có gia đình và cùng biết rõ điều đó","Bất kỳ sự rung cảm, hấp dẫn hay thích thú nào dành cho người khác ngoài người phối ngẫu của mình","Hành vi phản bội người phối ngẫu bao gồm cả gian lận tình cảm, chia sẻ bí mật riêng tư và thiếu trung thực"],ans:"A"},
+  {q:"Theo bài học, ly dị gây ra những tổn hại gì?",opts:["Chủ yếu gây tổn hại cho trẻ em vì làm mất đi môi trường gia đình ổn định cần thiết cho sự phát triển toàn diện","Chủ yếu gây tổn hại cho người phối ngẫu bị ruồng bỏ và gây ra những tổn thương tâm lý khó chữa lành","Chủ yếu gây tổn hại cho xã hội vì làm suy yếu thể chế gia đình vốn là nền tảng của mọi nền văn hóa văn minh","Gây hại cho người phối ngẫu bị ruồng bỏ, cho con cái phải đau khổ và cho xã hội vì hiệu quả lây lan của nó"],ans:"D"},
+  {q:"Tại sao đa thê nghịch với kế hoạch của Thiên Chúa?",opts:["Vì gây ra nhiều phức tạp về pháp lý, phân chia tài sản và ảnh hưởng đến quyền lợi của con cái trong gia đình","Vì làm cho người phụ nữ bị đặt vào vị trí bất bình đẳng, phải cạnh tranh với những người vợ khác cho tình cảm của chồng","Vì tạo ra môi trường gia đình phức tạp, không ổn định và thiếu sự gắn kết cần thiết để nuôi dạy con cái lành mạnh","Vì nghịch phẩm giá bình đẳng của người nam và người nữ, chối bỏ tình yêu trọn vẹn, duy nhất và độc hữu"],ans:"D"},
+  {q:"Tại sao hôn nhân thử bị coi là sai trái theo bài học?",opts:["Vì không được pháp luật công nhận nên thiếu sự bảo vệ pháp lý cho cả hai bên khi xảy ra tranh chấp","Vì thiếu sự chứng kiến của cộng đồng và Giáo hội nên không có tính ràng buộc về mặt xã hội và tôn giáo","Vì tình yêu không chấp nhận thử nghiệm, đòi hỏi hiến thân trọn vẹn và dứt khoát ngay từ đầu","Vì dễ dẫn đến việc hai bên có thái độ tạm thời, không đầu tư thật sự vào mối quan hệ và sẵn sàng bỏ nhau khi gặp khó khăn"],ans:"C"},
+  {q:"Ai có quyền thực hiện hành vi tính dục theo bài học?",opts:["Những người trưởng thành đồng thuận hoàn toàn tự nguyện và đã cân nhắc kỹ lưỡng về hậu quả của hành vi","Những người có tình yêu thật sự và cam kết lâu dài với nhau, kể cả khi chưa chính thức kết hôn theo nghi lễ","Những người đã đăng ký kết hôn hợp pháp theo pháp luật nhà nước dù chưa được Giáo hội chứng nhận","Chỉ vợ chồng của nhau, vì lạc thú tính dục được Thiên Chúa sắp đặt để nâng đỡ đời sống hôn nhân gia đình"],ans:"D"},
+  {q:"Điểm chung của các tội dâm ô, thủ dâm, tà dâm, khiêu dâm, mại dâm và hiếp dâm là gì?",opts:["Tất cả đều bị pháp luật nhiều quốc gia trên thế giới cấm đoán và xử phạt nghiêm khắc","Tất cả đều gây ra những tổn hại nặng nề về thể lý, tâm lý và tâm linh cho người liên quan","Tất cả đều là biểu hiện của nền văn minh hưởng thụ coi con người như phương tiện thỏa mãn cá nhân","Tất cả đều phạm đến đức khiết tịnh, xúc phạm phẩm giá con người"],ans:"D"},
+  {q:"Mại dâm luôn là tội trọng nhưng có thể giảm khinh trách nhiệm vì lý do gì?",opts:["Vì xã hội hiện đại có xu hướng hợp pháp hóa và chấp nhận hành vi này như một thực tế khó tránh khỏi","Vì người thực hiện thường không có đủ nhận thức về sự sai trái do thiếu được giáo dục về đạo đức và tôn giáo","Vì trách nhiệm đạo đức trong lĩnh vực này luôn phức tạp và khó xác định rõ ràng về mặt thần học luân lý","Vì có thể bị hoàn cảnh túng bấn, hăm dọa hay áp lực xã hội chi phối, làm giảm bớt sự tự do lựa chọn"],ans:"D"},
+  {q:"Tổng hợp bài học, tính dục có giá trị thật sự khi thỏa mãn điều kiện gì?",opts:["Khi được thực hiện bởi những người trưởng thành, tự do, đồng thuận và trong không khí tôn trọng lẫn nhau","Khi được đặt trong bối cảnh tình yêu chân thật, không phải là hệ quả của cảm xúc nhất thời hay áp lực hoàn cảnh","Thực hiện trong hôn nhân, mang ý nghĩa trao hiến và bổ sung, mở ngỏ cho sự sống và xây dựng văn minh tình yêu","Khi được sự chúc phúc của mọi người và thực hiện theo hướng dẫn của luật tâm lý"],ans:"C"},
+  {q:"Điều gì phân biệt \"tự do sống chung\" với \"hôn nhân hợp pháp\"?",opts:["Tự do sống chung không có nghi lễ tôn giáo nên thiếu chiều kích tâm linh và ân sủng cần thiết cho đời sống đôi lứa","Tự do sống chung không được gia đình hai bên thừa nhận, dễ gây mâu thuẫn và thiếu sự hỗ trợ từ cộng đồng","Tự do sống chung không có con cái và không phát sinh trách nhiệm pháp lý nên không thể coi là gia đình đúng nghĩa","Tự do sống chung từ chối cam kết dài lâu theo đúng bản chất hôn nhân, xúc phạm phẩm giá và phá hủy ý niệm gia đình"],ans:"D"},
+  {q:"Đâu là thái độ đúng đắn nhất đối với tính dục theo Giáo lý Công giáo?",opts:["Coi tính dục là điều thứ yếu trong hôn nhân, chỉ nên được nhắc đến khi thật sự cần thiết vì đây là lĩnh vực nhạy cảm","Coi tính dục là vấn đề riêng tư của mỗi cặp vợ chồng, miễn là có sự đồng thuận thì mọi hình thức đều được chấp nhận","Coi tính dục là điều xấu xa cần kiềm chế tối đa vì đây là nguồn gốc của nhiều tội lỗi và cám dỗ trong đời sống","Nhìn nhận tính dục là ân huệ Thiên Chúa ban, cao quý khi thực hiện trong hôn nhân với tinh thần trao hiến và tiết độ"],ans:"D"},
+];
+
+let current=0, selected=null, revealed=false, answers=[], done=false, showWrong=false;
+const card = document.getElementById('main-card');
+
+function render(){ done ? renderResult() : renderQuiz(); }
+
+function renderQuiz(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  const optsHTML=q.opts.map((opt,i)=>{
+    const label=LABELS[i]; let cls='opt-btn', icon='';
+    if(revealed){
+      if(label===q.ans){cls+=' correct';icon='<span class="opt-icon">✓</span>';}
+      else if(label===selected){cls+=' wrong';icon='<span class="opt-icon">✗</span>';}
+    } else if(label===selected) cls+=' selected-pending';
+    return `<button class="${cls}" ${revealed?'disabled':''} onclick="handleAnswer('${label}')">
+      <span class="opt-label">${label}</span><span class="opt-text">${esc(opt)}</span>${icon}
+    </button>`;
+  }).join('');
+
+  const feedHTML=revealed?`<div class="feedback">
+    <span class="feedback-badge ${selected===q.ans?'ok':'err'}">${selected===q.ans?'✓ Chính xác!':'✗ Đáp án đúng: '+q.ans}</span>
+    <button class="btn-primary" onclick="handleNext()">${current+1<questions.length?'Câu tiếp theo →':'Xem kết quả'}</button>
+  </div>`:'';
+
+  card.innerHTML=`<div class="fade-in">
+    <div class="progress-meta">
+      <span>Câu ${current+1} / ${questions.length}</span><span>${pct}%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="question-box">
+      <div class="question-eyebrow">✦ Câu hỏi ${current+1}</div>
+      <p class="question-text">${esc(q.q)}</p>
+    </div>
+    <div class="options">${optsHTML}</div>
+    ${feedHTML}
+  </div>`;
+}
+
+function renderResult(){
+  const score=answers.filter(a=>a.selected===a.ans).length;
+  const pct=Math.round((score/questions.length)*100);
+  const wrong=answers.filter(a=>a.selected!==a.ans);
+  let medal='🥉',msg='Cần cố gắng thêm!',msgColor='#c0392b';
+  if(pct>=90){medal='🏆';msg='Xuất sắc!';msgColor='#9b1b30';}
+  else if(pct>=70){medal='🥇';msg='Làm tốt lắm!';msgColor='#27ae60';}
+  else if(pct>=50){medal='🥈';msg='Khá tốt!';msgColor='#2980b9';}
+
+  const wBtn=wrong.length>0?`<button class="btn-outline" onclick="toggleWrong()">${showWrong?'Ẩn câu sai':'Xem '+wrong.length+' câu sai'}</button>`:'';
+  const wList=showWrong?`<div id="wrong-list">`+wrong.map(w=>{
+    const yi=LABELS.indexOf(w.selected),ai=LABELS.indexOf(w.ans);
+    return `<div class="wrong-item">
+      <div class="wrong-item-num">✦ Câu ${w.idx}</div>
+      <p class="wrong-item-q">${esc(w.q)}</p>
+      <div class="wrong-item-yours">Bạn chọn (${w.selected}): ${esc(w.opts[yi]||'—')}</div>
+      <div class="wrong-item-ans">Đáp án (${w.ans}): ${esc(w.opts[ai])}</div>
+    </div>`;
+  }).join('')+`</div>`:'';
+
+  card.innerHTML=`<div class="result fade-in">
+    <div class="result-medal">${medal}</div>
+    <h2>Kết quả</h2>
+    <p class="result-msg" style="color:${msgColor}">${msg}</p>
+    <div class="result-score-box">
+      <div><span class="result-number">${score}</span><span class="result-total"> / ${questions.length}</span></div>
+      <div class="result-label">Trả lời đúng — ${pct}%</div>
+      <div class="result-bar-track"><div class="result-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${wBtn}${wList}
+    <div class="result-actions">
+      <button class="btn-restart" onclick="handleRestart()">✦ Làm lại từ đầu</button>
+    </div>
+  </div>`;
+}
+
+function handleAnswer(label){ if(revealed)return; selected=label; revealed=true; render(); }
+function handleNext(){
+  const q=questions[current];
+  answers.push({idx:current+1,q:q.q,opts:q.opts,ans:q.ans,selected});
+  if(current+1>=questions.length){ done=true; }
+  else{ current++; selected=null; revealed=false; }
+  render();
+}
+function handleRestart(){ current=0;selected=null;revealed=false;answers=[];done=false;showWrong=false;render(); }
+function toggleWrong(){ showWrong=!showWrong; renderResult(); }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+render();
+</script>
+</body>
+</html>
