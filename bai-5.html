@@ -1,0 +1,820 @@
+<title>Quiz · Chúa Giêsu — Đấng Cứu Chuộc</title>
+
+<style>
+:root {
+  --ground:    #1A1529;
+  --surface:   #241D3A;
+  --surface2:  #2F2650;
+  --card:      #F7F0E6;
+  --card-ink:  #1E1A2E;
+  --card-dim:  #5A5070;
+  --text:      #EDE5D4;
+  --muted:     #7A6E8F;
+  --accent:    #D4A347;
+  --accent-lt: #E8C070;
+  --jade:      #4EA884;
+  --jade-lt:   #7ECDB5;
+  --ruby:      #B04040;
+  --ruby-lt:   #D08080;
+  --border:    rgba(212,163,71,.16);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+body {
+  background: var(--ground);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  padding: 2.5rem 1.25rem 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#bg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .05;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 660px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── header ── */
+.pg-header {
+  text-align: center;
+  margin-bottom: 2.75rem;
+}
+
+.pg-eyebrow {
+  font-size: .65rem;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .6rem;
+}
+
+.pg-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(1.45rem, 4.5vw, 2.05rem);
+  color: var(--accent);
+  line-height: 1.22;
+  margin-bottom: .35rem;
+}
+
+.pg-sub {
+  font-size: .8rem;
+  color: var(--muted);
+}
+
+/* ── bead progress ── */
+.beads-wrap {
+  margin-bottom: 1.8rem;
+}
+
+.beads-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: .7rem;
+  color: var(--muted);
+  margin-bottom: .6rem;
+}
+
+.beads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.bead {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--surface2);
+  transition: background .3s ease, transform .2s ease;
+  flex-shrink: 0;
+}
+
+.bead.done    { background: var(--accent); }
+.bead.current { background: var(--accent-lt); transform: scale(1.3); }
+
+/* ── score strip ── */
+.score-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+
+.score-disp {
+  font-size: .8rem;
+  color: var(--muted);
+}
+.score-disp b { font-size: 1.1rem; color: var(--accent); }
+
+.topic-pill {
+  font-size: .62rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  background: rgba(212,163,71,.1);
+  color: var(--accent);
+  padding: .22rem .85rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+/* ── question card ── */
+.q-card {
+  background: var(--card);
+  border-radius: 4px;
+  padding: 1.8rem 1.75rem 1.55rem;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 1px 4px rgba(0,0,0,.3),
+    0 8px 28px rgba(0,0,0,.4),
+    0 0 0 1px rgba(0,0,0,.15),
+    inset 0 1px 0 rgba(255,255,255,.5);
+  animation: fadeUp .28s ease both;
+}
+
+/* vellum texture: subtle vertical grain */
+.q-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 6px,
+    rgba(0,0,0,.012) 6px,
+    rgba(0,0,0,.012) 7px
+  );
+  pointer-events: none;
+}
+
+.q-roman {
+  font-family: Georgia, serif;
+  font-size: .7rem;
+  letter-spacing: .18em;
+  color: var(--accent);
+  margin-bottom: .6rem;
+  opacity: .85;
+}
+
+.q-text {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.08rem;
+  color: var(--card-ink);
+  line-height: 1.62;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── options ── */
+.opts {
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+  animation: fadeUp .3s .05s ease both;
+}
+
+.opt-btn {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.055);
+  color: var(--text);
+  font-family: inherit;
+  font-size: .875rem;
+  text-align: left;
+  padding: .8rem 1.05rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: .7rem;
+  line-height: 1.45;
+  transition: background .13s, border-color .13s, transform .1s;
+}
+
+.opt-btn:hover:not(:disabled) {
+  background: var(--surface2);
+  border-color: rgba(212,163,71,.3);
+  transform: translateX(4px);
+}
+
+.opt-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.opt-lbl {
+  font-size: .7rem;
+  font-weight: 700;
+  font-family: Georgia, serif;
+  color: var(--accent);
+  min-width: 1.1em;
+  flex-shrink: 0;
+  margin-top: .13em;
+}
+
+.opt-btn.is-correct {
+  background: rgba(78,168,132,.17);
+  border-color: var(--jade);
+  color: var(--jade-lt);
+}
+.opt-btn.is-correct .opt-lbl { color: var(--jade); }
+
+.opt-btn.is-wrong {
+  background: rgba(176,64,64,.15);
+  border-color: var(--ruby);
+  color: var(--ruby-lt);
+}
+.opt-btn.is-wrong .opt-lbl { color: var(--ruby); }
+
+.opt-btn:disabled { cursor: default; transform: none; }
+
+/* ── feedback ── */
+.feedback {
+  margin-top: .8rem;
+  padding: .75rem 1rem;
+  border-radius: 4px;
+  font-size: .82rem;
+  line-height: 1.5;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: rgba(78,168,132,.12); border: 1px solid rgba(78,168,132,.36); color: #90D4BF; }
+.feedback.no { background: rgba(176,64,64,.1);  border: 1px solid rgba(176,64,64,.36); color: #D4A0A0; }
+
+/* ── next button ── */
+.next-btn {
+  width: 100%;
+  margin-top: 1.05rem;
+  padding: .85rem 1rem;
+  background: var(--accent);
+  color: #1A1529;
+  font-family: inherit;
+  font-size: .875rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .13s, transform .1s;
+  display: none;
+}
+.next-btn.show { display: block; }
+.next-btn:hover { background: var(--accent-lt); transform: translateY(-1px); }
+.next-btn:focus-visible { outline: 2px solid var(--accent-lt); outline-offset: 2px; }
+
+/* ── results ── */
+#results {
+  display: none;
+  text-align: center;
+  padding: 2rem 0;
+  animation: fadeUp .35s ease both;
+}
+
+.res-score {
+  font-family: Georgia, serif;
+  font-size: 5.5rem;
+  line-height: 1;
+  color: var(--accent);
+  margin-bottom: .2rem;
+}
+.res-denom  { font-size: 2.2rem; opacity: .4; }
+.res-pct    { font-size: .85rem; color: var(--muted); margin-bottom: 1.5rem; }
+.res-msg    { font-family: Georgia, serif; font-size: 1.05rem; color: var(--text); line-height: 1.6; margin-bottom: 2rem; max-width: 440px; margin-left: auto; margin-right: auto; }
+
+.res-divider { width: 60px; height: 2px; background: var(--border); margin: 1.5rem auto 2rem; }
+
+.grade-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  display: inline-block;
+  min-width: 220px;
+}
+.grade-lbl  { font-size: .65rem; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin-bottom: .4rem; }
+.grade-val  { font-family: Georgia, serif; font-size: 1.6rem; color: var(--accent); }
+.grade-sub  { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+
+.restart-btn {
+  padding: .85rem 2.25rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: .875rem;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: all .14s;
+}
+.restart-btn:hover { background: var(--accent); color: var(--ground); }
+.restart-btn:focus-visible { outline: 2px solid var(--accent-lt); outline-offset: 2px; }
+
+/* ── animation ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration: 0ms !important; transition-duration: 0ms !important; }
+}
+
+@media (max-width: 480px) {
+  body { padding: 2rem .9rem 4rem; }
+  .q-card { padding: 1.4rem 1.2rem 1.2rem; }
+  .q-text { font-size: 1rem; }
+  .res-score { font-size: 4rem; }
+  .bead { width: 8px; height: 8px; }
+}
+</style>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrap">
+  <header class="pg-header">
+    <div class="pg-eyebrow">Bài Kiểm Tra · Giáo Lý Hôn Nhân</div>
+    <h1 class="pg-title">Chúa Giêsu<br>Đấng Cứu Chuộc</h1>
+    <p class="pg-sub">25 câu hỏi trắc nghiệm</p>
+  </header>
+
+  <main id="quiz-body">
+    <!-- bead progress -->
+    <div class="beads-wrap">
+      <div class="beads-meta">
+        <span id="bead-label">Câu I / XXV</span>
+        <span id="bead-score">0 đúng</span>
+      </div>
+      <div class="beads" id="beads-row" role="progressbar" aria-valuemin="0" aria-valuemax="25" aria-valuenow="0"></div>
+    </div>
+
+    <div class="score-strip">
+      <div class="score-disp">Điểm: <b id="score-num">0</b> / 25</div>
+      <div class="topic-pill">Kitô Học</div>
+    </div>
+
+    <div class="q-card" id="q-card" role="region" aria-live="polite">
+      <div class="q-roman" id="q-roman">I</div>
+      <div class="q-text"  id="q-text"></div>
+    </div>
+
+    <div class="opts" id="opts-list" role="list"></div>
+
+    <div class="feedback" id="feedback" role="status"></div>
+
+    <button class="next-btn" id="next-btn" onclick="onNext()">Câu tiếp theo →</button>
+  </main>
+
+  <section id="results" aria-label="Kết quả">
+    <div class="pg-eyebrow" style="margin-bottom:1.25rem">Kết quả</div>
+    <div class="res-score" id="res-score">0<span class="res-denom">/25</span></div>
+    <div class="res-pct"   id="res-pct"></div>
+    <div class="res-msg"   id="res-msg"></div>
+    <div class="res-divider"></div>
+    <div class="grade-card">
+      <div class="grade-lbl">Xếp loại</div>
+      <div class="grade-val" id="grade-val"></div>
+      <div class="grade-sub" id="grade-sub"></div>
+    </div>
+    <br><br>
+    <button class="restart-btn" onclick="restart()">Làm lại từ đầu</button>
+  </section>
+</div>
+
+<script>
+/* ── noise canvas ── */
+(function () {
+  const cv = document.getElementById('bg-canvas');
+  const cx = cv.getContext('2d');
+  function draw() {
+    cv.width  = window.innerWidth;
+    cv.height = window.innerHeight;
+    const img = cx.createImageData(cv.width, cv.height);
+    const d   = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.floor(Math.random() * 256);
+      d[i] = d[i+1] = d[i+2] = v;
+      d[i+3] = 255;
+    }
+    cx.putImageData(img, 0, 0);
+  }
+  draw();
+  window.addEventListener('resize', draw);
+}());
+
+/* ── roman numerals ── */
+function toRoman(n) {
+  const vals = [10,9,5,4,1];
+  const syms = ['X','IX','V','IV','I'];
+  let r = '';
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) { r += syms[i]; n -= vals[i]; }
+  }
+  return r;
+}
+
+/* ── data ── */
+const LABELS = ['A','B','C','D'];
+
+const QS = [
+  {
+    q: 'Tên "Giêsu" trong tiếng Do Thái có nghĩa là gì, và nó diễn tả điều gì về Ngài?',
+    o: [
+      'Thiên Chúa ở cùng chúng ta — Diễn tả Ngài là Thiên Chúa.',
+      'Thiên Chúa Cứu Độ — Diễn tả cả căn tính và sứ vụ của Ngài.',
+      'Đấng được xức dầu — Diễn tả sứ vụ Vương đế.',
+      'Ngôi Lời nhập thể — Diễn tả sự kết hợp hai bản tính.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Danh hiệu "Kitô" (dịch từ "Mêsia") bao hàm việc Chúa Giêsu hoàn tất ba nhiệm vụ nào của Cựu Ước?',
+    o: [
+      'Tiên tri, Tư tế, Vương đế.',
+      'Tư tế, Ngôn sứ, Thủ lãnh.',
+      'Thẩm phán, Ngôn sứ, Tư tế.',
+      'Vương đế, Lãnh đạo, Trung gian.'
+    ],
+    a: 0
+  },
+  {
+    q: 'Trong mầu nhiệm Ba Ngôi, thuật ngữ "Bản thể" (What) chỉ điều gì?',
+    o: [
+      'Sự khác biệt giữa các Ngôi vị.',
+      'Mối tương quan giữa Chúa Cha và Chúa Con.',
+      'Bản tính thần linh duy nhất bao gồm sự toàn năng, hằng hữu.',
+      'Sự nhập thể của Ngôi Lời trong dòng lịch sử.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Sự phân biệt giữa 3 Ngôi vị trong Thiên Chúa dựa trên nền tảng nào?',
+    o: [
+      'Mức độ quyền năng (kẻ lớn người nhỏ).',
+      'Trật tự thời gian xuất hiện trong lịch sử.',
+      'Mối tương quan (ví dụ: Cha sinh ra, Con được sinh ra).',
+      'Khác biệt về bản thể thần linh được chia làm ba phần.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Khái niệm "Chúa Con bởi Chúa Cha mà ra" (nhiệm xuất) được hiểu như thế nào cho đúng nhất?',
+    o: [
+      'Chúa Con được Chúa Cha tạo dựng từ hư vô.',
+      'Chúa Con được sinh ra từ đời đời, mang cùng một bản tính với Chúa Cha.',
+      'Chúa Con xuất hiện sau Chúa Cha về mặt thời gian.',
+      'Chúa Con đi từ không hiện hữu đến hiện hữu.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Tại sao hành động hiến tế của Chúa Giêsu có sức đền bù cho toàn nhân loại?',
+    o: [
+      'Vì Ngài là một con người vô tội nên làm nguôi cơn giận của Thiên Chúa.',
+      'Vì Ngài là Thiên Chúa nên hành động của Ngài có giá trị vô biên.',
+      'Vì Thiên Chúa Cha yêu cầu một sự trả thù đẫm máu.',
+      'Vì Ngài là nhà tiên tri vĩ đại nhất của lịch sử.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Khái niệm "Nhập thể" mang ý nghĩa thần học cốt lõi nào?',
+    o: [
+      'Con Thiên Chúa từ bỏ hoàn toàn thần tính để trở thành một phàm nhân.',
+      'Con Thiên Chúa nhận lấy bản tính nhân loại nhằm thực hiện việc cứu độ ngay trong bản tính ấy.',
+      'Một linh hồn thiên thần mượn thân xác con người để hiện ra.',
+      'Thiên Chúa biến hình dưới hình dạng con người tạm thời.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Lý do nào KHÔNG NẰM TRONG 4 lý do Ngôi Lời làm người?',
+    o: [
+      'Để cứu độ và giao hòa chúng ta với Thiên Chúa.',
+      'Để trở thành gương mẫu thánh thiện.',
+      'Để con người được thông phần bản tính Thiên Chúa.',
+      'Để phán xét và trừng phạt những kẻ chống đối lề luật.'
+    ],
+    a: 3
+  },
+  {
+    q: 'Công đồng Chalcêđônia (năm 451) tuyên xưng sự kết hợp hai bản tính của Chúa Giêsu theo cách thức nào?',
+    o: [
+      'Có sự pha trộn lẫn lộn để tạo thành một bản tính mới.',
+      'Nhân tính bị thần tính hòa tan hoàn toàn.',
+      'Không lẫn lộn, không thay đổi, không phân chia, không tách biệt.',
+      'Tách biệt hoàn toàn thành hai chủ thể hành động độc lập.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Nhân tính của Chúa Giêsu có một chủ thể (ngôi vị) nào ngoài Ngôi Vị thần linh của Con Thiên Chúa không?',
+    o: [
+      'Có, Ngài có một ngôi vị nhân loại song song tồn tại.',
+      'Không, Đức Kitô chỉ có một Ngôi Vị duy nhất là Ngôi Hai Thiên Chúa.',
+      'Có, nhân tính của Ngài hoạt động độc lập với thần tính.',
+      'Không, Ngài không có ý chí và lý trí của nhân loại.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Tri thức nhân loại của Chúa Giêsu khi Nhập Thể được mô tả như thế nào?',
+    o: [
+      'Vô hạn và biết mọi sự ngay từ khi mới sinh trong hang đá.',
+      'Không vô hạn, được hình thành trong không gian, thời gian và phải học hỏi qua kinh nghiệm.',
+      'Bị giới hạn hoàn toàn, không thấu hiểu được bất kỳ kế hoạch vĩnh cửu nào.',
+      'Là ảo ảnh do thần tính tạo ra để giống con người.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Biến cố tại vườn Ghếtsêmani chứng minh điều gì về "hai ý muốn" của Chúa Giêsu?',
+    o: [
+      'Ý muốn nhân loại của Ngài đối kháng và phủ quyết ý muốn thần linh.',
+      'Ngài chỉ có một ý muốn duy nhất là ý muốn thần linh.',
+      'Ngài có ý muốn nhân loại thật (tự nhiên khao khát sống, sợ chết) nhưng hoàn toàn vâng phục ý muốn thần linh.',
+      'Ngài không có bản năng sợ hãi đau đớn của con người.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Phép lạ hóa nước thành rượu, dẹp yên biển động thuộc nhóm phép lạ nào và mạc khải điều gì?',
+    o: [
+      'Phép lạ chữa lành — Mạc khải tình thương với bệnh nhân.',
+      'Phép lạ xua trừ ma quỷ — Mạc khải quyền lực trên vương quốc Satan.',
+      'Phép lạ thống trị thiên nhiên — Mạc khải Ngài là Đấng Tạo Hóa có uy quyền tuyệt đối.',
+      'Phép lạ hoàn sinh — Mạc khải sự chiến thắng trên cõi chết.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Chủ thể đích thực thực hiện các phép lạ của Chúa Giêsu là ai?',
+    o: [
+      'Chỉ là bản tính nhân loại hữu hạn của Ngài.',
+      'Các thiên thần từ trời xuống làm thay cho Ngài.',
+      'Ngôi Vị thần linh của Ngài (Ngôi Lời nhập thể).',
+      'Một vị tiên tri được Thiên Chúa ban quyền năng tạm thời.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Sự kiện Chúa Giêsu cho anh Lazarô sống lại khác biệt bản chất thế nào so với sự Phục Sinh của chính Ngài?',
+    o: [
+      'Lazarô chuyển sang trạng thái vinh quang, vượt không gian.',
+      'Lazarô chỉ trở lại cuộc sống trần thế thông thường và sẽ lại phải chết.',
+      'Lazarô không bao giờ chết nữa, sống mãi đến tận thế.',
+      'Không có sự khác biệt nào giữa hai biến cố này.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Về trách nhiệm đối với cái chết của Chúa Giêsu, Hội Thánh Công giáo dạy thế nào?',
+    o: [
+      'Đổ lỗi hoàn toàn cho tập thể dân Do Thái thời đó.',
+      'Đổ lỗi cho dân Do Thái thời nay.',
+      'Mọi tội nhân (tất cả những ai phạm tội) đều là tác giả gây ra cực hình cho Ngài.',
+      'Chỉ một mình quan Philatô và quân lính La Mã phải chịu trách nhiệm.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Giá trị cứu chuộc vô biên của Hy lễ Thập giá bắt nguồn từ đâu?',
+    o: [
+      'Từ sự tàn khốc của hình phạt đóng đinh.',
+      'Từ Ngôi Vị Thiên Chúa của Chúa Giêsu, làm cho hy tế có giá trị đền bù cho mọi người.',
+      'Từ sự vô tội của một con người trần thế đơn thuần.',
+      'Từ sự bất công của tòa án Rôma.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Lý do nào KHÔNG NẰM TRONG 4 lý do Chúa Giêsu thiết lập Hội Thánh?',
+    o: [
+      'Tiếp nối sứ vụ cứu độ trong không gian và thời gian.',
+      'Làm Bí tích cứu độ phổ quát ban phát ân sủng.',
+      'Thiết lập một hệ thống quyền lực chính trị trần thế để cạnh tranh quyền lực.',
+      'Làm mầm mống của Nước Trời ở trần thế.'
+    ],
+    a: 2
+  },
+  {
+    q: 'Dấu chỉ căn bản đầu tiên mang tính kiểm chứng lịch sử để nhìn nhận sự kiện Chúa sống lại là gì?',
+    o: [
+      'Lời kể của lính canh mồ.',
+      'Ngôi mộ trống.',
+      'Sự biến hình của Chúa trên núi Tabor.',
+      'Việc Chúa Giêsu cho Lazarô sống lại.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Trạng thái thân thể Phục Sinh của Đức Kitô mang đặc tính gì?',
+    o: [
+      'Là một bóng ma không có xương thịt, không chạm vào được.',
+      'Vẫn là thân thể thật (có dấu đinh) nhưng mang đặc tính vinh hiển, vượt quy luật vật lý.',
+      'Trở lại trạng thái nhân loại yếu đuối có thể bị bệnh tật và chết lại.',
+      'Chỉ là một ảo ảnh trong tâm trí và niềm tin của các Tông đồ.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Sự Phục sinh của Chúa Giêsu là công trình của ai?',
+    o: [
+      'Chỉ của Chúa Cha (Đấng làm cho Chúa Con sống lại).',
+      'Chỉ của Chúa Con (Tự sống lại bằng quyền năng thần linh).',
+      'Chỉ của Chúa Thánh Thần.',
+      'Là công trình chung của cả Ba Ngôi Thiên Chúa.'
+    ],
+    a: 3
+  },
+  {
+    q: 'Biến cố Chúa Giêsu Lên Trời (Thăng Thiên) mang ý nghĩa thần học cốt lõi nào?',
+    o: [
+      'Ngài bỏ mặc nhân loại để quay về cõi trời nghỉ ngơi.',
+      'Nhân tính của Ngài vĩnh viễn tiến vào vinh quang thần linh, mở lối cho nhân loại được về trời.',
+      'Ngài không còn hiện diện và hành động trong Hội Thánh nữa.',
+      'Ngài kết thúc vĩnh viễn mọi vai trò cứu độ của mình.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Tại tòa cao sang trên trời, Chúa Giêsu hiện đang thực thi chức vụ gì cho chúng ta?',
+    o: [
+      'Chức vụ thẩm phán phán xét liên tục từng lỗi lầm nhỏ của con người.',
+      'Chức vụ Thượng Tế chuyển cầu, là Đấng Trung Gian duy nhất trước mặt Thiên Chúa.',
+      'Trừng phạt những ai không tin ngay lập tức.',
+      'Lãnh đạo các thiên thần trong các cuộc chiến tranh vật lý ở trần gian.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Tình trạng của Nước Trời trong thời gian chờ đợi sự Quang lâm được mô tả ra sao?',
+    o: [
+      'Đã viên mãn và không còn thế lực sự dữ nào tồn tại trên trần gian.',
+      'Đã hiện diện một cách mầu nhiệm nhưng chưa trọn vẹn, vẫn đang bị thử thách và tấn công.',
+      'Hoàn toàn vắng bóng trên trần gian cho đến ngày tận thế mới xuất hiện.',
+      'Sẽ đạt được nhờ sự tiến bộ chính trị trần thế thuần túy.'
+    ],
+    a: 1
+  },
+  {
+    q: 'Trong cuộc Phán xét chung (Ngày Quang lâm), tiêu chuẩn cốt lõi để Chúa đo lường việc con người đón nhận hay khước từ tình yêu Thiên Chúa là gì?',
+    o: [
+      'Số lượng kinh lạy Cha đã đọc trong đời.',
+      'Cách thức họ đối xử với đồng loại (đặc biệt là những người bé nhỏ nhất).',
+      'Sự thành công về mặt tài chính và danh vọng ở trần gian.',
+      'Chức vụ họ nắm giữ trong các tổ chức tôn giáo.'
+    ],
+    a: 1
+  }
+];
+
+/* ── state ── */
+let cur = 0, score = 0, picked = false;
+const TOT = QS.length;
+
+/* ── beads ── */
+function renderBeads() {
+  const row = document.getElementById('beads-row');
+  row.innerHTML = '';
+  for (let i = 0; i < TOT; i++) {
+    const b = document.createElement('div');
+    b.className = 'bead' + (i < cur ? ' done' : i === cur ? ' current' : '');
+    row.appendChild(b);
+  }
+  row.setAttribute('aria-valuenow', cur);
+}
+
+/* ── render ── */
+function render() {
+  const q = QS[cur];
+
+  document.getElementById('bead-label').textContent  = 'Câu ' + toRoman(cur + 1) + ' / ' + toRoman(TOT);
+  document.getElementById('bead-score').textContent  = score + ' đúng';
+  document.getElementById('score-num').textContent   = score;
+  document.getElementById('q-roman').textContent     = toRoman(cur + 1);
+  document.getElementById('q-text').textContent      = q.q;
+
+  renderBeads();
+
+  /* options */
+  const list = document.getElementById('opts-list');
+  list.innerHTML = '';
+  q.o.forEach(function (txt, i) {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.setAttribute('role', 'listitem');
+    btn.setAttribute('aria-label', LABELS[i] + ': ' + txt);
+    btn.innerHTML = '<span class="opt-lbl">' + LABELS[i] + '</span>' + txt;
+    btn.addEventListener('click', function () { pick(i); });
+    list.appendChild(btn);
+  });
+
+  /* reset */
+  const fb = document.getElementById('feedback');
+  fb.className   = 'feedback';
+  fb.textContent = '';
+
+  const nb = document.getElementById('next-btn');
+  nb.className   = 'next-btn';
+  nb.textContent = cur < TOT - 1 ? 'Câu tiếp theo →' : 'Xem kết quả →';
+
+  picked = false;
+
+  /* re-animate card */
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = '';
+}
+
+function pick(i) {
+  if (picked) return;
+  picked = true;
+
+  const q    = QS[cur];
+  const btns = document.querySelectorAll('.opt-btn');
+  const ok   = i === q.a;
+
+  btns.forEach(function (b) { b.disabled = true; });
+  btns[i].classList.add(ok ? 'is-correct' : 'is-wrong');
+  if (!ok) btns[q.a].classList.add('is-correct');
+
+  if (ok) score++;
+  document.getElementById('score-num').textContent  = score;
+  document.getElementById('bead-score').textContent = score + ' đúng';
+
+  const fb = document.getElementById('feedback');
+  if (ok) {
+    fb.className   = 'feedback ok show';
+    fb.textContent = '✓ Đúng.';
+  } else {
+    fb.className   = 'feedback no show';
+    fb.textContent = '✗ Chưa đúng. Đáp án: ' + LABELS[q.a] + '. ' + q.o[q.a];
+  }
+
+  document.getElementById('next-btn').classList.add('show');
+}
+
+function onNext() {
+  cur++;
+  if (cur >= TOT) { showResults(); return; }
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showResults() {
+  document.getElementById('quiz-body').style.display = 'none';
+
+  const pct = Math.round(score / TOT * 100);
+  document.getElementById('res-score').innerHTML = score + '<span class="res-denom">/' + TOT + '</span>';
+  document.getElementById('res-pct').textContent = pct + '% câu trả lời đúng';
+
+  let msg  = '', gv = '', gs = '';
+  if (pct >= 92) {
+    msg = 'Xuất sắc. Bạn nắm vững Kitô học — từ Nhập Thể đến Quang Lâm.';
+    gv  = 'Xuất sắc'; gs = 'Nắm vững toàn bộ chủ đề';
+  } else if (pct >= 80) {
+    msg = 'Tốt. Kiến thức vững chắc, chỉ còn vài điểm cần củng cố thêm.';
+    gv  = 'Tốt'; gs = 'Hiểu phần lớn nội dung';
+  } else if (pct >= 64) {
+    msg = 'Khá. Hãy ôn lại phần Nhập Thể, Phục Sinh và Ba Ngôi để hiểu sâu hơn.';
+    gv  = 'Khá'; gs = 'Cần ôn thêm một số phần';
+  } else {
+    msg = 'Cần ôn tập thêm. Đọc lại tài liệu về Đấng Cứu Chuộc trước khi làm lại.';
+    gv  = 'Cần cố gắng'; gs = 'Ôn lại toàn bộ nội dung';
+  }
+
+  document.getElementById('res-msg').textContent   = msg;
+  document.getElementById('grade-val').textContent = gv;
+  document.getElementById('grade-sub').textContent = gs;
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  cur = score = 0;
+  document.getElementById('results').style.display  = 'none';
+  document.getElementById('quiz-body').style.display = 'block';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+render();
+</script>
