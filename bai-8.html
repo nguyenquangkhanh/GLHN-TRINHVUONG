@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0B1B33">
+<title>Trắc Nghiệm Giáo Lý Hôn Nhân – Bài 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0B1B33;
+    --navy-900:#11264A;
+    --navy-800:#1B3A6B;
+    --navy-700:#274A7D;
+    --gold-700:#8A6A18;
+    --gold-600:#9C7A1E;
+    --gold-500:#C9A227;
+    --gold-300:#E4C76B;
+    --ivory-50:#FAF6EC;
+    --ivory-100:#F1EAD8;
+    --ink-900:#1A2238;
+    --ink-600:#4A5270;
+    --sage-600:#3F6B52;
+    --sage-100:#E4EFE7;
+    --rose-700:#8B3A3A;
+    --rose-100:#F4E3E1;
+    --shadow:0 18px 40px -14px rgba(11,27,51,0.5);
+    --radius-lg:18px;
+    --radius-md:12px;
+    --radius-sm:8px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Lora',Georgia,serif;
+    background:radial-gradient(ellipse at top, var(--navy-800) 0%, var(--navy-950) 62%);
+    min-height:100vh;
+    color:var(--ivory-50);
+    -webkit-font-smoothing:antialiased;
+  }
+  .page-wrap{max-width:680px;margin:0 auto;padding:36px 18px 70px;}
+
+  .eyebrow-strip{
+    text-align:center;font-family:'Cormorant Garamond',serif;
+    letter-spacing:.18em;text-transform:uppercase;font-size:13px;
+    color:var(--gold-300);margin-bottom:26px;
+  }
+  .eyebrow-strip .cross{color:var(--gold-500);margin-right:6px;}
+  .eyebrow-strip .sep{margin:0 8px;opacity:.5;}
+
+  .hero-card,.q-card,.results-card{
+    background:var(--ivory-50);color:var(--ink-900);
+    border-radius:var(--radius-lg);padding:36px 32px;
+    box-shadow:var(--shadow);position:relative;
+  }
+  @media(max-width:520px){
+    .hero-card,.q-card,.results-card{padding:28px 20px;}
+  }
+
+  .kicker{
+    font-family:'Cormorant Garamond',serif;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--gold-700);font-size:13px;
+    font-weight:600;margin:0 0 8px;
+  }
+  .hero-card h1{
+    font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5.5vw,42px);
+    margin:0 0 16px;color:var(--navy-950);font-weight:600;line-height:1.15;
+  }
+  .lede{font-size:16.5px;line-height:1.75;color:var(--ink-600);margin:0 0 26px;}
+  .seal-inline{color:var(--gold-700);font-weight:700;}
+
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+  .field-row label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-600);}
+  .field-row input{
+    font-family:'Lora',serif;font-size:15px;padding:10px 12px;
+    border:1px solid rgba(11,27,51,0.18);border-radius:var(--radius-sm);
+    background:#fff;color:var(--ink-900);
+  }
+  .field-row input:focus-visible{outline:2px solid var(--gold-500);outline-offset:1px;}
+  @media(max-width:520px){.field-row{grid-template-columns:1fr;}}
+
+  .hint{font-size:13.5px;color:var(--ink-600);opacity:.85;margin-top:20px;line-height:1.6;}
+
+  .btn-primary{
+    font-family:'Cormorant Garamond',serif;font-weight:600;letter-spacing:.03em;
+    font-size:17px;padding:13px 28px;border:none;border-radius:99px;
+    background:linear-gradient(135deg,var(--gold-300),var(--gold-600));
+    color:var(--navy-950);cursor:pointer;transition:transform .15s ease,box-shadow .15s ease;
+    box-shadow:0 10px 22px -9px rgba(156,122,30,0.6);
+  }
+  .btn-primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 14px 26px -9px rgba(156,122,30,0.7);}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-ghost{
+    font-family:'Cormorant Garamond',serif;font-weight:600;font-size:16px;
+    padding:12px 22px;border-radius:99px;border:1px solid rgba(11,27,51,0.2);
+    background:transparent;color:var(--navy-800);cursor:pointer;transition:all .15s ease;
+  }
+  .btn-ghost:hover:not(:disabled){border-color:var(--navy-800);background:rgba(27,58,107,0.06);}
+  .btn-ghost:disabled{opacity:.35;cursor:not-allowed;}
+  :focus-visible{outline:2px solid var(--gold-500);outline-offset:2px;}
+
+  .progress-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;padding:0 2px;}
+  .progress-meta .section-label{
+    font-family:'Cormorant Garamond',serif;font-size:13px;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--gold-300);font-weight:600;
+  }
+  .progress-meta .count{font-family:'Lora',serif;font-size:13px;color:rgba(250,246,236,0.7);}
+  .progress-track{width:100%;height:6px;background:rgba(250,246,236,0.15);border-radius:99px;overflow:hidden;margin-bottom:26px;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-600),var(--gold-300));border-radius:99px;transition:width .3s ease;}
+
+  .seal{
+    position:absolute;top:-16px;right:24px;width:56px;height:56px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold-300), var(--gold-500) 55%, var(--gold-700) 100%);
+    color:var(--navy-950);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:10.5px;letter-spacing:.05em;
+    line-height:1.15;transform:rotate(-9deg);
+    box-shadow:0 6px 14px -4px rgba(0,0,0,0.5), inset 0 0 0 2px rgba(11,27,51,0.15);
+    z-index:2;
+  }
+  .seal .star{font-size:17px;line-height:1;}
+
+  .q-num{
+    font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold-700);
+    font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin:0 0 10px;
+  }
+  .q-text{font-size:19px;line-height:1.62;color:var(--navy-950);margin:0 0 24px;font-weight:500;}
+
+  .option-btn{
+    display:flex;align-items:flex-start;gap:13px;width:100%;text-align:left;
+    padding:13px 15px;background:var(--ivory-100);border:1px solid rgba(11,27,51,0.12);
+    border-radius:var(--radius-md);font-family:'Lora',serif;font-size:16px;color:var(--ink-900);
+    cursor:pointer;transition:all .18s ease;margin-bottom:10px;
+  }
+  .option-btn:hover:not(:disabled){border-color:var(--gold-500);transform:translateY(-1px);box-shadow:0 8px 16px -10px rgba(11,27,51,0.4);}
+  .option-btn:disabled{cursor:default;}
+  .option-btn .opt-letter{
+    flex:0 0 auto;width:27px;height:27px;border-radius:50%;background:var(--navy-900);color:var(--ivory-50);
+    display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;
+    font-weight:700;font-size:13.5px;margin-top:1px;
+  }
+  .option-btn .opt-text{padding-top:2px;}
+  .option-btn.is-correct{background:var(--sage-100);border-color:var(--sage-600);}
+  .option-btn.is-correct .opt-letter{background:var(--sage-600);}
+  .option-btn.is-incorrect{background:var(--rose-100);border-color:var(--rose-700);}
+  .option-btn.is-incorrect .opt-letter{background:var(--rose-700);}
+  .option-btn.is-muted{opacity:.5;}
+
+  .feedback-panel{
+    margin:8px 0 6px;padding:16px 18px;border-left:3px solid var(--gold-500);
+    background:rgba(201,162,39,0.08);border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+  }
+  .feedback-panel.is-wrong{border-left-color:var(--rose-700);background:rgba(139,58,58,0.06);}
+  .feedback-panel .verdict{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:17.5px;margin:0 0 6px;}
+  .feedback-panel .verdict.ok{color:var(--sage-600);}
+  .feedback-panel .verdict.no{color:var(--rose-700);}
+  .feedback-panel p{margin:0;font-size:14.5px;line-height:1.65;color:var(--ink-600);}
+
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:12px;}
+
+  .results-card{text-align:center;}
+  .results-card h2{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--navy-950);margin:0 0 4px;font-weight:600;}
+  .class-tag{font-size:13px;color:var(--ink-600);margin:0 0 22px;}
+  .score-ring{
+    width:188px;height:188px;border-radius:50%;
+    background:conic-gradient(var(--gold-500) calc(var(--pct) * 1%), rgba(11,27,51,0.12) 0);
+    display:grid;place-items:center;margin:6px auto 22px;box-shadow:var(--shadow);
+  }
+  .score-ring-inner{
+    width:148px;height:148px;border-radius:50%;background:var(--ivory-50);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:inset 0 0 0 1px rgba(11,27,51,0.08);
+  }
+  .score-num{font-family:'Cormorant Garamond',serif;font-size:50px;font-weight:600;color:var(--navy-900);line-height:1;}
+  .score-den{font-family:'Lora',serif;font-size:13px;color:var(--ink-600);letter-spacing:.04em;margin-top:2px;}
+  .tier-msg{font-size:16.5px;line-height:1.65;color:var(--navy-800);max-width:480px;margin:0 auto 28px;font-style:italic;}
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 28px;}
+  .stat-box{background:var(--ivory-100);border-radius:var(--radius-md);padding:15px 8px;}
+  .stat-box .num{display:block;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:var(--navy-900);}
+  .stat-box .label{font-size:11px;color:var(--ink-600);letter-spacing:.03em;}
+  .missed-block{text-align:left;background:var(--ivory-100);border-radius:var(--radius-md);padding:20px 22px;margin-bottom:30px;}
+  .missed-block h3{font-family:'Cormorant Garamond',serif;font-size:17px;margin:0 0 12px;color:var(--navy-900);}
+  .missed-chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-family:'Lora',serif;font-size:13.5px;padding:6px 13px;border-radius:99px;background:#fff;border:1px solid rgba(139,58,58,0.35);color:var(--rose-700);cursor:pointer;transition:background .15s ease;}
+  .chip:hover{background:var(--rose-100);}
+  .chip.hard::after{content:' ★';color:var(--gold-700);}
+  .no-missed{font-size:15px;color:var(--sage-600);font-style:italic;margin:0;}
+  .closing-line{
+    text-align:center;margin-top:28px;font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:15px;color:var(--gold-300);letter-spacing:.02em;
+  }
+
+  @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .hero-card,.q-card,.results-card{animation:fadeSlideIn .42s ease;}
+  @media (prefers-reduced-motion: reduce){
+    .hero-card,.q-card,.results-card{animation:none;}
+    .option-btn,.btn-primary,.btn-ghost,.progress-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap" id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {section:1,hard:false,
+      q:"Theo tài liệu Giáo lý Hôn nhân, giới tính được định nghĩa là gì?",
+      options:["Tất cả những đặc điểm thuộc về địa vị xã hội và nghề nghiệp của mỗi người.","Tất cả những đặc điểm phân biệt người nam với người nữ.","Những nét đặc trưng về thể chất và trí tuệ của từng cá nhân.","Những đặc điểm di truyền bẩm sinh không thể thay đổi."],
+      correct:1,
+      explain:'Theo mục Ghi nhớ (Bài 8.1): "Giới tính là tất cả những đặc điểm phân biệt người nam với người nữ."'},
+    {section:1,hard:false,
+      q:"Theo tài liệu, giới tính ảnh hưởng đặc biệt đến những lĩnh vực nào trong cuộc sống con người?",
+      options:["Nghề nghiệp, trình độ học vấn và địa vị xã hội.","Đời sống tình cảm, khả năng yêu thương và truyền sinh.","Trí tuệ, năng khiếu nghệ thuật và thể lực.","Quan hệ cha mẹ và sở thích cá nhân."],
+      correct:1,
+      explain:'Tài liệu ghi: "Giới tính ảnh hưởng trên toàn bộ con người, đặc biệt liên quan đến đời sống tình cảm, khả năng yêu thương, truyền sinh."'},
+    {section:1,hard:false,
+      q:"Về phương diện thể xác, đặc điểm nào sau đây phù hợp với người nữ theo tài liệu?",
+      options:["Cơ bắp to, thích hợp cho lao động nặng; sau khi làm việc cần nghỉ ngơi.","Cơ bắp nhỏ hơn, thích hợp cho công việc bền dai; tuổi thọ thường cao hơn.","Sức khoẻ thể chất yếu ớt, dễ mệt mỏi và cần được bảo vệ.","Khả năng lao động liên tục mà không cần nghỉ ngơi."],
+      correct:1,
+      explain:'Tài liệu: "Nữ có cơ bắp nhỏ hơn... thích hợp cho những công việc đòi hỏi bền dai... có khả năng chịu đựng và tuổi thọ thường cao hơn."'},
+    {section:1,hard:false,
+      q:"Về phương diện nhận thức, đặc điểm nào sau đây phù hợp với người nam?",
+      options:["Chú ý đến mọi chi tiết và suy nghĩ bằng trực giác.","Phán đoán thường chủ quan vì dựa trên tình cảm.","Chú ý đến cái tổng quát; lý luận theo nguyên tắc và phán đoán khách quan hơn.","Coi trọng lời nói hơn việc làm."],
+      correct:2,
+      explain:'Tài liệu: "Nam chú ý đến cái tổng quát, cốt yếu; lý luận theo nguyên tắc, phán đoán khách quan hơn... coi việc làm quan trọng hơn lời nói."'},
+    {section:1,hard:false,
+      q:"Về phương diện tình yêu, người nữ có đặc điểm nào sau đây theo tài liệu?",
+      options:["Coi tình yêu là một trong nhiều điều quan trọng; chủ động và dễ bị kích động.","Coi tình yêu là tất cả; sẵn sàng dâng hiến; cảm xúc đến từ từ nhưng kéo dài.","Yêu mãnh liệt và chóng quên; dễ say mê người mới.","Yêu một chiều, ít chủ động bày tỏ tình cảm."],
+      correct:1,
+      explain:'Tài liệu: "Nữ coi tình yêu là tất cả; khi yêu, nữ sẵn sàng dâng hiến; cảm xúc của nữ đến từ từ nhưng kéo dài."'},
+    {section:1,hard:false,
+      q:"Về phương diện tôn giáo và luân lý, người nữ thường gặp khó khăn nhất trong nhân đức nào?",
+      options:["Đức tiết độ và khiết tịnh.","Đức bác ái trong lời nói.","Đức tin vững mạnh.","Đức cậy trông."],
+      correct:1,
+      explain:'Tài liệu: "Nữ... khó giữ đức bác ái trong lời nói." (Người nam khó giữ đức tiết độ và khiết tịnh hơn.)'},
+    {section:1,hard:false,
+      q:'Theo "Luật ưu tiên" về tâm lý, đặc điểm nào sau đây được tài liệu nêu lên?',
+      options:["Người nam ưu tiên lý tưởng; người nữ ưu tiên công việc.","Người nam ưu tiên thể xác; người nữ ưu tiên trái tim.","Người nam ưu tiên sự nghiệp; người nữ ưu tiên con cái.","Người nam ưu tiên lý trí; người nữ ưu tiên tình cảm."],
+      correct:1,
+      explain:'Tài liệu: "Nơi người nam thể xác ưu tiên. Nơi người nữ trái tim ưu tiên."'},
+    {section:1,hard:false,
+      q:'Theo "Luật phân cách", trái tim người nữ có đặc điểm gì so với người nam?',
+      options:["Trái tim người nữ có hai ngăn; trong khi người nam có bốn ngăn.","Trái tim người nữ chỉ có một ngăn; trong khi người nam có bốn ngăn.","Trái tim người nữ rộng hơn, bao gồm mọi người thân trong gia đình.","Trái tim người nữ và người nam đều có bốn ngăn như nhau."],
+      correct:1,
+      explain:'Tài liệu: "Nơi người nam trái tim có bốn ngăn. Nơi người nữ trái tim chỉ có một ngăn."'},
+    {section:1,hard:true,
+      q:'Theo "Luật phân cách", trong bốn ngăn của trái tim người nam, ngăn thứ ba dành riêng cho điều gì?',
+      options:["Công việc.","Người vợ.","Lý tưởng.","Giải trí."],
+      correct:2,
+      explain:"Tài liệu nêu rõ thứ tự bốn ngăn nơi trái tim người nam: Ngăn 1 dành cho người vợ; Ngăn 2 dành cho công việc; Ngăn 3 dành cho lý tưởng; Ngăn 4 dành cho giải trí."},
+    {section:1,hard:false,
+      q:'Theo "Luật bất đồng cảm", đặc điểm phản ứng cảm xúc của người nữ là gì?',
+      options:["Phản ứng nhanh nhưng mau dứt.","Phản ứng nhanh và kéo dài.","Phản ứng chậm nhưng kéo dài.","Phản ứng chậm và cũng mau dứt."],
+      correct:2,
+      explain:'Tài liệu: "Người nữ phản ứng chậm nhưng kéo dài." (Người nam phản ứng nhanh nhưng mau dứt.)'},
+    {section:1,hard:false,
+      q:'Theo "Luật thính giác", đặc điểm nào sau đây mô tả đúng về người nữ?',
+      options:["Người nữ có lưỡi ngắn.","Người nữ có lỗ tai to; đôi tai gắn liền với trái tim; thích nghe và dễ tin.","Người nữ ít thích nghe chuyện tâm sự và thường giữ im lặng.","Người nữ có lỗ tai to nhưng không dễ tin những gì nghe được."],
+      correct:1,
+      explain:'Tài liệu: "Người nữ có lỗ tai to" và "Đôi tai của chị gắn liền với trái tim, chị thích nghe và dễ tin."'},
+    {section:1,hard:true,
+      q:'Câu trích dẫn Kinh Thánh mở đầu Bài 8.1 — "Anh em hãy hết lòng khiêm tốn, hiền hậu, nhẫn nại, chịu đựng nhau trong đức ái..." — được lấy từ thư nào của Thánh Phaolô?',
+      options:["Thư thứ nhất gởi tín hữu Côrintô (1 Cr).","Thư gởi tín hữu Rôma (Rm).","Thư gởi tín hữu Êphêsô (Ep 4, 2-3).","Thư gởi tín hữu Côlôsê (Cl)."],
+      correct:2,
+      explain:"Câu trích dẫn mở đầu Bài 8.1 ghi rõ nguồn: (Ep 4, 2-3) — Thư gởi tín hữu Êphêsô."},
+    {section:1,hard:false,
+      q:'Theo lời khuyên trong "Luật ưu tiên", người chồng cần ghi nhớ điều gì khi đáp ứng nhu cầu của người vợ?',
+      options:["Tập trung lo công ăn việc làm và tài chính gia đình.","Thường xuyên dọn bữa ăn ngon và đúng giờ.","Đáp ứng nhu cầu vợ bằng lời nói dịu ngọt, tâm tình, cử chỉ âu yếm; phát huy các giá trị tinh thần.","Tham gia các hoạt động xã hội để trở thành chỗ dựa tinh thần cho vợ."],
+      correct:2,
+      explain:'Tài liệu: "Chị sống bằng tình cảm hơn lý luận... Hãy đáp ứng bằng những lời nói dịu ngọt, tâm tình, những cử chỉ âu yếm. Hãy phát huy và theo đuổi những giá trị tinh thần."'},
+    {section:1,hard:false,
+      q:'Theo "Luật chi tiết", lời khuyên nào được dành riêng cho người vợ?',
+      options:["Hãy nhắc nhở chồng thường xuyên về các dịp kỷ niệm quan trọng.","Hãy giảm bớt những chi tiết làm chồng bận tâm; đừng cằn nhằn; bỏ qua những quên sót nhỏ nhặt.","Hãy chú trọng đến vẻ bề ngoài và trang điểm duyên dáng.","Hãy ghi chép tỉ mỉ mọi chi tiết để tránh tranh cãi."],
+      correct:1,
+      explain:'Tài liệu (Luật chi tiết – lời khuyên cho chị): "Giảm bớt những chi tiết làm anh bận tâm. Đừng cằn nhằn, hãy bỏ qua những quên sót nhỏ nhặt của anh."'},
+    {section:1,hard:false,
+      q:"Tình yêu chân thật, theo tài liệu, được mô tả như thế nào?",
+      options:["Không nhìn thấy khiếm khuyết của người kia; chỉ nhìn thấy ưu điểm.","Thấy rõ khiếm khuyết của người kia nhưng vui vẻ đón nhận; đồng thời khám phá và khéo léo phát huy những ưu điểm của họ.","Chịu đựng khiếm khuyết của người kia trong thinh lặng và cầu nguyện.","Yêu thương người kia vì những ưu điểm nổi bật, bất chấp khiếm khuyết."],
+      correct:1,
+      explain:'Tài liệu: "Tình yêu chân thật là thấy rõ khiếm khuyết của người khác, nhưng vui vẻ đón nhận, đồng thời khám phá ra những ưu điểm của họ và khéo léo phát huy."'},
+
+    {section:2,hard:false,
+      q:"Lời cam kết hôn nhân được trích dẫn trong tài liệu đề cập đến bao nhiêu hoàn cảnh của cuộc sống vợ chồng?",
+      options:["Hai hoàn cảnh: thịnh vượng và gian nan.","Ba hoàn cảnh: thịnh vượng, gian nan và bệnh hoạn.","Bốn hoàn cảnh: thịnh vượng, gian nan, bệnh hoạn và mạnh khoẻ.","Năm hoàn cảnh, bao gồm cả khi vui và khi buồn."],
+      correct:2,
+      explain:'Lời cam kết nêu: "khi thịnh vượng cũng như lúc gian nan, khi bệnh hoạn cũng như lúc mạnh khoẻ" — đủ bốn hoàn cảnh.'},
+    {section:2,hard:false,
+      q:"Theo tài liệu Bài 8.2, vợ chồng cần bao nhiêu điều để tình nghĩa ngày càng đậm đà và bền chặt?",
+      options:["Năm điều.","Sáu điều.","Bảy điều.","Tám điều."],
+      correct:2,
+      explain:"Tài liệu liệt kê đủ bảy điều: tôn trọng nhau, hy sinh cho nhau, đối thoại với nhau, dành thời giờ cho nhau, nói lời âu yếm, làm tròn bổn phận vợ chồng, và cùng nhau cầu nguyện."},
+    {section:2,hard:false,
+      q:'Theo tài liệu, "tôn trọng nhau" trước hết đòi hỏi điều gì?',
+      options:["Nói những lời dịu dàng, âu yếm với nhau mỗi ngày.","Nhìn nhận nhau — coi nhau là bạn đời, là hình ảnh Thiên Chúa, được tạo dựng để bổ túc và hiệp thông với nhau.","Không bao giờ nói xấu nhau trước người thứ ba.","Luôn tôn trọng ý kiến của nhau trong mọi quyết định."],
+      correct:1,
+      explain:'Tài liệu: "Trước hết, trọng kính là phải nhìn nhận nhau. Vợ không phải là người hầu... mà là người bạn đời... cả hai đều là hình ảnh Thiên Chúa, được tạo dựng để trở thành trợ tá của nhau."'},
+    {section:2,hard:false,
+      q:"Gia đình nào được tài liệu nêu gương về sự đón nhận nhau trong hôn nhân?",
+      options:["Gia đình của ông Tôbia và bà Sara trong Cựu Ước.","Gia đình của ông Giacóp và bà Rackhel.","Gia đình Nadarét — với lời sứ thần: \u201cĐừng sợ đón bà Maria vợ ông về...\u201d","Gia đình của các thánh tử đạo Việt Nam."],
+      correct:2,
+      explain:"Tài liệu: \u201cGia đình Nadarét được bắt đầu bằng sự đón nhận: 'Này ông Giuse, con cháu Đavít, đừng sợ đón bà Maria vợ ông về...' (Mt 1,20).\u201d"},
+    {section:2,hard:false,
+      q:"Câu Kinh Thánh nào sau đây được tài liệu trích dẫn để nói về chiều sâu của tình yêu hy sinh?",
+      options:["Lòng mến tha thứ tất cả, tin tưởng tất cả, hy vọng tất cả, chịu đựng tất cả. (1 Cr 13,7)","Không có tình thương nào cao cả hơn tình thương của người đã hy sinh tính mạng vì bạn hữu. (Ga 15,13)","Như Chúa đã tha thứ cho anh em, anh em cũng hãy tha thứ cho nhau. (Cl 3,13)","Chồng hãy làm tròn bổn phận đối với vợ, và vợ đối với chồng cũng vậy. (1 Cr 7,3)"],
+      correct:1,
+      explain:'Tài liệu trích Ga 15,13: "Không có tình thương nào cao cả hơn tình thương của người đã hy sinh tính mạng vì bạn hữu của mình."'},
+    {section:2,hard:false,
+      q:'Theo tài liệu, khi nào sự nhượng bộ KHÔNG phải là hy sinh quên mình mà bị coi là "đồng lõa với cái xấu"?',
+      options:["Khi nhượng bộ để tránh những tranh cãi không cần thiết trong gia đình.","Khi nhượng bộ về sở thích cá nhân như giải trí, mua sắm.","Khi chấp nhận làm điều sai trái về luân lý hay đạo đức để làm vui lòng người bạn đời.","Khi nhượng bộ trong việc phân chia công việc nhà."],
+      correct:2,
+      explain:'Tài liệu: "Chấp nhận làm điều xấu để làm vui lòng chồng hay vợ không phải là hy sinh quên mình, nhưng là đồng loã với cái xấu và càng làm hại người kia hơn."'},
+    {section:2,hard:true,
+      q:"Trong đoạn thư Côlôsê (Cl 3,12-13) được trích dẫn trong tài liệu, tâm tình nào sau đây KHÔNG được Thánh Phaolô đề cập đến?",
+      options:["Từ bi, nhân hậu.","Khiêm cung ôn hoà, nhẫn nại.","Tha thứ cho nhau.","Dũng cảm vác thập giá theo Chúa Kitô."],
+      correct:3,
+      explain:'Đoạn Cl 3,12-13 liệt kê: từ bi, nhân hậu, khiêm cung, ôn hoà, nhẫn nại, chịu đựng và tha thứ cho nhau. Tài liệu không nhắc đến hình ảnh "vác thập giá" trong đoạn này.'},
+    {section:2,hard:false,
+      q:'Câu Kinh Thánh "Đâu có hai ba người họp lại nhân danh Thầy, thì có Thầy ở đấy, giữa họ" thuộc đoạn Tin Mừng nào?',
+      options:["Ga 15,13.","Mt 18,20.","1 Cr 7,3-5.","Ep 4,2-3."],
+      correct:1,
+      explain:'Tài liệu trích Mt 18,20: "Đâu có hai ba người họp lại nhân danh Thầy, thì có Thầy ở đấy, giữa họ." Câu này được nhắc đến khi nói về sự hiện diện của Thiên Chúa trong đời sống cầu nguyện chung của vợ chồng.'},
+    {section:2,hard:true,
+      q:"Theo Thánh Phaolô trong thư thứ nhất gởi tín hữu Côrintô (1 Cr 7,3-5), điều kiện nào cho phép vợ chồng từ chối nhau trong một thời gian?",
+      options:["Khi một người đang thực hiện công tác truyền giáo xa nhà.","Khi hai người đồng thuận để chuyên lo cầu nguyện, sau đó lại ăn ở với nhau như thường.","Khi Giáo Hội chỉ định những thời kỳ ăn chay và kiêng thịt.","Khi một trong hai người đang đau bệnh nghiêm trọng."],
+      correct:1,
+      explain:'Tài liệu trích 1 Cr 7,3-5: "...trừ phi hai người đồng ý sống như vậy trong một thời gian, để chuyên lo cầu nguyện; rồi hai người lại ăn ở với nhau như thường."'},
+    {section:2,hard:false,
+      q:"Theo tài liệu, đối thoại trong gia đình được định nghĩa như thế nào?",
+      options:["Chỉ là bày tỏ suy nghĩ và mong ước của mình với người kia.","Là nói và nghe — nghe không chỉ bằng đôi tai mà còn bằng cả khối óc và con tim.","Là cùng nhau quyết định mọi vấn đề theo đa số.","Là nhờ người thứ ba trung gian hoà giải khi có bất đồng."],
+      correct:1,
+      explain:'Tài liệu: "Đối thoại là nói và nghe. Cần nói cho nhau biết những điều mình suy nghĩ và mong ước... Nghe không phải chỉ bằng đôi tai, mà còn bằng cả khối óc và con tim."'},
+    {section:2,hard:true,
+      q:'Tài liệu khẳng định điều gì về sự "hy sinh" trong lĩnh vực luân lý và đạo đức của đời sống hôn nhân?',
+      options:["Hy sinh có nghĩa là nhường bộ hoàn toàn trong mọi lĩnh vực để giữ hoà khí gia đình.","Chấp nhận làm điều xấu để chiều lòng bạn đời là hình thức hy sinh cao cả nhất.","Chấp nhận làm điều xấu để chiều lòng bạn đời không phải là hy sinh quên mình, mà là đồng loã với cái xấu và càng làm hại người kia hơn.","Hy sinh trong hôn nhân không bao giờ liên quan đến lĩnh vực luân lý hay đạo đức."],
+      correct:2,
+      explain:'Tài liệu nhấn mạnh ranh giới quan trọng: "Chấp nhận làm điều xấu để làm vui lòng chồng hay vợ không phải là hy sinh quên mình, nhưng là đồng loã với cái xấu và càng làm hại người kia hơn." Đây là điểm dễ nhầm lẫn giữa hy sinh đích thực và thoả hiệp với điều sai trái.'},
+    {section:2,hard:false,
+      q:"Câu tục ngữ Việt Nam nào được trích dẫn trong Bài 8.2 để nói về sức mạnh của sự đồng thuận vợ chồng?",
+      options:["\u201cMột nhịn chín lành\u201d.","\u201cTương kính như tân\u201d.","\u201cThuận vợ thuận chồng tát bể Đông cũng cạn\u201d.","\u201cĐói no thiếp chịu, lạnh lùng thiếp cam\u201d."],
+      correct:2,
+      explain:'Tài liệu trích câu: "Thuận vợ thuận chồng tát bể Đông cũng cạn." ("Tương kính như tân" và "Một nhịn chín lành" cũng xuất hiện trong tài liệu nhưng mang ý nghĩa khác.)'},
+    {section:2,hard:false,
+      q:"Theo Thánh Phaolô (1 Cr 7,3-5), nguy cơ nào có thể xảy ra nếu vợ chồng không tiết dục nổi mà từ chối nhau?",
+      options:["Tình yêu vợ chồng sẽ lạnh nhạt dần theo thời gian.","Satan lợi dụng để cám dỗ.","Họ sẽ rơi vào sự lười biếng thiêng liêng.","Họ sẽ không còn xứng đáng tham dự các Bí tích."],
+      correct:1,
+      explain:'Tài liệu trích 1 Cr 7,3-5: "...kẻo vì hai người không tiết dục nổi mà Satan lợi dụng để cám dỗ."'},
+    {section:2,hard:false,
+      q:"Theo tài liệu, vai trò của cầu nguyện trong đời sống hôn nhân được mô tả như thế nào?",
+      options:["Là một bổn phận quan trọng nhưng không nhất thiết phải thực hiện hằng ngày.","Thiên Chúa ở giữa như nút dây nối kết hai vợ chồng, giúp họ lắng nghe, hiểu nhau, thuỷ chung và vượt qua mọi gian nan thử thách.","Là việc bổ sung cho các hoạt động khác nhưng không quyết định hạnh phúc gia đình.","Là bổn phận riêng của người vợ trong gia đình Công giáo."],
+      correct:1,
+      explain:'Tài liệu: "Ngài ở giữa như nút dây nối kết hai vợ chồng, giúp họ lắng nghe nhau, hiểu nhau, thuỷ chung với nhau và cùng nhau tiến bước, vượt qua mọi gian nan thử thách."'},
+    {section:2,hard:false,
+      q:"Theo tài liệu, câu nào sau đây mô tả ĐÚNG quan điểm về bổn phận vợ chồng trong đời sống hôn nhân?",
+      options:["Bổn phận vợ chồng là quyền của chồng và nghĩa vụ của vợ.","Bổn phận vợ chồng không nên đề cập trong Giáo lý vì thuộc lĩnh vực riêng tư.","Nên một trong thân xác là yếu tố nòng cốt của tình yêu vợ chồng; cần làm cho nó luôn mới mẻ và phong phú.","Bổn phận vợ chồng chỉ quan trọng trong những năm đầu hôn nhân."],
+      correct:2,
+      explain:'Tài liệu: "Nên một trong thân xác là một trong những yếu tố nòng cốt của tình yêu vợ chồng... Đừng làm cho việc chăn gối thành nhàm chán và nghèo nàn, nhưng cần làm cho nó nên mới mẻ và phong phú."'}
+  ];
+
+  var LETTERS = ['A','B','C','D'];
+  var TOTAL = QUESTIONS.length;
+  var PART1_TOTAL = QUESTIONS.filter(function(q){return q.section===1;}).length;
+  var PART2_TOTAL = QUESTIONS.filter(function(q){return q.section===2;}).length;
+  var HARD_TOTAL = QUESTIONS.filter(function(q){return q.hard;}).length;
+
+  var state = {
+    screen:'intro',
+    current:0,
+    answers:new Array(TOTAL).fill(null)
+  };
+
+  var app = document.getElementById('app');
+
+  function escapeHtml(str){
+    return (str||'').replace(/[&<>"']/g, function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
+  }
+
+  function eyebrow(){
+    return '<div class="eyebrow-strip"><span class="cross">✠</span>GIÁO LÝ HÔN NHÂN<span class="sep">·</span>BÀI 8</div>';
+  }
+
+  function renderIntro(){
+    return eyebrow() +
+      '<section class="hero-card">' +
+        '<p class="kicker">Bộ câu hỏi ôn tập</p>' +
+        '<h1>Hôn Nhân Là Một Mầu Nhiệm</h1>' +
+        '<p class="lede">' + TOTAL + ' câu trắc nghiệm giúp anh chị ôn lại những điều cốt yếu đã học trong Bài 8, gồm ' + HARD_TOTAL + ' câu mang dấu <span class="seal-inline">★</span> đòi hỏi đọc kỹ tài liệu mới làm được.</p>' +
+        '<button class="btn-primary" data-action="start">Bắt đầu làm bài →</button>' +
+        '<p class="hint">Mỗi câu chỉ chọn một đáp án đúng nhất. Sau khi chọn, đáp án và phần giải thích sẽ hiện ra ngay để anh chị tiện ôn tập.</p>' +
+      '</section>';
+  }
+
+  function renderQuiz(){
+    var i = state.current;
+    var q = QUESTIONS[i];
+    var answered = state.answers[i];
+    var isLast = i === TOTAL - 1;
+    var sectionLabel = q.section === 1 ? 'Phần I · Sự khác biệt nam nữ' : 'Phần II · Hoà hợp trong khác biệt';
+    var pct = Math.round(((i) / TOTAL) * 100);
+
+    var optionsHtml = q.options.map(function(opt, idx){
+      var cls = 'option-btn';
+      if(answered !== null){
+        if(idx === q.correct) cls += ' is-correct';
+        else if(idx === answered) cls += ' is-incorrect';
+        else cls += ' is-muted';
+      }
+      var disabled = answered !== null ? 'disabled' : '';
+      return '<button class="' + cls + '" data-action="select-option" data-opt="' + idx + '" ' + disabled + '>' +
+               '<span class="opt-letter">' + LETTERS[idx] + '</span>' +
+               '<span class="opt-text">' + opt + '</span>' +
+             '</button>';
+    }).join('');
+
+    var feedbackHtml = '';
+    if(answered !== null){
+      var isOk = answered === q.correct;
+      feedbackHtml = '<div class="feedback-panel ' + (isOk ? '' : 'is-wrong') + '">' +
+        '<p class="verdict ' + (isOk ? 'ok' : 'no') + '">' +
+          (isOk ? '✓ Chính xác.' : '✕ Chưa đúng — đáp án đúng là <strong>' + LETTERS[q.correct] + '</strong>.') +
+        '</p>' +
+        '<p>' + q.explain + '</p>' +
+      '</div>';
+    }
+
+    var sealHtml = q.hard ? '<div class="seal"><span class="star">★</span>CÂU<br>KHÓ</div>' : '';
+
+    return eyebrow() +
+      '<div class="progress-meta"><span class="section-label">' + sectionLabel + '</span><span class="count">Câu ' + (i+1) + ' / ' + TOTAL + '</span></div>' +
+      '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+      '<section class="q-card">' +
+        sealHtml +
+        '<p class="q-num">Câu ' + String(i+1).padStart(2,'0') + '</p>' +
+        '<p class="q-text">' + q.q + '</p>' +
+        optionsHtml +
+        feedbackHtml +
+        '<div class="nav-row">' +
+          '<button class="btn-ghost" data-action="prev" ' + (i===0 ? 'disabled' : '') + '>← Câu trước</button>' +
+          '<button class="btn-primary" data-action="next" ' + (answered===null ? 'disabled' : '') + '>' + (isLast ? 'Xem kết quả →' : 'Câu sau →') + '</button>' +
+        '</div>' +
+      '</section>';
+  }
+
+  function computeStats(){
+    var total=0, p1=0, p2=0, hardCorrect=0;
+    var missed=[];
+    QUESTIONS.forEach(function(q, idx){
+      var a = state.answers[idx];
+      var ok = a === q.correct;
+      if(ok){
+        total++;
+        if(q.section===1) p1++; else p2++;
+        if(q.hard) hardCorrect++;
+      } else {
+        missed.push({num:idx+1, hard:q.hard, index:idx});
+      }
+    });
+    return {total:total, p1:p1, p2:p2, hardCorrect:hardCorrect, missed:missed};
+  }
+
+  function tierMessage(total){
+    if(total >= 28) return 'Xuất sắc — anh chị đã thấu hiểu sâu sắc giáo huấn của Hội Thánh về ơn gọi hôn nhân.';
+    if(total >= 23) return 'Rất tốt — nền tảng giáo lý của anh chị khá vững chắc, chỉ cần ôn lại một vài chi tiết.';
+    if(total >= 17) return 'Khá — anh chị nên đọc lại tài liệu để hiểu sâu hơn một số nội dung quan trọng.';
+    return 'Anh chị nên dành thêm thời gian đọc kỹ tài liệu Bài 8 trước khi tiếp tục hành trình chuẩn bị hôn nhân.';
+  }
+
+  function renderResults(){
+    var s = computeStats();
+    var pct = Math.round((s.total / TOTAL) * 100);
+
+    var chipsHtml = s.missed.map(function(m){
+      return '<button class="chip ' + (m.hard ? 'hard' : '') + '" data-action="goto" data-index="' + m.index + '">Câu ' + m.num + '</button>';
+    }).join('');
+
+    var missedInner = s.missed.length
+      ? '<div class="missed-chips">' + chipsHtml + '</div>'
+      : '<p class="no-missed">Anh chị đã trả lời đúng toàn bộ ' + TOTAL + ' câu. Xin chúc mừng!</p>';
+
+    return eyebrow() +
+      '<section class="results-card">' +
+        '<p class="kicker">Kết quả</p>' +
+        '<h2>Kết quả bài làm</h2>' +
+        '<div class="score-ring" style="--pct:' + pct + '">' +
+          '<div class="score-ring-inner">' +
+            '<span class="score-num">' + s.total + '</span>' +
+            '<span class="score-den">trên ' + TOTAL + '</span>' +
+          '</div>' +
+        '</div>' +
+        '<p class="tier-msg">' + tierMessage(s.total) + '</p>' +
+        '<div class="stat-grid">' +
+          '<div class="stat-box"><span class="num">' + s.p1 + '/' + PART1_TOTAL + '</span><span class="label">PHẦN I</span></div>' +
+          '<div class="stat-box"><span class="num">' + s.p2 + '/' + PART2_TOTAL + '</span><span class="label">PHẦN II</span></div>' +
+          '<div class="stat-box"><span class="num">' + s.hardCorrect + '/' + HARD_TOTAL + '</span><span class="label">CÂU KHÓ ★</span></div>' +
+        '</div>' +
+        '<div class="missed-block">' +
+          '<h3>' + (s.missed.length ? 'Những câu nên xem lại' : 'Hoàn hảo!') + '</h3>' +
+          missedInner +
+        '</div>' +
+        '<button class="btn-primary" data-action="restart">Làm lại bài ↻</button>' +
+      '</section>' +
+      '<p class="closing-line">✠ Lạy Chúa, xin chúc lành cho các gia đình. ✠</p>';
+  }
+
+  function render(){
+    if(state.screen === 'intro') app.innerHTML = renderIntro();
+    else if(state.screen === 'quiz') app.innerHTML = renderQuiz();
+    else app.innerHTML = renderResults();
+  }
+
+  app.addEventListener('click', function(e){
+    var t = e.target.closest('[data-action]');
+    if(!t) return;
+    var action = t.getAttribute('data-action');
+
+    if(action === 'start'){
+      state.screen = 'quiz';
+      state.current = 0;
+      render();
+    } else if(action === 'select-option'){
+      var qIdx = state.current;
+      if(state.answers[qIdx] !== null) return;
+      var optIdx = parseInt(t.getAttribute('data-opt'), 10);
+      state.answers[qIdx] = optIdx;
+      render();
+    } else if(action === 'prev'){
+      if(state.current > 0){ state.current--; render(); }
+    } else if(action === 'next'){
+      if(state.current < TOTAL - 1){ state.current++; render(); }
+      else { state.screen = 'results'; render(); }
+    } else if(action === 'restart'){
+      state.screen = 'intro';
+      state.current = 0;
+      state.answers = new Array(TOTAL).fill(null);
+      render();
+    } else if(action === 'goto'){
+      state.current = parseInt(t.getAttribute('data-index'), 10);
+      state.screen = 'quiz';
+      render();
+    }
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
