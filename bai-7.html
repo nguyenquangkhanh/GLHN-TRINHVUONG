@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quiz: Bài 7 - Chúa Thánh Thần</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-2:#12285c;
+    --navy-light:#1e3a75;
+    --gold:#d4af37;
+    --white:#ffffff;
+    --green:#1e7d32;
+    --red:#c62828;
+    --fs:22pt;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Tahoma, Arial, sans-serif;
+    background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 100%);
+    color:var(--white);
+    font-size:var(--fs);
+    padding:30px 20px 80px;
+  }
+  h1{
+    text-align:center;
+    font-size:1.4em;
+    color:var(--gold);
+    margin-bottom:0.1em;
+    letter-spacing:1px;
+  }
+  h2{
+    text-align:center;
+    font-size:1em;
+    color:var(--white);
+    font-weight:normal;
+    margin-top:0;
+    margin-bottom:1em;
+  }
+  #progress{
+    text-align:center;
+    color:var(--gold);
+    font-size:0.6em;
+    margin-bottom:20px;
+  }
+  .card{
+    max-width:900px;
+    margin:0 auto;
+    background:var(--navy-light);
+    border-radius:18px;
+    padding:35px 40px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    border:2px solid var(--gold);
+  }
+  .question{
+    font-size:0.9em;
+    line-height:1.4;
+    margin-bottom:25px;
+    font-weight:600;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .option{
+    background:rgba(255,255,255,0.07);
+    border:2px solid rgba(212,175,55,0.4);
+    border-radius:12px;
+    padding:16px 20px;
+    cursor:pointer;
+    font-size:0.65em;
+    line-height:1.3;
+    transition:all 0.2s ease;
+  }
+  .option:hover{
+    background:rgba(212,175,55,0.15);
+    border-color:var(--gold);
+  }
+  .option.correct{
+    background:rgba(30,125,50,0.5);
+    border-color:var(--green);
+  }
+  .option.wrong{
+    background:rgba(198,40,40,0.5);
+    border-color:var(--red);
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  .feedback{
+    margin-top:20px;
+    font-size:0.6em;
+    font-weight:bold;
+    min-height:1.2em;
+  }
+  .feedback.correct{color:#7CFC9A;}
+  .feedback.wrong{color:#FF8A80;}
+  .nav-buttons{
+    display:flex;
+    justify-content:space-between;
+    margin-top:30px;
+  }
+  button.nav{
+    font-size:0.55em;
+    padding:12px 26px;
+    border-radius:10px;
+    border:none;
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:bold;
+    cursor:pointer;
+  }
+  button.nav:disabled{
+    opacity:0.4;
+    cursor:not-allowed;
+  }
+  #result{
+    max-width:900px;
+    margin:0 auto;
+    text-align:center;
+    background:var(--navy-light);
+    border-radius:18px;
+    padding:50px 40px;
+    border:2px solid var(--gold);
+    display:none;
+  }
+  #result h2{color:var(--gold);font-size:1.1em;}
+  #score{
+    font-size:1.5em;
+    color:var(--white);
+    margin:20px 0;
+  }
+  #restart{
+    font-size:0.55em;
+    padding:14px 30px;
+    border-radius:10px;
+    border:none;
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:20px;
+  }
+</style>
+</head>
+<body>
+
+<h1>CÂU HỎI TRẮC NGHIỆM</h1>
+<h2>Bài 7: Chúa Thánh Thần</h2>
+<div id="progress"></div>
+
+<div class="card" id="quizCard">
+  <div class="question" id="questionText"></div>
+  <div class="options" id="optionsBox"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="nav-buttons">
+    <button class="nav" id="prevBtn">← Câu trước</button>
+    <button class="nav" id="nextBtn">Câu tiếp →</button>
+  </div>
+</div>
+
+<div id="result">
+  <h2>KẾT QUẢ</h2>
+  <div id="score"></div>
+  <button id="restart">Làm lại</button>
+</div>
+
+<script>
+const questions = [
+{q:"Câu 1. Nhận định nào sau đây diễn tả chính xác nhất về bản thể của Chúa Thánh Thần?",
+ opts:["Là một luồng năng lượng thiêng liêng tỏa ra từ Chúa Cha.",
+       "Là Ngôi Ba Thiên Chúa, đồng bản thể và được thờ phượng tôn vinh cùng Chúa Cha và Chúa Con.",
+       "Là một khái niệm trừu tượng chỉ tình yêu giữa Chúa Cha và Chúa Con.",
+       "Là một cảm xúc đánh động tâm hồn con người hướng về Thiên Chúa."], ans:1},
+{q:"Câu 2. Trong Kinh Thánh, đâu là các danh xưng dùng để gọi Chúa Thánh Thần?",
+ opts:["Đấng bảo trợ, Đấng an ủi, Thần chân lý, Thần khí của lời hứa, Thần khí của Chúa Kitô, Thần khí vinh hiển.",
+       "Đấng bảo trợ, Thần chân lý, Nước hằng sống, Hơi thở thần linh, Chim bồ câu, Ánh sáng.",
+       "Đấng sáng tạo, Ngôi Lời nhập thể, Thần khí vinh hiển, Đấng cứu chuộc, Thần khí mưu lược.",
+       "Đấng an ủi, Thần khí vinh hiển, Nguồn mạch sự sống, Lửa thiêng, Dấu ấn."], ans:0},
+{q:"Câu 3. Những hình ảnh nào sau đây liệt kê đúng và đầy đủ các biểu tượng của Chúa Thánh Thần?",
+ opts:["Nước, Lửa, Gió, Khí, Bánh, Rượu, Bồ câu, Ánh sáng.",
+       "Sự khôn ngoan, Sự hiểu biết, Mưu lược, Sức mạnh, Lòng đạo đức, Kính sợ Chúa.",
+       "Nước, Xức dầu, Lửa, Áng mây và ánh sáng, Chim bồ câu, Dấu ấn, Đặt tay, Ngón tay.",
+       "Ánh sáng, Áng mây, Đền thờ, Hòm bia giao ước, Dầu thánh, Bàn tay, Ngón tay."], ans:2},
+{q:"Câu 4. Thánh Phaolô trong thư thứ nhất gửi tín hữu Côrintô (1Cr 12,3) đã khẳng định điều gì về vai trò khơi dậy đức tin của Chúa Thánh Thần?",
+ opts:["Đức tin là kết quả của nỗ lực lý trí con người để nhận biết Đức Giêsu.",
+       "Không ai có thể nói \"Đức Giêsu là Chúa\" nếu không ở trong Thần Khí.",
+       "Thần Khí giúp con người hiểu được mọi mầu nhiệm Kinh Thánh.",
+       "Đức tin là một cảm xúc được Thần Khí khơi dậy trong lúc cầu nguyện."], ans:1},
+{q:"Câu 5. Thư gửi tín hữu Galát (Gl 4,6) cho biết Chúa Thánh Thần giúp con người đi vào mối tương quan nào với Thiên Chúa?",
+ opts:["Mối tương quan tôi tớ trung thành.",
+       "Mối tương quan bằng hữu qua Đức Kitô.",
+       "Mối tương quan con thảo để kêu lên \"Áp-ba, Cha ơi!\".",
+       "Mối tương quan đồng thừa kế vinh quang."], ans:2},
+{q:"Câu 6. Trong Hội Thánh, chúng ta KHÔNG nhận ra sự hiện diện của Chúa Thánh Thần qua phương tiện nào sau đây?",
+ opts:["Kinh Thánh do Ngài linh hứng và Thánh Truyền.",
+       "Những nỗ lực suy luận triết học thuần túy của lý trí con người.",
+       "Phụng vụ bí tích, đặc sủng và các thừa tác vụ.",
+       "Đời sống tông đồ, chứng tá các thánh và Huấn quyền."], ans:1},
+{q:"Câu 7. Từ \"Thánh Thần\" được dịch từ tiếng Do Thái mang ý nghĩa ban đầu là gì?",
+ opts:["Lửa và nước.", "Sức mạnh và quyền năng.", "Sự sống và tình yêu.", "Hơi thở, khí, gió."], ans:3},
+{q:"Câu 8. Đức Giêsu gọi Chúa Thánh Thần bằng danh xưng nào khi Ngài hứa sai Thánh Thần đến với các môn đệ (Ga 14,16 & Ga 16,13)?",
+ opts:["Thần khí của Lời hứa.", "Thần khí vinh hiển.", "Đấng Bảo Trợ và Thần Chân Lý.", "Thần khí làm cho nên nghĩa tử."], ans:2},
+{q:"Câu 9. Biểu tượng \"Nước\" trong các Bí tích liên quan đến Chúa Thánh Thần mang ý nghĩa thần học cốt lõi nào?",
+ opts:["Sự thanh tẩy bề ngoài của thân xác.",
+       "Dấu chỉ của cơn khát tâm linh được thỏa mãn.",
+       "Sự tái sinh và sự sống thần linh được ban phát (như nước hằng sống vọt ra từ Đức Kitô).",
+       "Sự bình an ngự xuống trên các tín hữu."], ans:2},
+{q:"Câu 10. Từ \"Kitô\" (Messia) trong tiếng Do Thái có nghĩa là gì, liên quan mật thiết đến biểu tượng nào của Chúa Thánh Thần?",
+ opts:["Người được tuyển chọn - Biểu tượng Dấu ấn.",
+       "Người được xức dầu bằng Thần Khí.",
+       "Người mang lửa tình yêu - Biểu tượng Lửa.",
+       "Người thanh tẩy muôn dân - Biểu tượng Nước."], ans:1},
+{q:"Câu 11. Sự kiện Chúa Thánh Thần ngự xuống dưới hình \"chim bồ câu\" diễn ra trong bối cảnh nào của Tân Ước?",
+ opts:["Lễ Hiển Dung trên núi Tabor.",
+       "Ngày Lễ Ngũ Tuần tại nhà Tiệc Ly.",
+       "Đức Maria thưa tiếng \"Xin Vâng\" trong biến cố Truyền Tin.",
+       "Đức Giêsu lên khỏi nước trong dịp chịu phép rửa ở sông Giođan."], ans:3},
+{q:"Câu 12. Hình ảnh \"Dấu ấn\" của Chúa Thánh Thần nói lên hiệu quả không thể xóa nhòa (ấn tín thiêng liêng) trong các Bí tích nào?",
+ opts:["Rửa Tội, Thánh Thể, Thêm Sức.",
+       "Rửa Tội, Thêm Sức, Truyền Chức Thánh.",
+       "Rửa Tội, Hôn Phối, Truyền Chức Thánh.",
+       "Thêm Sức, Xức Dầu Bệnh Nhân, Truyền Chức Thánh."], ans:1},
+{q:"Câu 13. Biểu tượng \"Áng mây và Ánh sáng\" trong Cựu Ước (như trên núi Sinai) mang ý nghĩa thần học kép nào về Thiên Chúa?",
+ opts:["Vừa đe dọa kẻ thù, vừa bảo vệ dân riêng.",
+       "Vừa ban sự sống, vừa thiêu đốt tội lỗi.",
+       "Vừa mặc khải Thiên Chúa cứu độ, vừa che khuất sự siêu việt của vinh quang Ngài.",
+       "Vừa thanh tẩy tâm hồn, vừa ghi dấu ấn vĩnh cửu."], ans:2},
+{q:"Câu 14. Ngay từ lúc khởi đầu Tạo thành (St 1,2), hoạt động của Thần Khí được miêu tả như thế nào để khẳng định Ngài là nguồn mạch sự sống?",
+ opts:["Ngài phán một lời và muôn loài xuất hiện.",
+       "Thần Khí Thiên Chúa bay lượn trên mặt nước.",
+       "Thần Khí thổi hơi vào bùn đất để tạo ra con người.",
+       "Ngài là đám mây bao phủ vũ trụ mờ mịt."], ans:1},
+{q:"Câu 15. Ngôn sứ Isaia (Is 11,1-2) đã tiên báo điều gì về Đấng Messia liên quan đến Chúa Thánh Thần?",
+ opts:["Thần Khí sẽ ban cho vị này quyền cai trị muôn dân bằng gậy sắt.",
+       "Thần Khí Chúa sẽ ngự trên Ngài với các đặc ân: khôn ngoan, minh mẫn, mưu lược, dũng mãnh, hiểu biết, kính sợ Chúa.",
+       "Ngài sẽ dùng lửa của Thần Khí để thanh tẩy thế gian.",
+       "Ngài sẽ làm phép rửa trong Thần Khí và nước."], ans:1},
+{q:"Câu 16. Đâu là thời điểm Chúa Giêsu mặc khải trọn vẹn về Chúa Thánh Thần cho nhân loại?",
+ opts:["Khi Ngài chịu phép rửa tại sông Giođan.",
+       "Khi Ngài giảng đạo trên núi.",
+       "Khi Ngài hóa hình trên núi hiển dung.",
+       "Khi Ngài được tôn vinh qua cái chết và sự sống lại."], ans:3},
+{q:"Câu 17. Vai trò của Chúa Thánh Thần đối với Hội Thánh trong biến cố Hiện Xuống (Lễ Ngũ Tuần) là gì?",
+ opts:["Đánh dấu sự kết thúc của thời kỳ Cựu Ước.",
+       "Khai sinh Hội Thánh, củng cố đức tin và ban sức mạnh để các Tông đồ công khai loan báo Đức Giêsu phục sinh.",
+       "Lập ra các cơ cấu phẩm trật và lề luật của Giáo hội.",
+       "Hướng dẫn các tông đồ viết các sách Tân Ước ngay lập tức."], ans:1},
+{q:"Câu 18. Khi người Kitô hữu lúng túng không biết cầu nguyện thế nào cho phải, Chúa Thánh Thần sẽ làm gì (theo Rm 8,26)?",
+ opts:["Đọc cho chúng ta những lời kinh cần thiết.",
+       "Đưa chúng ta vào trạng thái xuất thần.",
+       "Đến trợ giúp, dạy dỗ và cầu thay nguyện giúp cho chúng ta.",
+       "Khơi dậy trí hiểu để ta tự suy nghĩ ra lời cầu nguyện."], ans:2},
+{q:"Câu 19. Ơn nào của Chúa Thánh Thần giúp chúng ta biết phân biệt điều phải, điều trái trong cuộc sống hằng ngày?",
+ opts:["Ơn Hiểu Biết", "Ơn Khôn Ngoan", "Ơn Thông Minh", "Ơn Biết Lo Liệu"], ans:1},
+{q:"Câu 20. Ơn ban giúp người Kitô hữu hiểu biết sâu xa hơn những điều Thiên Chúa và Giáo Hội truyền dạy được gọi là ơn gì?",
+ opts:["Ơn Hiểu Biết", "Ơn Đạo Đức", "Ơn Sức Mạnh", "Ơn Kính Sợ Thiên Chúa"], ans:0},
+{q:"Câu 21. Khi đối diện với các quyết định quan trọng hoặc gặp phải những hoàn cảnh nan giải, khó khăn trong đời sống, ơn nào sẽ nâng đỡ và dẫn dắt hành động của chúng ta?",
+ opts:["Ơn Thông Minh", "Ơn Đạo Đức", "Ơn Biết Lo Liệu", "Ơn Khôn Ngoan"], ans:2},
+{q:"Câu 22. Điền vào chỗ trống: \"Ơn Sức Mạnh giúp ta ........................ và vượt qua mọi khó khăn.\"",
+ opts:["Nhận ra thánh ý Chúa", "Chu toàn việc bổn phận", "Tin yêu Chúa nồng nàn", "Tôn kính quyền phép Chúa"], ans:1},
+{q:"Câu 23. Ý nghĩa cốt lõi của \"Ơn Thông Minh\" mà Chúa Thánh Thần ban tặng là gì?",
+ opts:["Giúp ta học hành giỏi giang và thành đạt trong xã hội",
+       "Giúp ta giải quyết mọi khó khăn vật chất",
+       "Giúp ta nhận ra thánh ý Chúa",
+       "Giúp ta phân biệt rõ ràng điều phải điều trái"], ans:2},
+{q:"Câu 24. Ơn nào nâng đỡ chúng ta luôn vững lòng tin yêu Chúa và thôi thúc tâm hồn biết sẵn sàng nâng đỡ, giúp đỡ anh chị em xung quanh?",
+ opts:["Ơn Đạo Đức", "Ơn Kính Sợ Thiên Chúa", "Ơn Khôn Ngoan", "Ơn Hiểu Biết"], ans:0},
+{q:"Câu 25. \"Ơn Kính Sợ Thiên Chúa\" có ý nghĩa như thế nào trong đời sống Kitô hữu?",
+ opts:["Khiến ta run sợ trước hình phạt của Chúa và xa lánh Ngài",
+       "Giúp ta tôn kính sự công bằng, quyền phép Chúa và sợ làm phiền lòng Ngài",
+       "Giúp ta luôn chu toàn mọi bổn phận được giao phó",
+       "Giúp ta giải quyết các thử thách trong đời sống tâm linh"], ans:1}
+];
+
+let current = 0;
+let answered = new Array(questions.length).fill(null);
+const letters = ["A","B","C","D"];
+
+const questionText = document.getElementById('questionText');
+const optionsBox = document.getElementById('optionsBox');
+const feedback = document.getElementById('feedback');
+const progress = document.getElementById('progress');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const quizCard = document.getElementById('quizCard');
+const resultBox = document.getElementById('result');
+const scoreEl = document.getElementById('score');
+
+function render(){
+  const item = questions[current];
+  progress.textContent = `Câu ${current+1} / ${questions.length}`;
+  questionText.textContent = item.q;
+  optionsBox.innerHTML = "";
+  feedback.textContent = "";
+  feedback.className = "feedback";
+
+  item.opts.forEach((opt,i)=>{
+    const div = document.createElement('div');
+    div.className = "option";
+    div.textContent = letters[i] + ". " + opt;
+    div.onclick = () => selectAnswer(i);
+    if(answered[current] !== null){
+      div.classList.add('disabled');
+      if(i === item.ans) div.classList.add('correct');
+      if(i === answered[current] && i !== item.ans) div.classList.add('wrong');
+    }
+    optionsBox.appendChild(div);
+  });
+
+  if(answered[current] !== null){
+    if(answered[current] === item.ans){
+      feedback.textContent = "✔ Chính xác!";
+      feedback.classList.add('correct');
+    } else {
+      feedback.textContent = "✘ Sai rồi. Đáp án đúng là " + letters[item.ans] + ".";
+      feedback.classList.add('wrong');
+    }
+  }
+
+  prevBtn.disabled = current === 0;
+  nextBtn.textContent = current === questions.length-1 ? "Xem kết quả" : "Câu tiếp →";
+}
+
+function selectAnswer(i){
+  if(answered[current] !== null) return;
+  answered[current] = i;
+  render();
+}
+
+prevBtn.onclick = () => { if(current>0){current--; render();} };
+nextBtn.onclick = () => {
+  if(current === questions.length-1){
+    showResult();
+  } else {
+    current++;
+    render();
+  }
+};
+
+function showResult(){
+  quizCard.style.display = "none";
+  progress.style.display = "none";
+  let score = 0;
+  answered.forEach((a,i)=>{ if(a===questions[i].ans) score++; });
+  resultBox.style.display = "block";
+  scoreEl.textContent = `Bạn trả lời đúng ${score} / ${questions.length} câu`;
+}
+
+document.getElementById('restart').onclick = () => {
+  answered = new Array(questions.length).fill(null);
+  current = 0;
+  quizCard.style.display = "block";
+  progress.style.display = "block";
+  resultBox.style.display = "none";
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
