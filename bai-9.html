@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bài 9 - Tin Hội Thánh Công Giáo & Bí Tích Tổng Quát</title>
+<style>
+  :root{
+    --navy-900:#0a1a35;
+    --navy-800:#0f2547;
+    --navy-700:#15305c;
+    --navy-600:#1c3d73;
+    --navy-500:#254b8c;
+    --gold:#d4af37;
+    --white:#f5f7fa;
+    --green:#2e7d4f;
+    --red:#c0392b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    background:linear-gradient(160deg,var(--navy-900),var(--navy-700) 60%,var(--navy-800));
+    min-height:100vh;
+    color:var(--white);
+    padding:24px 12px 60px;
+  }
+  .container{
+    max-width:760px;
+    margin:0 auto;
+  }
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  header h1{
+    font-size:1.6rem;
+    color:var(--gold);
+    letter-spacing:0.5px;
+    text-shadow:0 2px 6px rgba(0,0,0,0.4);
+  }
+  header p{
+    margin-top:6px;
+    color:#c9d4e8;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:var(--navy-600);
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 8px;
+    border:1px solid var(--navy-500);
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--gold),#f0d878);
+    transition:width .3s ease;
+  }
+  #status-line{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.85rem;
+    color:#a9b8d6;
+    margin-bottom:20px;
+  }
+  .card{
+    background:var(--navy-800);
+    border:1px solid var(--navy-600);
+    border-radius:14px;
+    padding:22px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.35);
+    margin-bottom:18px;
+  }
+  .q-number{
+    display:inline-block;
+    background:var(--gold);
+    color:var(--navy-900);
+    font-weight:700;
+    padding:3px 12px;
+    border-radius:20px;
+    font-size:0.85rem;
+    margin-bottom:12px;
+  }
+  .q-text{
+    font-size:1.08rem;
+    line-height:1.5;
+    margin-bottom:16px;
+    color:var(--white);
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--navy-700);
+    border:1.5px solid var(--navy-500);
+    border-radius:10px;
+    padding:12px 14px;
+    cursor:pointer;
+    transition:all .2s ease;
+    font-size:0.98rem;
+  }
+  .option:hover{
+    background:var(--navy-600);
+    border-color:var(--gold);
+    transform:translateX(2px);
+  }
+  .option .letter{
+    flex-shrink:0;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:var(--navy-500);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:0.85rem;
+  }
+  .option.correct{
+    background:rgba(46,125,79,0.35);
+    border-color:var(--green);
+  }
+  .option.correct .letter{background:var(--green);}
+  .option.wrong{
+    background:rgba(192,57,43,0.35);
+    border-color:var(--red);
+  }
+  .option.wrong .letter{background:var(--red);}
+  .option.disabled{
+    cursor:default;
+    pointer-events:none;
+  }
+  .explain{
+    margin-top:12px;
+    font-size:0.88rem;
+    color:#c9d4e8;
+    background:var(--navy-900);
+    border-left:3px solid var(--gold);
+    padding:8px 12px;
+    border-radius:6px;
+    display:none;
+  }
+  .nav-btns{
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-top:22px;
+  }
+  button.nav{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    font-size:0.95rem;
+    font-weight:600;
+    cursor:pointer;
+    background:var(--navy-600);
+    color:var(--white);
+    transition:background .2s;
+  }
+  button.nav:hover:not(:disabled){background:var(--navy-500);}
+  button.nav:disabled{opacity:0.4;cursor:not-allowed;}
+  button.primary{
+    background:var(--gold);
+    color:var(--navy-900);
+  }
+  button.primary:hover{background:#e6c55c;}
+  #result-screen{
+    display:none;
+    text-align:center;
+    padding:40px 20px;
+  }
+  #result-screen h2{
+    font-size:1.8rem;
+    color:var(--gold);
+    margin-bottom:10px;
+  }
+  #score-circle{
+    width:150px;height:150px;
+    border-radius:50%;
+    background:var(--navy-700);
+    border:6px solid var(--gold);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    margin:20px auto;
+  }
+  #score-circle .big{font-size:2.2rem;font-weight:800;color:var(--white);}
+  #score-circle .small{font-size:0.85rem;color:#c9d4e8;}
+  #restart-btn{
+    margin-top:20px;
+    padding:14px 32px;
+    background:var(--gold);
+    color:var(--navy-900);
+    border:none;
+    border-radius:30px;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+  }
+  #restart-btn:hover{background:#e6c55c;}
+  #review-list{
+    text-align:left;
+    margin-top:24px;
+  }
+  .review-item{
+    background:var(--navy-800);
+    border-left:4px solid var(--navy-500);
+    border-radius:8px;
+    padding:12px 16px;
+    margin-bottom:10px;
+    font-size:0.9rem;
+  }
+  .review-item.ok{border-left-color:var(--green);}
+  .review-item.bad{border-left-color:var(--red);}
+  .review-item .rq{font-weight:600;margin-bottom:4px;}
+  .review-item .ra{color:#c9d4e8;}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>BÀI 9</h1>
+    <p>Trắc nghiệm: Tin Hội Thánh Công Giáo & Bí Tích Tổng Quát</p>
+  </header>
+
+  <div id="quiz-screen">
+    <div id="progress-wrap"><div id="progress-bar"></div></div>
+    <div id="status-line">
+      <span id="q-counter">Câu 1 / 25</span>
+      <span id="score-live">Điểm: 0</span>
+    </div>
+    <div class="card">
+      <div class="q-number" id="q-num-badge">CÂU 1</div>
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="explain" id="explain"></div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav" id="prev-btn">← Câu trước</button>
+      <button class="nav primary" id="next-btn" disabled>Câu tiếp →</button>
+    </div>
+  </div>
+
+  <div id="result-screen">
+    <h2>🎉 Hoàn thành!</h2>
+    <div id="score-circle">
+      <div class="big" id="final-score">0/25</div>
+      <div class="small">câu đúng</div>
+    </div>
+    <p id="score-msg"></p>
+    <button id="restart-btn">Làm lại</button>
+    <div id="review-list"></div>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Theo từ điển Công giáo, chữ \"Giáo Hội\" có nghĩa là gì?",opts:["Tổ chức chính trị","Đoàn thể của một tôn giáo","Nhóm từ thiện","Trường học tâm linh"],correct:1},
+{q:"Nguyên ngữ Hy Lạp của từ Giáo Hội là \"exclesia\", có ý nghĩa là gì?",opts:["Ngôi nhà của Thiên Chúa","Tòa án tối cao","Sự tập hợp dân chúng, quy tụ đám đông","Dân tộc Israel"],correct:2},
+{q:"Sách giáo lý Công giáo định nghĩa Hội Thánh là gì?",opts:["Tổ chức phi chính phủ","Dân Thiên Chúa gồm những người tin theo Chúa Kitô","Tập hợp những người hoàn hảo","Cộng đoàn những người không bao giờ phạm tội"],correct:1},
+{q:"Hội Thánh được khởi đầu từ đâu?",opts:["Từ sự tình cờ của lịch sử","Từ sáng kiến của các Tông đồ","Từ ý định cứu độ của Thiên Chúa Cha","Từ yêu cầu của người dân"],correct:2},
+{q:"Giai đoạn chuẩn bị gần cho Hội Thánh bắt đầu bằng sự kiện nào?",opts:["Kêu gọi ông Ápraham","Tuyển chọn dân Ítraen làm dân Thiên Chúa qua giao ước trên núi Sinai","Nước lụt thời Nôê","Dân Israel vào đất hứa"],correct:1},
+{q:"Hội Thánh được Chúa Giêsu thiết lập trên nền tảng cơ cấu hữu hình nào đầu tiên?",opts:["Nhóm Mười Hai với Phêrô làm thủ lãnh","72 môn đệ","Các tư tế Do Thái","Dân chúng Giêrusalem"],correct:0},
+{q:"Theo ý nghĩa thiêng liêng, Hội Thánh được sinh ra từ đâu?",opts:["Từ bữa Tiệc Ly","Từ dòng sông Giođan","Từ trái tim bị đâm thâu của Đức Kitô trên thập giá","Từ hang đá Bêlem"],correct:2},
+{q:"Hội Thánh được tỏ hiện công khai trước công chúng vào ngày nào?",opts:["Lễ Phục Sinh","Lễ Giáng Sinh","Lễ Thăng Thiên","Lễ Ngũ Tuần (Chúa Thánh Thần hiện xuống)"],correct:3},
+{q:"Tại sao gọi Hội Thánh là một \"Mầu nhiệm\"?",opts:["Vì không ai có thể hiểu được","Vì Hội Thánh vừa hữu hình vừa thiêng liêng (vô hình)","Vì Hội Thánh giữ nhiều bí mật","Vì Hội Thánh chỉ dành cho giáo sĩ"],correct:1},
+{q:"Đối với những người không biết Đức Kitô và Hội Thánh (không do lỗi của họ), họ có thể được cứu độ không?",opts:["Hoàn toàn không thể","Có, nếu họ thành tâm tìm kiếm Chúa và sống theo hướng dẫn của lương tâm","Có, nhưng chỉ khi họ giàu có","Không, vì họ chưa chịu phép rửa tội"],correct:1},
+{q:"Hội Thánh không chỉ là người đang sống, mà bao gồm 3 tình trạng hiệp thông. Các Thánh vinh quang trên trời thuộc tình trạng nào?",opts:["Hội Thánh Lữ Hành","Hội Thánh Thiên Quốc","Hội Thánh Thanh Luyện","Hội Thánh Đau Khổ"],correct:1},
+{q:"Các tín hữu đang sống nơi trần gian được gọi là gì?",opts:["Hội Thánh Thanh Luyện","Hội Thánh Chiến Thắng","Hội Thánh Lữ Hành","Hội Thánh Khải Hoàn"],correct:2},
+{q:"Các linh hồn đang được thanh tẩy nơi luyện ngục thuộc về?",opts:["Hội Thánh Thanh Luyện","Hội Thánh Lữ Hành","Hội Thánh Thiên Quốc","Hội Thánh vinh quang"],correct:0},
+{q:"Qua Bí tích Rửa Tội, mỗi người giáo dân được tham dự vào 3 chức vụ nào của Đức Kitô?",opts:["Tiên tri, Tư tế, Vương đế","Giáo hoàng, Giám mục, Linh mục","Cai quản, Giảng dạy, Tế lễ","Truyền giáo, Cầu nguyện, Bác ái"],correct:0},
+{q:"Chức năng \"Tiên tri\" của giáo dân chủ yếu được thực hiện như thế nào?",opts:["Tiên đoán tương lai","Loan báo Đức Kitô bằng chứng từ đời sống và lời nói","Đứng trên bục giảng trong nhà thờ","Viết sách thần học"],correct:1},
+{q:"Khi dâng những khó khăn trong cuộc sống thành hiến lễ thiêng liêng, người giáo dân đang thực thi chức vụ gì?",opts:["Tiên tri","Vương đế","Tư tế","Tông đồ"],correct:2},
+{q:"Thực thi quyền \"Vương đế\" đối với người giáo dân mang ý nghĩa cốt lõi là gì?",opts:["Cai trị người khác","Làm chủ bản thân và lãnh đạo bằng sự phục vụ","Có quyền lực trong giáo xứ","Được mọi người phục tùng"],correct:1},
+{q:"Bốn đặc tính của Hội Thánh Công giáo là gì?",opts:["Duy nhất, Thánh thiện, Công giáo, Tông truyền","Hữu hình, Vô hình, Mầu nhiệm, Bí tích","Tiên tri, Tư tế, Vương đế, Mục tử","Hiệp thông, Truyền giáo, Phục vụ, Yêu thương"],correct:0},
+{q:"Đặc tính \"Duy nhất\" của Hội Thánh biểu hiện qua điều gì?",opts:["Chỉ có một nhà thờ","Cùng tuyên xưng một đức tin và cử hành chung các bí tích","Chỉ nói một ngôn ngữ","Chỉ có một người lãnh đạo"],correct:1},
+{q:"Đặc tính \"Công giáo\" có ý nghĩa là:",opts:["Chỉ dành cho người phương Tây","Thuộc về một quốc gia","Phổ quát, được sai đến với toàn thể nhân loại","Không đón nhận các văn hóa khác"],correct:2},
+{q:"Hội Thánh \"Tông truyền\" nghĩa là gì?",opts:["Được xây dựng trên nền móng các Tông đồ","Truyền bá bằng tông thư","Do các tổ tông lập ra","Chỉ truyền cho con cháu"],correct:0},
+{q:"Tín hữu Công giáo gồm những thành phần chính nào?",opts:["Giáo hoàng và Giám mục","Giáo sĩ, Tu sĩ và Giáo dân","Các linh mục và tu sĩ","Những người làm việc trong nhà thờ"],correct:1},
+{q:"Ai là người thuộc bậc \"Giáo sĩ\"?",opts:["Những người đã rửa tội","Những người đã tuyên khấn","Những người nam đã lãnh nhận Bí tích Truyền Chức Thánh","Những giáo dân tích cực"],correct:2},
+{q:"Sứ vụ chính của Giáo sĩ trong Hội Thánh là gì?",opts:["Tham gia chính trị","Giảng dạy, Thánh hóa và Cai quản (chăn dắt đoàn chiên)","Quản lý tài chính xã hội","Trồng trọt và sản xuất"],correct:1},
+{q:"Tại sao gọi Hội Thánh là \"Bí tích của ơn cứu độ\"?",opts:["Vì Hội Thánh phát minh ra bí tích","Vì Hội Thánh là dấu chỉ hữu hình và công cụ để Đức Kitô trao ban ơn cứu độ","Vì Hội Thánh cất giữ nhiều bí mật","Vì chỉ có giáo hội mới hiểu bí tích"],correct:1}
+];
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+
+const qText = document.getElementById('q-text');
+const optionsDiv = document.getElementById('options');
+const qCounter = document.getElementById('q-counter');
+const qBadge = document.getElementById('q-num-badge');
+const scoreLive = document.getElementById('score-live');
+const progressBar = document.getElementById('progress-bar');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const explainDiv = document.getElementById('explain');
+
+function letter(i){ return ['A','B','C','D'][i]; }
+
+function renderQuestion(){
+  const item = questions[current];
+  qText.textContent = item.q;
+  qBadge.textContent = 'CÂU ' + (current+1);
+  qCounter.textContent = `Câu ${current+1} / ${questions.length}`;
+  progressBar.style.width = ((current)/questions.length*100) + '%';
+  optionsDiv.innerHTML = '';
+  explainDiv.style.display = 'none';
+
+  const already = answers[current];
+
+  item.opts.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="letter">${letter(idx)}</span><span>${opt}</span>`;
+    if(already !== null){
+      div.classList.add('disabled');
+      if(idx === item.correct) div.classList.add('correct');
+      if(idx === already && already !== item.correct) div.classList.add('wrong');
+    }
+    div.addEventListener('click', () => {
+      if(answers[current] !== null) return;
+      answers[current] = idx;
+      updateScore();
+      renderQuestion();
+      explainDiv.style.display = 'block';
+      explainDiv.textContent = idx === item.correct
+        ? '✔ Chính xác!'
+        : `✘ Chưa đúng. Đáp án đúng là: ${letter(item.correct)}. ${item.opts[item.correct]}`;
+      nextBtn.disabled = false;
+    });
+    optionsDiv.appendChild(div);
+  });
+
+  if(already !== null){
+    explainDiv.style.display = 'block';
+    explainDiv.textContent = already === item.correct
+      ? '✔ Bạn đã trả lời đúng!'
+      : `✘ Bạn đã chọn sai. Đáp án đúng là: ${letter(item.correct)}. ${item.opts[item.correct]}`;
+    nextBtn.disabled = false;
+  } else {
+    nextBtn.disabled = true;
+  }
+
+  prevBtn.disabled = current === 0;
+  nextBtn.textContent = current === questions.length - 1 ? 'Xem kết quả' : 'Câu tiếp →';
+}
+
+function updateScore(){
+  const correctCount = answers.filter((a,i) => a === questions[i].correct).length;
+  scoreLive.textContent = 'Điểm: ' + correctCount;
+}
+
+prevBtn.addEventListener('click', () => {
+  if(current > 0){ current--; renderQuestion(); }
+});
+
+nextBtn.addEventListener('click', () => {
+  if(current < questions.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult(){
+  document.getElementById('quiz-screen').style.display = 'none';
+  const resultScreen = document.getElementById('result-screen');
+  resultScreen.style.display = 'block';
+  const correctCount = answers.filter((a,i) => a === questions[i].correct).length;
+  document.getElementById('final-score').textContent = `${correctCount}/${questions.length}`;
+  const pct = Math.round(correctCount/questions.length*100);
+  let msg = '';
+  if(pct === 100) msg = '🏆 Xuất sắc! Bạn đã nắm vững toàn bộ bài học.';
+  else if(pct >= 80) msg = '👏 Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = '🙂 Khá ổn, nên ôn lại một số phần.';
+  else msg = '📚 Hãy xem lại bài học và thử lại nhé.';
+  document.getElementById('score-msg').textContent = msg;
+
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '<h3 style="color:var(--gold);margin-bottom:12px;">Xem lại chi tiết</h3>';
+  questions.forEach((item, i) => {
+    const isOk = answers[i] === item.correct;
+    const div = document.createElement('div');
+    div.className = 'review-item ' + (isOk ? 'ok' : 'bad');
+    div.innerHTML = `<div class="rq">Câu ${i+1}: ${item.q}</div>
+      <div class="ra">Đáp án đúng: ${letter(item.correct)}. ${item.opts[item.correct]}${!isOk && answers[i] !== null ? ' — Bạn chọn: ' + letter(answers[i]) + '. ' + item.opts[answers[i]] : ''}</div>`;
+    reviewList.appendChild(div);
+  });
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  updateScore();
+  renderQuestion();
+});
+
+renderQuestion();
+</script>
+</body>
+</html>
