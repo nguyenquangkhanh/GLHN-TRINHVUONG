@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm Bài 10: Bí tích Hôn phối</title>
+<style>
+  :root {
+    --navy-dark: #0a1f44;
+    --navy: #14305c;
+    --navy-light: #1f4e8c;
+    --gold: #d4af37;
+    --bg: #eef1f7;
+    --white: #ffffff;
+    --correct: #1e7d4f;
+    --wrong: #b6342a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: var(--navy-dark);
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 25px;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6em;
+    letter-spacing: 0.5px;
+  }
+  header p {
+    margin: 0;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  #progress-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    height: 10px;
+    margin: 18px 0 25px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    background: var(--gold);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  .q-count {
+    color: var(--navy-light);
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--navy-dark);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 2px solid #d9e0ec;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg);
+    font-size: 1em;
+  }
+  .option:hover {
+    border-color: var(--navy-light);
+    background: #e2e9f7;
+  }
+  .option .letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.85em;
+    flex-shrink: 0;
+  }
+  .option.correct {
+    background: #e3f5ea;
+    border-color: var(--correct);
+  }
+  .option.correct .letter { background: var(--correct); }
+  .option.wrong {
+    background: #fbe6e4;
+    border-color: var(--wrong);
+  }
+  .option.wrong .letter { background: var(--wrong); }
+  .option.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #e3f5ea;
+    color: var(--correct);
+  }
+  .feedback.wrong-fb {
+    background: #fbe6e4;
+    color: var(--wrong);
+  }
+  .nav-btns {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+  button.next-btn {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: none;
+  }
+  button.next-btn.show { display: inline-block; }
+  button.next-btn:hover { background: var(--navy-light); }
+
+  .result-screen {
+    text-align: center;
+  }
+  .result-screen .score {
+    font-size: 3em;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 10px 0;
+  }
+  .result-screen .score span { color: var(--gold); }
+  .result-msg {
+    font-size: 1.1em;
+    color: var(--navy-dark);
+    margin-bottom: 20px;
+  }
+  .restart-btn {
+    background: var(--gold);
+    color: var(--navy-dark);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .restart-btn:hover { opacity: 0.9; }
+
+  .review-list {
+    text-align: left;
+    margin-top: 20px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .review-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e6ee;
+    font-size: 0.92em;
+  }
+  .review-item b { color: var(--navy); }
+  .review-item .tag-ok { color: var(--correct); font-weight: 700; }
+  .review-item .tag-bad { color: var(--wrong); font-weight: 700; }
+
+  footer {
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    margin-top: 20px;
+    font-size: 0.85em;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>✝️ BÀI 10: HÔN NHÂN CÔNG GIÁO LÀ MỘT BÍ TÍCH</h1>
+    <p>Câu hỏi trắc nghiệm ôn tập — Giáo luật về Bí tích Hôn phối</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+
+  <div class="card" id="quiz-card"></div>
+
+  <footer>Chạm vào một đáp án để xem kết quả ngay</footer>
+</div>
+
+<script>
+const questions = [
+{q:"Bộ Giáo luật hiện hành của Hội Thánh Công giáo được ban hành vào năm nào?",opts:["1980","1983","1982","1978"],ans:1},
+{q:"Luật \"Hôn nhân và Gia đình\" tại Việt Nam được Quốc Hội thông qua ngày 09.6.2000 gồm bao nhiêu điều?",opts:["110 điều","111 điều","100 điều","120 điều"],ans:0},
+{q:"Luật của Hội Thánh về hôn nhân (giáo luật) ràng buộc đối với ai?",opts:["Mọi công dân Việt Nam","Người Công giáo","Mọi tôn giáo","Chỉ hàng giáo sĩ"],ans:1},
+{q:"Để Bí tích Hôn phối thành sự, cần mấy điều kiện chính?",opts:["Ba","Bốn","Năm","Sáu"],ans:1},
+{q:"Điều kiện nào sau đây KHÔNG thuộc bốn điều kiện để Hôn phối thành sự?",opts:["Một nam một nữ đã rửa tội","Có tự do kết hôn","Có sự chứng kiến của cha mẹ hai bên","Cử hành theo thể thức của Hội Thánh"],ans:2},
+{q:"Ngăn trở hôn phối là gì?",opts:["Là sự phản đối của gia đình hai bên","Là hoàn cảnh làm cho cuộc hôn phối không thành sự hoặc bất hợp luật","Là thủ tục giấy tờ hành chính","Là nghi thức trong Thánh lễ hôn phối"],ans:1},
+{q:"Theo giáo luật, có tất cả bao nhiêu ngăn trở hôn phối?",opts:["10","11","12","14"],ans:2},
+{q:"Theo Giáo luật, tuổi tối thiểu để nam và nữ kết hôn thành sự là bao nhiêu?",opts:["Nam trọn 18 tuổi, nữ trọn 16 tuổi","Nam trọn 16 tuổi, nữ trọn 14 tuổi","Nam trọn 20 tuổi, nữ trọn 18 tuổi","Nam trọn 20 tuổi, nữ trọn 16 tuổi"],ans:1},
+{q:"Theo Luật Hôn nhân và Gia đình Việt Nam, độ tuổi kết hôn hợp pháp là bao nhiêu?",opts:["Nam từ 20 tuổi, nữ từ 18 tuổi","Nam từ 18 tuổi, nữ từ 16 tuổi","Nam từ 16 tuổi, nữ từ 14 tuổi","Nam từ 22 tuổi, nữ từ 20 tuổi"],ans:0},
+{q:"Hiểu thế nào cho đúng về \"bất lực\" và \"vô sinh\" trong hôn nhân Công giáo?",opts:["Cả hai đều là ngăn trở hôn phối theo Thiên Luật","Bất lực là không thể có con; vô sinh là không thể giao hợp, cả hai là ngăn trở theo Giáo Luật","Bất lực là không thể giao hợp; vô sinh là không thể có con, và vô sinh không phải là ngăn trở","Cả hai đều không phải là ngăn trở"],ans:2},
+{q:"Ngăn trở do \"đã kết hôn\" chỉ chấm dứt khi nào?",opts:["Khi hai vợ chồng ly thân","Khi một trong hai người không còn tình yêu với người bạn đời của mình","Khi có sự đồng ý của cha xứ, gia đình và cộng đoàn giáo xứ","Khi người phối ngẫu qua đời, hoặc hôn nhân được đoạn tiêu hợp pháp"],ans:3},
+{q:"Những ai được xem là có \"chức thánh\", theo ngăn trở do chức thánh?",opts:["Giám mục, linh mục, phó tế","Giáo lý viên, ca đoàn, ban hành giáo","Tu sĩ nam nữ nói chung","Chủng sinh và dự tu"],ans:0},
+{q:"Ngăn trở do \"khấn dòng\" áp dụng cho những người nào?",opts:["Người mới vào nhà tập","Người khấn tạm trong dòng tu","Người khấn trọn đời (vĩnh khấn) sống khiết tịnh trong một dòng tu","Người từng là tu sĩ nhưng đã tháo gỡ lời khấn"],ans:2},
+{q:"Theo ngăn trở họ máu (huyết tộc) hàng ngang, hôn nhân bất thành cho tới hết bậc thứ mấy?",opts:["Bậc 2","Bậc 3","Bậc 4","Bậc 5"],ans:2},
+{q:"Ví dụ nào sau đây KHÔNG bị ngăn trở \"họ kết bạn\" chi phối?",opts:["Cha chồng muốn lấy con dâu","Chàng rể muốn lấy mẹ vợ","Con nuôi muốn lấy cha mẹ nuôi","Anh rể có thể lấy em dâu (khi vợ mất)"],ans:3},
+{q:"Đối với những ngăn trở thuộc luật tự nhiên, Hội Thánh có quyền miễn chuẩn hay không?",opts:["Có, trong mọi trường hợp","Không, Hội Thánh không có quyền miễn chuẩn","Chỉ Đức Giáo Hoàng mới được miễn chuẩn","Chỉ Giám mục giáo phận mới được miễn chuẩn"],ans:1},
+{q:"Trường hợp nào sau đây KHÔNG thể được Hội Thánh miễn chuẩn?",opts:["Ngăn trở về tuổi tối thiểu","Ngăn trở về khác tôn giáo","Ngăn trở do có họ máu hàng dọc","Ngăn trở do khấn dòng"],ans:2},
+{q:"Sự ưng thuận kết hôn được gọi là \"hành vi nhân linh\" vì lý do gì?",opts:["Vì có sự chứng kiến của linh mục, của cộng đoàn và gia đình","Vì đó là hành vi của con người có ý thức và tự do","Vì được luật dân sự công nhận","Vì diễn ra trong nhà thờ thánh thiêng"],ans:1},
+{q:"Trường hợp nào sau đây làm cho sự ưng thuận kết hôn bị coi là thiếu tự do, khiến hôn nhân không thành?",opts:["Hai người tự nguyện chọn ngày cưới","Ưng thuận với điều kiện về tương lai","Có sự chứng kiến của hai người làm chứng","Cử hành tại nhà thờ giáo xứ"],ans:1},
+{q:"Để Hôn nhân thành sự về thể thức, cần có sự hiện diện của ai?",opts:["Chỉ cần hai người kết hôn","Vị chứng hôn có thẩm quyền (cha xứ, linh mục hoặc phó tế được ủy quyền) cùng hai người làm chứng","Chỉ cần cha mẹ hai bên","Chỉ cần chính quyền địa phương"],ans:1},
+{q:"Hội Thánh có thể miễn chuẩn ngăn trở nào?",opts:["Bất lực, dây hôn phối trước","Họ máu hàng dọc, bậc hai hàng ngang","Chức thánh và Khấn dòng","Tất cả đều sai"],ans:2},
+{q:"Có mấy trường hợp \"thiếu sự tự do ưng thuận kết hôn\"?",opts:["6","7","8","9"],ans:3},
+{q:"Người xin chuẩn hôn nhân khác đạo (người Công giáo kết hôn với người chưa được rửa tội) thì có được miễn việc học giáo lý hôn nhân?",opts:["Có được - vì đạo ai nấy giữ, miễn sao sống tốt","Không được - vì tuy không theo đạo nhưng cần biết để tôn trọng niềm tin của người bạn đời","Cả hai đều sai","Cả hai đều đúng"],ans:1},
+{q:"Hội Thánh có quyền miễn chuẩn mọi ngăn trở cho đôi hôn phối, đúng hay sai?",opts:["Sai, vì có ngăn trở mà Hội Thánh không được miễn chuẩn","Đúng, vì Hội Thánh là mẹ chúng ta","Chỉ đức Giáo Hoàng mới toàn quyền","Giám mục giáo phận có quyền trong địa phận của ngài"],ans:0},
+{q:"Ông A đã sống chung công khai với bà B thì ông này kết hôn với mẹ hay con gái riêng của bà B thì dính phải ngăn trở nào?",opts:["Họ máu","Họ kết bạn","Công hạnh","Pháp tộc"],ans:2}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let userAnswers = [];
+
+const letters = ["A","B","C","D"];
+const card = document.getElementById("quiz-card");
+const progressBar = document.getElementById("progress-bar");
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  progressBar.style.width = ((current) / questions.length * 100) + "%";
+
+  let optsHtml = q.opts.map((opt, i) => `
+    <div class="option" data-idx="${i}" onclick="selectOption(${i})">
+      <span class="letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </div>
+  `).join("");
+
+  card.innerHTML = `
+    <div class="q-count">Câu ${current + 1} / ${questions.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${optsHtml}</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav-btns"><button class="next-btn" id="nextBtn" onclick="nextQuestion()">Câu tiếp theo →</button></div>
+  `;
+}
+
+function selectOption(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  userAnswers[current] = idx;
+  const options = document.querySelectorAll(".option");
+  options.forEach(o => o.classList.add("disabled"));
+
+  if (idx === q.ans) {
+    score++;
+    options[idx].classList.add("correct");
+    showFeedback(true);
+  } else {
+    options[idx].classList.add("wrong");
+    options[q.ans].classList.add("correct");
+    showFeedback(false);
+  }
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function showFeedback(isCorrect) {
+  const fb = document.getElementById("feedback");
+  fb.classList.add("show");
+  if (isCorrect) {
+    fb.classList.add("correct-fb");
+    fb.textContent = "✔ Chính xác! Rất tốt.";
+  } else {
+    fb.classList.add("wrong-fb");
+    fb.textContent = "✘ Chưa đúng. Đáp án đúng là: " + letters[questions[current].ans] + ". " + questions[current].opts[questions[current].ans];
+  }
+}
+
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  progressBar.style.width = "100%";
+  const pct = Math.round((score / questions.length) * 100);
+  let msg = "";
+  if (pct >= 90) msg = "Xuất sắc! Bạn nắm rất vững giáo lý về Bí tích Hôn phối.";
+  else if (pct >= 70) msg = "Khá tốt! Hãy ôn lại một số điểm còn chưa chắc.";
+  else if (pct >= 50) msg = "Trung bình. Nên xem lại bài học kỹ hơn.";
+  else msg = "Cần ôn tập lại bài học nhiều hơn nhé.";
+
+  let reviewHtml = questions.map((q, i) => {
+    const correct = userAnswers[i] === q.ans;
+    return `<div class="review-item">
+      <b>Câu ${i+1}:</b> ${q.q}<br>
+      Đáp án đúng: <span class="tag-ok">${letters[q.ans]}. ${q.opts[q.ans]}</span>
+      ${correct ? '' : ` — Bạn chọn: <span class="tag-bad">${letters[userAnswers[i]]}. ${q.opts[userAnswers[i]]}</span>`}
+    </div>`;
+  }).join("");
+
+  card.innerHTML = `
+    <div class="result-screen">
+      <div>Kết quả của bạn</div>
+      <div class="score">${score}<span>/${questions.length}</span></div>
+      <div class="result-msg">${msg} (${pct}%)</div>
+      <button class="restart-btn" onclick="restartQuiz()">Làm lại từ đầu</button>
+      <div class="review-list">${reviewHtml}</div>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  userAnswers = [];
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
