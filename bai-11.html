@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm Bài 11: Phụng Vụ - Ơn Chúa</title>
+<style>
+  :root {
+    --navy-dark: #0a1f44;
+    --navy: #14305c;
+    --navy-light: #1f4e8c;
+    --gold: #d4af37;
+    --bg: #eef1f7;
+    --white: #ffffff;
+    --correct: #1e7d4f;
+    --wrong: #b6342a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    min-height: 100vh;
+    padding: 30px 15px;
+    color: var(--navy-dark);
+  }
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 25px;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.6em;
+    letter-spacing: 0.5px;
+  }
+  header p {
+    margin: 0;
+    color: var(--gold);
+    font-weight: 600;
+  }
+  #progress-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    height: 10px;
+    margin: 18px 0 25px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    background: var(--gold);
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  }
+  .q-count {
+    color: var(--navy-light);
+    font-weight: 700;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--navy-dark);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 16px;
+    border: 2px solid #d9e0ec;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--bg);
+    font-size: 1em;
+  }
+  .option:hover {
+    border-color: var(--navy-light);
+    background: #e2e9f7;
+  }
+  .option .letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--navy);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 0.85em;
+    flex-shrink: 0;
+  }
+  .option.correct {
+    background: #e3f5ea;
+    border-color: var(--correct);
+  }
+  .option.correct .letter { background: var(--correct); }
+  .option.wrong {
+    background: #fbe6e4;
+    border-color: var(--wrong);
+  }
+  .option.wrong .letter { background: var(--wrong); }
+  .option.disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+  .feedback {
+    margin-top: 16px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct-fb {
+    background: #e3f5ea;
+    color: var(--correct);
+  }
+  .feedback.wrong-fb {
+    background: #fbe6e4;
+    color: var(--wrong);
+  }
+  .nav-btns {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 22px;
+  }
+  button.next-btn {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    padding: 12px 26px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: none;
+  }
+  button.next-btn.show { display: inline-block; }
+  button.next-btn:hover { background: var(--navy-light); }
+
+  .result-screen {
+    text-align: center;
+  }
+  .result-screen .score {
+    font-size: 3em;
+    font-weight: 800;
+    color: var(--navy);
+    margin: 10px 0;
+  }
+  .result-screen .score span { color: var(--gold); }
+  .result-msg {
+    font-size: 1.1em;
+    color: var(--navy-dark);
+    margin-bottom: 20px;
+  }
+  .restart-btn {
+    background: var(--gold);
+    color: var(--navy-dark);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .restart-btn:hover { opacity: 0.9; }
+
+  .review-list {
+    text-align: left;
+    margin-top: 20px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 6px;
+  }
+  .review-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e6ee;
+    font-size: 0.92em;
+  }
+  .review-item b { color: var(--navy); }
+  .review-item .tag-ok { color: var(--correct); font-weight: 700; }
+  .review-item .tag-bad { color: var(--wrong); font-weight: 700; }
+
+  footer {
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    margin-top: 20px;
+    font-size: 0.85em;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>✝️ BÀI 11: PHỤNG VỤ - ƠN CHÚA</h1>
+    <p>Câu hỏi trắc nghiệm ôn tập</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+
+  <div class="card" id="quiz-card"></div>
+
+  <footer>Chạm vào một đáp án để xem kết quả ngay</footer>
+</div>
+
+<script>
+const questions = [
+{q:"Phụng vụ là gì?",opts:["Là những buổi giao lưu, sinh hoạt nhóm tự phát của giới trẻ","Là lời cầu nguyện riêng tư của mỗi cá nhân","Là việc tôn thờ chính thức của toàn thể Hội Thánh","Là các lễ hội văn hóa của người Công giáo"],ans:2},
+{q:"Mục đích chính của Phụng vụ là gì?",opts:["Để xin ơn vật chất và sức khỏe","Để tôn vinh Thiên Chúa Ba Ngôi và thánh hóa con người","Để gặp gỡ, giao lưu giữa các tín hữu","Để nghe các bài giảng đạo lý"],ans:1},
+{q:"Trong Phụng vụ, ai là người đóng vai trò \"nguồn mạch và cùng đích\"?",opts:["Chúa Cha","Chúa Con","Chúa Thánh Thần","Đức Trinh Nữ Maria"],ans:0},
+{q:"Ngôi vị nào trực tiếp mượn đôi tay của Hội Thánh và dùng các dấu chỉ để trao ban ân sủng cho chúng ta?",opts:["Chúa Cha","Chúa Con (Đức Kitô)","Chúa Thánh Thần","Các Thiên thần"],ans:1},
+{q:"Khái niệm \"Đức Kitô toàn thể\" đang hành động trong Phụng vụ bao gồm những ai?",opts:["Chỉ Chúa Giêsu và các vị Linh mục cử hành","Chúa Giêsu (Đầu) và toàn thể Hội Thánh (Thân Thể)","Chúa Giêsu và các Thiên thần, các Thánh trên trời","Chúa Giêsu và các tín hữu đang sống nơi trần thế"],ans:1},
+{q:"Thành phần nào sau đây KHÔNG nằm trong Thân Thể mầu nhiệm cùng cử hành Phụng vụ?",opts:["Các Thánh trên trời","Các tín hữu nơi trần thế","Các linh hồn nơi luyện ngục","Những người không tin và chối bỏ Thiên Chúa"],ans:3},
+{q:"Phụng vụ được Giáo lý ví như điều gì đối với đời sống Hội Thánh?",opts:["Là điểm khởi đầu và nơi kết thúc","Là chóp đỉnh và nguồn mạch phát sinh mọi năng lực","Là trường học dạy đạo lý","Là nơi nghỉ ngơi thiêng liêng"],ans:1},
+{q:"Lời cầu nguyện tự phát theo sáng kiến cá nhân có được coi là một cử hành Phụng Vụ không?",opts:["Có, vì đó cũng là cầu nguyện với Chúa","Không, vì Phụng vụ phải là nghi lễ chính thức của Hội Thánh","Tùy thuộc vào việc cầu nguyện ở nhà hay ở nhà thờ","Có, nếu người cầu nguyện là Linh mục"],ans:1},
+{q:"Một cử hành có tính Phụng vụ đòi hỏi phải có mấy yếu tố?",opts:["1 yếu tố","2 yếu tố","3 yếu tố (Nghi lễ chính thức, Thừa tác viên hợp pháp, Nhân danh toàn thể Hội Thánh)","4 yếu tố"],ans:2},
+{q:"Phụng vụ bao gồm những việc nào dưới đây?",opts:["Thánh lễ, Rước kiệu, Sinh hoạt giáo xứ","Thánh lễ, Bí tích, Á bí tích, Phụng vụ các Giờ kinh","Bí tích, Làm việc từ thiện, Hành hương","Phụng vụ các Giờ kinh, Dọn dẹp nhà thờ, Cầu nguyện cá nhân"],ans:1},
+{q:"Năm phụng vụ của Giáo Hội Công giáo có bao nhiêu tuần lễ?",opts:["40 tuần","50 tuần","52 tuần","60 tuần"],ans:2},
+{q:"Năm phụng vụ khởi đầu và kết thúc vào thời điểm nào?",opts:["Khởi đầu từ ngày 1/1 và kết thúc vào ngày 31/12","Khởi đầu Mùa Chay và kết thúc Lễ Phục Sinh","Khởi đầu Chúa Nhật I Mùa Vọng và kết thúc Lễ Chúa Kitô Vua vũ trụ","Khởi đầu Lễ Giáng Sinh và kết thúc Lễ Hiện Xuống"],ans:2},
+{q:"Giai đoạn quan trọng nhất, là đỉnh cao trong tất cả các mùa phụng vụ là mùa nào?",opts:["Mùa Vọng","Mùa Giáng Sinh","Mùa Chay","Mùa Phục Sinh"],ans:3},
+{q:"Mùa Vọng mang ý nghĩa gì và dùng lễ phục màu gì?",opts:["Mừng Chúa sống lại - Màu trắng","Sám hối, chuẩn bị tâm hồn đón Lễ Giáng Sinh - Màu tím","Ăn chay hãm mình - Màu đỏ","Lớn lên và trưởng thành trong đức tin - Màu xanh"],ans:1},
+{q:"Mùa Chay kéo dài trong bao lâu và bắt đầu từ ngày nào?",opts:["30 ngày, bắt đầu từ Chúa Nhật I Mùa Chay","40 ngày, bắt đầu từ Thứ Tư Lễ Tro","50 ngày, bắt đầu từ Thứ Sáu Tuần Thánh","40 ngày, bắt đầu từ Thứ Năm Tuần Thánh"],ans:1},
+{q:"Mùa Phục Sinh kéo dài bao nhiêu ngày?",opts:["30 ngày","40 ngày","50 ngày (cho đến hết Lễ Chúa Thánh Thần hiện xuống)","60 ngày"],ans:2},
+{q:"Ơn Chúa (Ân sủng) có bản chất là gì?",opts:["Là phần thưởng do chúng ta làm nhiều việc tốt","Là sức mạnh do con người tự rèn luyện mà có","Là một ân huệ, một sự trợ giúp hoàn toàn miễn phí do Thiên Chúa chủ động ban tặng","Là sự may mắn ngẫu nhiên trong cuộc sống"],ans:2},
+{q:"Ân sủng có đặc tính vượt quá trí tuệ và sức lực tự nhiên, nên chúng ta chỉ có thể đón nhận bằng điều gì?",opts:["Bằng lý trí khoa học","Bằng đức tin","Bằng cảm xúc","Bằng giác quan thông thường"],ans:1},
+{q:"Có mấy thứ Ơn Chúa chính?",opts:["Chỉ có 1 thứ là ơn thánh hóa","2 thứ: Ơn thánh hóa và ơn trợ giúp","3 thứ: Ơn thánh hóa, ơn cứu độ, ơn bình an","4 thứ: Ơn hiểu biết, ơn khôn ngoan, ơn sức mạnh, ơn đạo đức"],ans:1},
+{q:"Ta nhận được ơn thánh hóa (thường sủng) làm sạch mọi tội lỗi lần đầu tiên khi nào?",opts:["Khi chịu Bí tích Thêm Sức","Khi xưng tội","Khi chịu Bí tích Rửa Tội","Khi rước lễ lần đầu"],ans:2},
+{q:"Một sự soi sáng bất chợt giúp bạn quyết định làm việc tốt, hay sức mạnh vượt qua cám dỗ nhất thời được gọi là ơn gì?",opts:["Ơn thường sủng","Ơn đoàn sủng","Ơn hiện sủng","Ơn cứu độ"],ans:2},
+{q:"Ơn đặc biệt Chúa ban để phục vụ cộng đoàn (VD: ơn làm cha mẹ, ơn linh mục) được gọi là gì?",opts:["Ơn hiện sủng","Ơn đoàn sủng","Ơn thánh hóa","Ơn thứ tha"],ans:1},
+{q:"Theo Sách Giáo lý, \"Ơn cứu độ\" gồm 3 khía cạnh cốt lõi nào?",opts:["Giải thoát, Phục hồi, Trao ban","Sinh ra, Chết đi, Sống lại","Tha thứ, Chữa lành, Dạy dỗ","Cầu nguyện, Ăn chay, Bác ái"],ans:0},
+{q:"Đích đến cuối cùng của Ơn cứu độ là gì?",opts:["Sự giàu có và thành công ở đời này","Mở ra cánh cửa Nước Trời, được chia sẻ sự sống thần linh vĩnh cửu","Không bao giờ mắc bệnh tật","Được mọi người trên thế gian khen ngợi"],ans:1},
+{q:"Vì sao Thiên Chúa không \"ép buộc\" ban ơn cho chúng ta dù ơn Ngài là hoàn toàn miễn phí?",opts:["Vì ơn Chúa có giới hạn","Vì Ngài vô cùng tôn trọng sự tự do của con người","Vì Ngài muốn xem chúng ta có xứng đáng không","Vì Ngài chỉ ban cho những người hoàn hảo"],ans:1}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+let userAnswers = [];
+
+const letters = ["A","B","C","D"];
+const card = document.getElementById("quiz-card");
+const progressBar = document.getElementById("progress-bar");
+
+function renderQuestion() {
+  answered = false;
+  const q = questions[current];
+  progressBar.style.width = ((current) / questions.length * 100) + "%";
+
+  let optsHtml = q.opts.map((opt, i) => `
+    <div class="option" data-idx="${i}" onclick="selectOption(${i})">
+      <span class="letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </div>
+  `).join("");
+
+  card.innerHTML = `
+    <div class="q-count">Câu ${current + 1} / ${questions.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${optsHtml}</div>
+    <div class="feedback" id="feedback"></div>
+    <div class="nav-btns"><button class="next-btn" id="nextBtn" onclick="nextQuestion()">Câu tiếp theo →</button></div>
+  `;
+}
+
+function selectOption(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  userAnswers[current] = idx;
+  const options = document.querySelectorAll(".option");
+  options.forEach(o => o.classList.add("disabled"));
+
+  if (idx === q.ans) {
+    score++;
+    options[idx].classList.add("correct");
+    showFeedback(true);
+  } else {
+    options[idx].classList.add("wrong");
+    options[q.ans].classList.add("correct");
+    showFeedback(false);
+  }
+  document.getElementById("nextBtn").classList.add("show");
+}
+
+function showFeedback(isCorrect) {
+  const fb = document.getElementById("feedback");
+  fb.classList.add("show");
+  if (isCorrect) {
+    fb.classList.add("correct-fb");
+    fb.textContent = "✔ Chính xác! Rất tốt.";
+  } else {
+    fb.classList.add("wrong-fb");
+    fb.textContent = "✘ Chưa đúng. Đáp án đúng là: " + letters[questions[current].ans] + ". " + questions[current].opts[questions[current].ans];
+  }
+}
+
+function nextQuestion() {
+  current++;
+  if (current < questions.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  progressBar.style.width = "100%";
+  const pct = Math.round((score / questions.length) * 100);
+  let msg = "";
+  if (pct >= 90) msg = "Xuất sắc! Bạn nắm rất vững giáo lý về Bí tích Hôn phối.";
+  else if (pct >= 70) msg = "Khá tốt! Hãy ôn lại một số điểm còn chưa chắc.";
+  else if (pct >= 50) msg = "Trung bình. Nên xem lại bài học kỹ hơn.";
+  else msg = "Cần ôn tập lại bài học nhiều hơn nhé.";
+
+  let reviewHtml = questions.map((q, i) => {
+    const correct = userAnswers[i] === q.ans;
+    return `<div class="review-item">
+      <b>Câu ${i+1}:</b> ${q.q}<br>
+      Đáp án đúng: <span class="tag-ok">${letters[q.ans]}. ${q.opts[q.ans]}</span>
+      ${correct ? '' : ` — Bạn chọn: <span class="tag-bad">${letters[userAnswers[i]]}. ${q.opts[userAnswers[i]]}</span>`}
+    </div>`;
+  }).join("");
+
+  card.innerHTML = `
+    <div class="result-screen">
+      <div>Kết quả của bạn</div>
+      <div class="score">${score}<span>/${questions.length}</span></div>
+      <div class="result-msg">${msg} (${pct}%)</div>
+      <button class="restart-btn" onclick="restartQuiz()">Làm lại từ đầu</button>
+      <div class="review-list">${reviewHtml}</div>
+    </div>
+  `;
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  userAnswers = [];
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
