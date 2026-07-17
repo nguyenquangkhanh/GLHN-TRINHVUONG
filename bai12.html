@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm - Bài 12: Hôn Nhân là Giao Ước</title>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --card:#ffffff;
+    --accent:#7a3b2e;
+    --accent2:#b5834f;
+    --ok:#3a7d44;
+    --bad:#b3372c;
+    --text:#2c231b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Segoe UI', serif;
+    background:linear-gradient(180deg,#f5f1e8,#ece3d2);
+    color:var(--text);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  header h1{
+    font-size:1.5rem;
+    color:var(--accent);
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:#7a6a55;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:#e2d8c3;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .3s ease;
+  }
+  .question-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+    border-left:5px solid var(--accent2);
+  }
+  .q-number{
+    font-size:0.8rem;
+    color:var(--accent2);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:1.08rem;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 14px;
+    border:1.5px solid #e0d5c0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+    font-size:0.98rem;
+    line-height:1.4;
+  }
+  .option:hover{background:#f8f2e6;}
+  .option.selected{
+    border-color:var(--accent);
+    background:#f1e6d8;
+  }
+  .option.correct{
+    border-color:var(--ok);
+    background:#e4f3e6;
+  }
+  .option.incorrect{
+    border-color:var(--bad);
+    background:#f8e3e0;
+  }
+  .option input{margin-top:3px;}
+  .letter{
+    font-weight:bold;
+    color:var(--accent2);
+    min-width:18px;
+  }
+  #nav-btn, #retry-btn{
+    display:block;
+    width:100%;
+    padding:14px;
+    font-size:1.05rem;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
+    transition:background .2s;
+  }
+  #nav-btn:hover, #retry-btn:hover{background:#5f2e24;}
+  #result{
+    text-align:center;
+    background:var(--card);
+    border-radius:14px;
+    padding:28px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    display:none;
+  }
+  #result h2{color:var(--accent);margin-top:0;}
+  #score-num{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:var(--accent);
+  }
+  .feedback{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:0.92rem;
+  }
+  .feedback-correct{
+    color:var(--ok);
+    background:#e4f3e6;
+  }
+  .feedback-incorrect{
+    color:var(--bad);
+    background:#f8e3e0;
+  }
+  .unanswered-note{
+    color:var(--bad);
+    font-size:0.9rem;
+    text-align:center;
+    margin:4px 0 14px;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bài 12: Hôn Nhân là Giao Ước & Hôn Nhân Khác Tôn Giáo</h1>
+    <p>Trắc nghiệm 30 câu — hãy chọn đáp án đúng nhất</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <p id="progress-text" style="text-align:center;color:#7a6a55;font-size:0.9rem;margin:-16px 0 20px;"></p>
+
+  <div id="quiz-container"></div>
+
+  <div id="result">
+    <h2>Kết quả</h2>
+    <div id="score-num"></div>
+    <p id="score-text"></p>
+    <button id="retry-btn">Làm lại</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Theo giáo huấn của Hội Thánh, hôn nhân Kitô giáo còn được hiểu là:", options:["Một hợp đồng","Một giao ước","Một sự thỏa thuận","Một cam kết"], answer:1},
+{q:"Giao ước hôn nhân được dự định kéo dài:", options:["Cho đến khi không còn tình cảm","Theo thỏa thuận của hai bên","Cho đến khi con cái trưởng thành","Cho đến khi cái chết chia lìa đôi bạn"], answer:3},
+{q:"Giao ước trong hôn nhân đặc biệt nhấn mạnh:", options:["Quyền lợi cá nhân","Sự thành công vật chất","Sự tha thứ, hy sinh","Tự do ly hôn"], answer:2},
+{q:"Hôn nhân hỗn hợp là hôn nhân giữa:", options:["Hai người khác quốc tịch","Một người Công giáo và một Kitô hữu đã chịu phép Rửa ngoài Công giáo","Một người Công giáo và một người theo đạo Phật","Một người Công giáo với người chưa chịu phép Rửa"], answer:1},
+{q:"Hôn nhân khác đạo là hôn nhân giữa:", options:["Hai người Công giáo","Một người Tin Lành với một người Công giáo","Một người Công giáo với người chưa chịu phép Rửa","Hai người Chính Thống giáo"], answer:2},
+{q:"Theo giáo luật hiện hành, hôn nhân khác đạo chỉ thành sự khi:", options:["Có sự đồng ý của cha mẹ","Có phép chuẩn của giáo quyền","Có đăng ký kết hôn","Có người làm chứng"], answer:1},
+{q:"Người Công giáo muốn kết hôn với người khác đạo trước hết cần trình bày với ai?", options:["Chủ tịch UBND","Cha xứ","Ban hành giáo","Người làm chứng"], answer:1},
+{q:"Theo giáo luật, bên Công giáo phải cam kết những gì?", options:["Chỉ cần giữ niềm tin của mình","Theo tôn giáo của người phối ngẫu","Giữ đức tin và giáo dục con cái trong Hội Thánh","Không cho con theo tôn giáo nào"], answer:2},
+{q:"Những nguy hiểm của hôn nhân khác đạo là:", options:["Dễ xa cách với cộng đoàn Ki-tô hữu","Dễ nguội lạnh trong đời sống đức tin dẫn đến bỏ đạo","Có thể bất đồng trong việc giáo dục con cái","Cả A,B,C"], answer:3},
+{q:"Theo thư thứ nhất gửi tín hữu Côrintô (1Cr 7,12-14), người chồng ngoại được thánh hóa nhờ:", options:["Cha mẹ","Linh mục","Người vợ có đạo","Cộng đoàn giáo xứ"], answer:2},
+{q:"Điểm khác biệt căn bản giữa hợp đồng và giao ước là:", options:["Giao ước có công chứng","Hợp đồng mang tính vĩnh viễn","Giao ước là sự hiến trao trọn vẹn bản thân","Hợp đồng có giá trị thiêng liêng"], answer:2},
+{q:"Giao ước hôn nhân đòi hỏi người phối ngẫu:", options:["Chỉ cần giữ đúng điều khoản","Phải sống đời sống nhân đức","Chỉ cần yêu thương khi thuận lợi","Không cần hy sinh"], answer:1},
+{q:"Theo bài học, sự thân mật vợ chồng diễn tả:", options:["Quyền sở hữu","Sự bình đẳng nam nữ","Sự hiệp nhất trong giao ước","Trách nhiệm xã hội"], answer:2},
+{q:"Giao ước hôn nhân đặt ưu tiên:", options:["Quyền lợi cá nhân","Lợi ích của mối tương quan","Danh dự gia đình","Thành công nghề nghiệp"], answer:1},
+{q:"Hôn nhân được gọi là \"thánh\" vì:", options:["Được tổ chức long trọng trong nhà thờ","Được nhiều người coi trọng","Là một giao ước mang tính thiêng liêng","Có nghi thức long trọng"], answer:2},
+{q:"Hợp đồng thường giả định:", options:["Lòng tín thác","Thiếu sự tin tưởng","Sự tha thứ","Sự hiệp nhất"], answer:1},
+{q:"Hội Thánh đặc biệt quan tâm đến hôn nhân khác đạo vì:", options:["Muốn cho con cái mình là các Ki-tô hữu những điều tốt nhất","Muốn bảo vệ, gìn giữ đức tin và hạnh phúc các gia đình","Cả A,B sai","Cả A,B đúng"], answer:3},
+{q:"Khác biệt tôn giáo giữa hai vợ chồng ảnh hưởng nhiều nhất đến:", options:["Nghề nghiệp cuộc sống","Kinh tế trong gia đình","Việc giáo dục con cái","Việc sinh hoạt trong gia đình, họ hàng hai bên"], answer:2},
+{q:"Nếu hai bên biết tôn trọng niềm tin của nhau thì:", options:["Hôn nhân chắc chắn giàu có","Có nhiều cơ hội xây dựng hạnh phúc","Không cần xin phép chuẩn","Không cần cầu nguyện"], answer:1},
+{q:"Trong hôn nhân khác đạo, người Công giáo được mời gọi:", options:["So sánh các tôn giáo với đạo Công giáo","Ép buộc người kia theo đạo Công giáo","Làm chứng cho Tin Mừng bằng đời sống","Hạn chế sinh hoạt giáo xứ tránh hiểu lầm"], answer:2},
+{q:"Nếu một người Công giáo kết hôn với người Phật giáo chưa chịu phép Rửa thì đó là:", options:["Hôn nhân hỗn hợp","Hôn nhân dị tín","Hôn nhân khác đạo","Hôn nhân tự nhiên"], answer:2},
+{q:"Khi xảy ra bất đồng do khác biệt niềm tin, điều người tín hữu cần làm trước tiên là:", options:["Bỏ đi, không cần giải thích nhiều","Tạm thời lánh đi chỗ khác thuận tiện hơn","Tôn trọng, đối thoại chân thành và cầu nguyện","Nài van người kia theo đạo cho dễ sống"], answer:2},
+{q:"Điều nào sau đây thể hiện đúng tinh thần giao ước?", options:["Chỉ yêu khi được đáp trả","Hy sinh lợi ích cá nhân vì gia đình","Chấm dứt hôn nhân khi gặp khó khăn","Chỉ giữ lời hứa khi thuận lợi"], answer:1},
+{q:"Khi kết hôn với người khác đạo, người Công giáo nên:", options:["Tránh sinh hoạt giáo xứ để không gây hiểu lầm cho người bạn đời","Gắn bó mật thiết hơn với cộng đoàn giáo xứ, giáo họ","Chỉ cần giữ đạo tại tâm là đủ rồi","Hạn chế tham gia phụng vụ Giáo hội"], answer:1},
+{q:"Phương thế hữu hiệu nhất để người bạn đời nhận biết Đức Kitô là:", options:["Giải thích các mầu nhiệm đức tin","Cầu nguyện, hy sinh, bác ái trong gia đình nội ngoại","Đời sống yêu thương và chứng tá Tin Mừng","B và C"], answer:3},
+{q:"Hội Thánh kỳ vọng điều gì nơi người không Công giáo?", options:["Bắt buộc phải theo đạo mới được cưới người Công giáo","Tự nguyện mở lòng đón nhận đức tin trong tình yêu mến","Chỉ cần không cấm cản bạn đời thực hành đức tin","Chỉ cần tôn trọng nghi lễ của Giáo Hội"], answer:1},
+{q:"Nhận định về các phát biểu sau đây: A. Hôn nhân hỗn hợp chỉ hợp pháp khi có phép rõ ràng của giáo quyền. B. Hôn nhân khác đạo chỉ thành sự khi có phép chuẩn rõ ràng của giáo quyền.", options:["Chỉ A đúng","Chỉ B đúng","Cả A, B sai","Cả A, B đúng"], answer:3},
+{q:"Muốn xin phép chuẩn hôn nhân khác đạo nơi Đức Giám Mục Giáo Phận cần:", options:["Hai đương sự hiểu biết, chấp nhận mục đích và đặc tính chính yếu của hôn nhân Công giáo","Bên Công giáo cam kết giữ đức tin và bảo đảm cho con cái được rửa tội, giáo dục trong Hội Thánh","Thông tri cho bên không Công giáo biết rõ những điều ấy","Cả A,B,C"], answer:3},
+{q:"Vì sao Hội Thánh yêu cầu bên Công giáo cam kết giáo dục con cái trong Hội Thánh?", options:["Để tạo sự khác biệt với các tôn giáo khác","Vì đức tin là hồng ân cần được gìn giữ và phát triển","Vì luật dân sự quy định","Để dễ quản lý giáo dân trong các giáo xứ"], answer:1},
+{q:"Câu nào diễn tả đầy đủ nhất các ý chính của bài học?", options:["Hôn nhân chỉ là sự đồng thuận giữa hai cá nhân.","Điều quan trọng nhất là tình cảm hiện tại.","Hôn nhân Kitô giáo là giao ước thánh thiêng, trung tín suốt đời; trong hôn nhân khác đạo, người tín hữu được mời gọi trung thành với đức tin và trở nên chứng nhân Tin Mừng.","Chỉ cần hai người yêu nhau thì không cần quan tâm đến đức tin."], answer:2},
+];
+
+const letters = ["A","B","C","D"];
+const container = document.getElementById('quiz-container');
+const answers = new Array(questions.length).fill(null);
+let current = 0;
+
+function renderQuestion(qi){
+  container.innerHTML = '';
+  const item = questions[qi];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `<div class="q-number">Câu ${qi+1} / ${questions.length}</div>
+    <div class="q-text">${item.q}</div>
+    <div class="options" id="opts-${qi}"></div>
+    <div class="feedback" id="feedback-${qi}" style="display:none;"></div>`;
+  container.appendChild(card);
+  const optsDiv = card.querySelector(`#opts-${qi}`);
+  item.options.forEach((opt, oi) => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${qi}-${oi}`;
+    label.innerHTML = `<span class="letter">${letters[oi]}.</span><span>${opt}</span>`;
+    label.addEventListener('click', () => selectOption(qi, oi));
+    optsDiv.appendChild(label);
+  });
+
+  const navBtn = document.createElement('button');
+  navBtn.id = 'nav-btn';
+  navBtn.textContent = qi === questions.length - 1 ? 'Nộp bài' : 'Câu tiếp theo →';
+  navBtn.style.display = 'none';
+  navBtn.addEventListener('click', () => {
+    if(qi === questions.length - 1){
+      showResult();
+    } else {
+      current = qi + 1;
+      renderQuestion(current);
+    }
+  });
+  container.appendChild(navBtn);
+
+  updateProgress();
+}
+
+function selectOption(qi, oi){
+  if(answers[qi] !== null) return; // đã chọn và khóa câu này rồi
+  answers[qi] = oi;
+  const item = questions[qi];
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(i === item.answer){
+      el.classList.add('correct');
+    } else if(i === oi){
+      el.classList.add('incorrect');
+    }
+  }
+  const feedback = document.getElementById(`feedback-${qi}`);
+  if(oi === item.answer){
+    feedback.textContent = '✔ Chính xác!';
+    feedback.className = 'feedback feedback-correct';
+  } else {
+    feedback.textContent = '✘ Chưa đúng. Đáp án đúng là ' + letters[item.answer] + '.';
+    feedback.className = 'feedback feedback-incorrect';
+  }
+  feedback.style.display = 'block';
+  document.getElementById('nav-btn').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered/questions.length)*100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${questions.length} câu`;
+}
+
+function showResult(){
+  container.innerHTML = '';
+  let score = 0;
+  questions.forEach((item, qi) => { if(answers[qi] === item.answer) score++; });
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct === 100) msg = 'Xuất sắc! Bạn đã nắm vững toàn bộ bài học. 🎉';
+  else if(pct >= 80) msg = 'Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = 'Khá ổn, nhưng nên xem lại một số điểm.';
+  else msg = 'Hãy ôn lại bài học và thử lại nhé.';
+  document.getElementById('score-text').textContent = msg + ' (' + pct + '%)';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  document.getElementById('result').style.display = 'none';
+  renderQuestion(current);
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion(current);
+
+</script>
+</body>
+</html>
