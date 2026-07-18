@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm - Bài 13: Bảy Bí Tích Trong Hội Thánh</title>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --card:#ffffff;
+    --accent:#7a3b2e;
+    --accent2:#b5834f;
+    --ok:#3a7d44;
+    --bad:#b3372c;
+    --text:#2c231b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Segoe UI', serif;
+    background:linear-gradient(180deg,#f5f1e8,#ece3d2);
+    color:var(--text);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  header h1{
+    font-size:1.5rem;
+    color:var(--accent);
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:#7a6a55;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:#e2d8c3;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .3s ease;
+  }
+  .question-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+    border-left:5px solid var(--accent2);
+  }
+  .q-number{
+    font-size:0.8rem;
+    color:var(--accent2);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:1.08rem;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 14px;
+    border:1.5px solid #e0d5c0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+    font-size:0.98rem;
+    line-height:1.4;
+  }
+  .option:hover{background:#f8f2e6;}
+  .option.selected{
+    border-color:var(--accent);
+    background:#f1e6d8;
+  }
+  .option.correct{
+    border-color:var(--ok);
+    background:#e4f3e6;
+  }
+  .option.incorrect{
+    border-color:var(--bad);
+    background:#f8e3e0;
+  }
+  .option input{margin-top:3px;}
+  .letter{
+    font-weight:bold;
+    color:var(--accent2);
+    min-width:18px;
+  }
+  #nav-btn, #retry-btn{
+    display:block;
+    width:100%;
+    padding:14px;
+    font-size:1.05rem;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
+    transition:background .2s;
+  }
+  #nav-btn:hover, #retry-btn:hover{background:#5f2e24;}
+  #result{
+    text-align:center;
+    background:var(--card);
+    border-radius:14px;
+    padding:28px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    display:none;
+  }
+  #result h2{color:var(--accent);margin-top:0;}
+  #score-num{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:var(--accent);
+  }
+  .feedback{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:0.92rem;
+  }
+  .feedback-correct{
+    color:var(--ok);
+    background:#e4f3e6;
+  }
+  .feedback-incorrect{
+    color:var(--bad);
+    background:#f8e3e0;
+  }
+  .unanswered-note{
+    color:var(--bad);
+    font-size:0.9rem;
+    text-align:center;
+    margin:4px 0 14px;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bài 13: Bảy Bí Tích Trong Hội Thánh</h1>
+    <p>Trắc nghiệm 25 câu — hãy chọn đáp án đúng nhất</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <p id="progress-text" style="text-align:center;color:#7a6a55;font-size:0.9rem;margin:-16px 0 20px;"></p>
+
+  <div id="quiz-container"></div>
+
+  <div id="result">
+    <h2>Kết quả</h2>
+    <div id="score-num"></div>
+    <p id="score-text"></p>
+    <button id="retry-btn">Làm lại</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Bí tích là gì?", options:["Bí tích là những điều bí nhiệm do Chúa Giê-su thiết lập.","Bí tích là dấu chỉ bên ngoài Chúa dùng để diễn tả và thông ban ơn bên trong cho loài người.","Bí tích là những điều bí nhiệm mà Chúa Giê-su đã thiết lập, để thông ban những ơn cần thiết cho con người.","Cả A, B và C"], answer:1},
+{q:"Có mấy Bí tích?", options:["Có 7 Bí tích là: Bí tích Rửa tội, Thêm sức, Giải tội, Thánh Thể, An táng, Hôn phối và Truyền Chức thánh.","Có 7 Bí tích là: Bí tích Rửa tội, Thêm sức, Giải tội, Chầu Thánh Thể, Xức dầu bệnh nhân, Hôn phối và Truyền Chức thánh.","Có 7 Bí tích là: Bí tích Rửa tội, Thêm sức, Giải tội, Thánh Thể, Xức dầu bệnh nhân, Hôn phối và Truyền Chức thánh.","Cả A, B và C"], answer:2},
+{q:"Bí tích Rửa tội có cần thiết không?", options:["Bí tích Rửa tội rất cần thiết như lời Chúa phán: \"Không ai có thể vào Nước Thiên Chúa nếu không sinh ra bởi nước và Thần Khí\"","Bí tích Rửa tội rất cần thiết. Vì đây được coi như cửa ngõ để dẫn đưa ta vào Hội Thánh của Chúa Giê-su.","Bí tích Rửa tội rất cần thiết. Vì đây được coi như cửa ngõ và là khởi đầu để dẫn đưa ta vào Hội Thánh của Chúa Giê-su, như lời Chúa phán: \"Không ai có thể vào Nước Thiên Chúa nếu không sinh ra bởi nước và Thần Khí\"","Tất cả đều đúng."], answer:0},
+{q:"Bí tích Rửa tội ban cho ta những ơn nào?", options:["Bí tích Rửa tội ban cho chúng ta được sạch tất cả các tội lỗi, tội chung cũng như tội riêng.","Bí tích Rửa tội ban cho chúng ta được sạch tất cả các tội lỗi, tội chung cũng như tội riêng. Làm cho ta trở nên con Chúa và con Hội Thánh.","Bí tích Rửa tội tha tội Tổ tông và tội riêng, làm cho ta trở nên con Chúa và con Hội Thánh.","Cả A, B và C"], answer:2},
+{q:"Người lãnh Bí tích Rửa tội thề hứa những gì?", options:["Họ thề không bao giờ bỏ Chúa và Hội Thánh của Người.","Họ thề hứa từ bỏ ma quỷ và tin theo Chúa Ki-tô.","Họ thề cho dù đến chết cũng không bao giờ bỏ Chúa và bỏ Đạo.","Cả A và B"], answer:1},
+{q:"Bí tích Thêm sức là gì?", options:["Là Bí tích ban cho ta ơn sức mạnh. Giúp ta trở thành con người trưởng thành trước mặt Thiên Chúa và mọi người.","Là Bí tích ban cho ta ơn sức mạnh. Giúp ta trở thành con người trưởng thành trước mặt Thiên Chúa và mọi người nhờ Chúa Thánh Thần.","Là Bí tích Chúa Giê-su đã lập cho ta lãnh nhận dồi dào ơn Chúa Thánh Thần.","Cả A, B và C"], answer:2},
+{q:"Bí tích Thêm sức ban cho ta những ơn nào?", options:["Bí tích Thêm sức ban cho ta những ơn này là: Ơn Khôn ngoan, Hiểu biết và Thông minh.","Bí tích Thêm sức ban cho ta những ơn này là: Ơn Lo liệu, Sức mạnh, Đạo đức và Ơn kính sợ Chúa.","Cả A và B","Bí tích Thêm sức tăng cường đời sống siêu nhiên, gắn bó ta cách mật thiết hơn với Hội Thánh và thúc giục ta làm việc tông đồ truyền giáo."], answer:3},
+{q:"Bí tích Thánh Thể là gì?", options:["Là Bí tích Chúa Giê-su đã lập để biến bánh rượu nên Mình Máu Người làm lương thực nuôi sống ta phần hồn.","Là Bí tích Chúa Giê-su đã lập để ban dồi dào ơn Chúa Thánh Thần cho người lãnh nhận.","Là Bí tích Chúa Giê-su đã lập để ban dồi dào ơn Chúa Thánh Thần cho người lãnh nhận. Cùng ban Mình Máu Người làm lương thực nuôi sống ta phần hồn.","Tất cả đều đúng."], answer:0},
+{q:"Chúa Giê-su ngự trong Bí tích Thánh Thể thế nào?", options:["Chúa Giê-su ngự thật trong Bí tích Thánh Thể. Tuy nhiên, Ngài chỉ hiện diện khi cử hành Thánh lễ mà thôi.","Chúa Giê-su ngự thật trong Bí tích Thánh Thể. Tuy nhiên, Ngài còn hiện diện trong Lời của Ngài trong Thánh lễ nữa.","Chúa Giê-su ngự thật trong Bí tích Thánh Thể, nghĩa là trong mỗi hình Bánh, hình Rượu dù nhỏ bé cũng có toàn vẹn Chúa Giê-su.","Cả A và B"], answer:2},
+{q:"Ta phải kính thờ Chúa Giê-su trong Thánh Thể thế nào?", options:["Ta phải năng đến kính viếng và thờ lạy Ngài bất cứ khi nào có điều kiện và bất cứ nơi đâu có sự hiện diện của Ngài.","Ta phải năng đến kính viếng, tôn thờ, giữ sự nghiêm trang đứng đắn trong nhà thờ, nhất là siêng năng tham dự Thánh Lễ và hiệp lễ sốt sắng.","Ta phải năng đến kính viếng và thờ lạy Ngài. Hơn nữa, chúng ta phải học nơi Chúa Giê-su Thánh Thể sự hy sinh và hiến thân mình vì hạnh phúc của người khác.","Cả A, B và C"], answer:1},
+{q:"Bí tích Giải tội là gì?", options:["Bí tích Giải tội là Bí tích chính Chúa Cha đã lập để tha tội ta phạm từ khi lãnh nhận Bí tích Rửa tội về sau.","Bí tích Giải tội là Bí tích chính Chúa Cha đã lập để tha tội ta phạm và giao hòa ta với Chúa cùng Hội Thánh.","Là Bí tích Chúa Giê-su đã lập để tha tội ta phạm từ khi lãnh nhận Bí tích Rửa tội về sau, cùng giao hòa ta với Chúa và Hội Thánh.","Cả A, B và C"], answer:2},
+{q:"Chúa Giê-su đã lập Bí tích Giải tội khi nào?", options:["Sau bữa Tiệc ly, Chúa Giê-su đã long trọng hà hơi trên các Tông đồ và phán: \"Anh em hãy nhận lấy Thánh Thần...\"","Sau khi sống lại, Chúa Giê-su hiện ra, thổi hơi trên các Tông đồ và phán: \"Anh em hãy nhận lấy Thánh Thần...\"","Sau khi đã về trời, Chúa Giê-su đã hiện ra với các Tông đồ và phán: \"Anh em hãy nhận lấy Thánh Thần...\"","Tất cả đều đúng."], answer:1},
+{q:"Ai có quyền tha tội?", options:["Chỉ có Giám mục và Linh mục mới có quyền tha tội mà thôi.","Không một người giáo dân Công Giáo nào được thi hành quyền bính này, mà chỉ có các Đức Giám mục và Linh mục mới có quyền tha tội mà thôi.","Chỉ có Thiên Chúa mới có quyền tha tội, nhưng Người đã trao quyền ấy cho các tông đồ và các Đấng kế vị. Vì thế, các Giám mục và linh mục nào được phép, mới có quyền ban Bí tích Giải tội.","Cả A, B và C"], answer:2},
+{q:"Ai cần lãnh nhận Bí tích Giải tội?", options:["Chỉ những người tín hữu mắc tội trọng thì mới cần lãnh nhận Bí tích Giải tội.","Những tín hữu đã phạm tội trọng thì cần phải lãnh nhận Bí tích Giải tội, nhưng ai chỉ mắc tội nhẹ mà lãnh nhận Bí tích này, thì được nhiều ích lợi thiêng liêng.","Chỉ những người tín hữu mắc tội trọng và trong cơn hấp hối thì mới cần lãnh nhận Bí tích Giải tội. Ngoài những trường hợp kể trên, họ chỉ cần thực lòng thống hối ăn năn là được.","Cả A, B và C"], answer:1},
+{q:"Muốn lãnh nhận Bí tích Giải tội thì phải làm gì?", options:["Trước tiên phải liên hệ với linh mục có quyền giải tội. Thứ đến, cần xét mình, hoặc nhờ người khác trợ giúp. Sau cùng là ăn năn và đền tội.","Phải hết lòng ăn năn và quyết tâm chừa cải.","Phải làm 4 việc này: Xét mình, Thống hối lỗi lầm, Ăn năn và Đền tội.","Phải làm 4 việc này: Xét mình, Ăn năn dốc lòng chừa, Xưng tội và Đền tội."], answer:3},
+{q:"Bí tích Xức Dầu bệnh nhân là gì?", options:["Là Bí tích Chúa Giê-su đã lập để ban ơn nâng đỡ cho những người hấp hối.","Là Bí tích Chúa Giê-su đã lập để ban ơn nâng đỡ bệnh nhân phần hồn phần xác và chuẩn bị bước về đời sau.","Là Bí tích Chúa Giê-su đã lập để ban ơn nâng đỡ cho những người hấp hối. Giúp họ gia tăng sức mạnh để can đảm bước về đời sau.","Cả A, B và C"], answer:1},
+{q:"Nên lãnh nhận Bí tích Xức Dầu bệnh nhân khi nào?", options:["Các bệnh nhân có nguy cơ chết thì cần lãnh Bí tích Xức dầu bệnh nhân và nên lãnh nhận khi còn tỉnh táo để được hưởng nhiều hiệu quả hơn.","Bất cứ lúc nào cũng có thể lãnh nhận Bí tích này, miễn là tâm hồn người bệnh đã được chuẩn bị sẵn sàng.","Chỉ khi nào người bệnh thực sự hấp hối, mới có thể lãnh nhận Bí tích này, miễn là tâm hồn họ đã được chuẩn bị sẵn sàng.","Cả A, B và C"], answer:0},
+{q:"Bí tích Truyền Chức thánh là gì?", options:["Là Bí tích Chúa Giê-su đã lập để ban chức thánh cho những người Chúa chọn.","Là Bí tích Chúa Giê-su đã lập để ban chức thánh cho những người được coi là xứng đáng, mà chính Thiên Chúa đã chọn.","Là Bí tích Chúa Giê-su đã lập để thánh hiến những vị mà Chúa muốn trao cho tác vụ thánh trong dân Chúa.","Cả A, B và C"], answer:2},
+{q:"Bí tích Hôn nhân ban cho đôi bạn những ơn nào?", options:["Bí tích Hôn nhân thánh hóa tình yêu vợ chồng và ban nhiều ơn đặc biệt, giúp họ chu toàn nghĩa vụ đối với người bạn đời của mình.","Bí tích Hôn nhân thánh hóa tình yêu vợ chồng và ban nhiều ơn đặc biệt, giúp họ chu toàn nghĩa vụ đối với người bạn đời của mình và đối với con cái.","Bí tích Hôn nhân thánh hóa tình yêu vợ chồng và ban nhiều ơn đặc biệt, giúp họ chu toàn nghĩa vụ đối với người bạn đời của mình, đó là yêu thương và tôn trọng nhau suốt đời.","Cả A, B và C"], answer:1},
+{q:"Hôn nhân Công giáo có mấy đặc tính?", options:["Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Tôn trọng nhau suốt đời.","Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Yêu thương cùng tôn trọng nhau suốt đời.","Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Bất khả phân ly (không được ly hôn).","Cả A, B và C"], answer:2},
+{q:"Mục đích của Hôn nhân Công giáo là gì?", options:["Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau, sinh sản và giáo dục con cái và cùng giúp nhau nên thánh.","Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và cùng giúp nhau nên thánh.","Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và giúp con cái cùng nên thánh.","Cả A, B và C"], answer:0},
+{q:"Bí tích Hôn nhân giúp đôi bạn nên thánh cách nào?", options:["Nhờ ơn thiêng của Bí tích Hôn nhân, đôi bạn nên thánh trong niềm vui đón nhận nhau, sinh sản và giáo dục con cái.","Bí tích Hôn nhân giúp đôi bạn nên thánh trong niềm vui đón nhận nhau, hy sinh cho nhau và cùng nhau đi đến cuối con đường.","Bí tích Hôn nhân giúp đôi bạn nên thánh nhờ sự hy sinh và hiến thân cho nhau, để cùng nhau đi đến cuối con đường.","Cả A, B và C"], answer:0},
+{q:"Theo giáo lý, tại sao \"Thành thật ước muốn\" (Ý hướng ngay lành) lại là một điều kiện cốt lõi khi lãnh nhận Bí tích?", options:["Vì Thiên Chúa tôn trọng tự do của con người, Ngài ban ân sủng nhưng không và không bao giờ ép buộc.","Để nhanh chóng hoàn tất các thủ tục hành chính và hình thức thế tục (như kết hôn).","Vì ân sủng của Bí tích chỉ phụ thuộc vào sự hiểu biết giáo lý bằng lý trí.","Để được miễn trừ các quy định về việc dọn xác như luật chay Thánh Thể."], answer:0},
+{q:"Đối với các \"Bí tích của kẻ sống\" (như Thêm Sức, Thánh Thể, Hôn Phối...), việc dọn tâm hồn đòi hỏi người tín hữu phải đáp ứng điều kiện tiên quyết nào?", options:["Phải mặc trang phục lịch sự, đoan trang và giữ thái độ cung kính.","Phải kiêng ăn uống (giữ luật chay) ít là một giờ trước khi cử hành.","Phải ở trong tình trạng ân sủng, tức là linh hồn sạch tội trọng; nếu vướng tội trọng phải xưng tội trước.","Phải thuộc lòng nguồn gốc thiết lập của mọi Bí tích trong Giáo hội."], answer:2},
+{q:"Bí tích nào ghi ấn tín không thể xoá được?", options:["Bí tích Rửa tội, Thêm sức","Bí tích Rửa tội, Giải tội","Thêm Sức, Truyền chức thánh","Cả A và C"], answer:3},
+];
+
+const letters = ["A","B","C","D"];
+const container = document.getElementById('quiz-container');
+const answers = new Array(questions.length).fill(null);
+let current = 0;
+
+function renderQuestion(qi){
+  container.innerHTML = '';
+  const item = questions[qi];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `<div class="q-number">Câu ${qi+1} / ${questions.length}</div>
+    <div class="q-text">${item.q}</div>
+    <div class="options" id="opts-${qi}"></div>
+    <div class="feedback" id="feedback-${qi}" style="display:none;"></div>`;
+  container.appendChild(card);
+  const optsDiv = card.querySelector(`#opts-${qi}`);
+  item.options.forEach((opt, oi) => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${qi}-${oi}`;
+    label.innerHTML = `<span class="letter">${letters[oi]}.</span><span>${opt}</span>`;
+    label.addEventListener('click', () => selectOption(qi, oi));
+    optsDiv.appendChild(label);
+  });
+
+  const navBtn = document.createElement('button');
+  navBtn.id = 'nav-btn';
+  navBtn.textContent = qi === questions.length - 1 ? 'Nộp bài' : 'Câu tiếp theo →';
+  navBtn.style.display = 'none';
+  navBtn.addEventListener('click', () => {
+    if(qi === questions.length - 1){
+      showResult();
+    } else {
+      current = qi + 1;
+      renderQuestion(current);
+    }
+  });
+  container.appendChild(navBtn);
+
+  updateProgress();
+}
+
+function selectOption(qi, oi){
+  if(answers[qi] !== null) return; // đã chọn và khóa câu này rồi
+  answers[qi] = oi;
+  const item = questions[qi];
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(i === item.answer){
+      el.classList.add('correct');
+    } else if(i === oi){
+      el.classList.add('incorrect');
+    }
+  }
+  const feedback = document.getElementById(`feedback-${qi}`);
+  if(oi === item.answer){
+    feedback.textContent = '✔ Chính xác!';
+    feedback.className = 'feedback feedback-correct';
+  } else {
+    feedback.textContent = '✘ Chưa đúng. Đáp án đúng là ' + letters[item.answer] + '.';
+    feedback.className = 'feedback feedback-incorrect';
+  }
+  feedback.style.display = 'block';
+  document.getElementById('nav-btn').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered/questions.length)*100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${questions.length} câu`;
+}
+
+function showResult(){
+  container.innerHTML = '';
+  let score = 0;
+  questions.forEach((item, qi) => { if(answers[qi] === item.answer) score++; });
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct === 100) msg = 'Xuất sắc! Bạn đã nắm vững toàn bộ bài học. 🎉';
+  else if(pct >= 80) msg = 'Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = 'Khá ổn, nhưng nên xem lại một số điểm.';
+  else msg = 'Hãy ôn lại bài học và thử lại nhé.';
+  document.getElementById('score-text').textContent = msg + ' (' + pct + '%)';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  document.getElementById('result').style.display = 'none';
+  renderQuestion(current);
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion(current);
+
+</script>
+</body>
+</html>
