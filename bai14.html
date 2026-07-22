@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm - Bài 14: Hôn Nhân Công Giáo "Tự Do"</title>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --card:#ffffff;
+    --accent:#7a3b2e;
+    --accent2:#b5834f;
+    --ok:#3a7d44;
+    --bad:#b3372c;
+    --text:#2c231b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Segoe UI', serif;
+    background:linear-gradient(180deg,#f5f1e8,#ece3d2);
+    color:var(--text);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  header h1{
+    font-size:1.5rem;
+    color:var(--accent);
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:#7a6a55;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:#e2d8c3;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .3s ease;
+  }
+  .question-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+    border-left:5px solid var(--accent2);
+  }
+  .q-number{
+    font-size:0.8rem;
+    color:var(--accent2);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:21pt;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 14px;
+    border:1.5px solid #e0d5c0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+    font-size:21pt;
+    line-height:1.4;
+  }
+  .option:hover{background:#f8f2e6;}
+  .option.selected{
+    border-color:var(--accent);
+    background:#f1e6d8;
+  }
+  .option.correct{
+    border-color:var(--ok);
+    background:#e4f3e6;
+  }
+  .option.incorrect{
+    border-color:var(--bad);
+    background:#f8e3e0;
+  }
+  .option input{margin-top:3px;}
+  .letter{
+    font-weight:bold;
+    color:var(--accent2);
+    min-width:18px;
+  }
+  #nav-btn, #retry-btn{
+    display:block;
+    width:100%;
+    padding:14px;
+    font-size:18pt;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
+    transition:background .2s;
+  }
+  #nav-btn:hover, #retry-btn:hover{background:#5f2e24;}
+  #result{
+    text-align:center;
+    background:var(--card);
+    border-radius:14px;
+    padding:28px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    display:none;
+  }
+  #result h2{color:var(--accent);margin-top:0;}
+  #score-num{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:var(--accent);
+  }
+  .feedback{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:17pt;
+  }
+  .feedback-correct{
+    color:var(--ok);
+    background:#e4f3e6;
+  }
+  .feedback-incorrect{
+    color:var(--bad);
+    background:#f8e3e0;
+  }
+  .unanswered-note{
+    color:var(--bad);
+    font-size:0.9rem;
+    text-align:center;
+    margin:4px 0 14px;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bài 14: Hôn Nhân Công Giáo "Tự Do" - Thủ Tục Hôn Nhân Dân Sự</h1>
+    <p>Trắc nghiệm 25 câu — hãy chọn đáp án đúng nhất</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <p id="progress-text" style="text-align:center;color:#7a6a55;font-size:0.9rem;margin:-16px 0 20px;"></p>
+
+  <div id="quiz-container"></div>
+
+  <div id="result">
+    <h2>Kết quả</h2>
+    <div id="score-num"></div>
+    <p id="score-text"></p>
+    <button id="retry-btn">Làm lại</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Theo giáo huấn của Hội Thánh, tự do đích thực là:", options:["Muốn làm gì thì làm.","Không bị ai kiểm soát.","Tự do làm điều thiện trong trách nhiệm.","Chỉ cần làm theo ý mình."], answer:2},
+{q:"Theo Giáo luật, điều gì không thể thiếu trong hôn nhân?", options:["Sự chúc lành của mọi người.","Sự ưng thuận của đôi bên.","Sự đồng ý của cha mẹ.","Việc đăng ký kết hôn."], answer:1},
+{q:"Điều 1057 §1 khẳng định không quyền lực nào có thể thay thế:", options:["Lời cầu nguyện của Hội Thánh.","Quyết định của cha mẹ.","Sự ưng thuận của đôi bạn.","Nghi thức cưới trong đám cưới."], answer:2},
+{q:"Yếu tố nào sau đây không thuộc ba điều kiện làm nên kết ước hôn nhân?", options:["Có năng cách pháp lý.","Sự ưng thuận của hai bạn.","Được biểu lộ hợp pháp.","Có nhiều khách dự lễ."], answer:3},
+{q:"Nếu thiếu một trong ba yếu tố căn bản của kết ước hôn nhân thì:", options:["Hôn nhân vẫn thành sự.","Hôn nhân chỉ bất hợp luật.","Hôn nhân vô hiệu.","Phải cưới lại sau một năm."], answer:2},
+{q:"Sự ưng thuận kết hôn là:", options:["Hành vi của cha mẹ.","Hành vi của ý chí tự do.","Quyết định của linh mục quản xứ.","Sự đồng ý của cơ quan thẩm quyền Nhà nước."], answer:1},
+{q:"Những dấu chỉ bên ngoài như lời thề, trao nhẫn, nắm tay nhằm:", options:["Làm đẹp nghi lễ.","Biểu lộ sự ưng thuận kết hôn.","Dựa theo phong tục.","Tạo niềm vui và sự trang nghiêm."], answer:1},
+{q:"Theo Giáo Luật điều 1060, khi còn hồ nghi thì:", options:["Hôn nhân bị coi là vô hiệu.","Hôn nhân được coi là thành sự cho đến khi có chứng cứ ngược lại.","Phải tổ chức cưới lại.","Cha sở quyết định."], answer:1},
+{q:"Việc đăng ký kết hôn theo pháp luật Việt Nam được thực hiện tại:", options:["Giáo xứ.","Tòa Giám mục.","Ủy ban Nhân dân nơi cư trú của một trong hai bên.","Tòa án."], answer:2},
+{q:"Khi đăng ký kết hôn theo pháp luật, điều kiện bắt buộc là:", options:["Cha mẹ hai bên phải có mặt.","Hai bên nam nữ phải trực tiếp có mặt và tự nguyện.","Có ít nhất hai nhân chứng.","Có linh mục chứng hôn."], answer:1},
+{q:"Theo truyền thống Việt Nam ngày nay, nghi lễ cưới hỏi thường được thu gọn còn:", options:["Hai nghi lễ.","Ba nghi lễ.","Bốn nghi lễ.","Sáu nghi lễ."], answer:1},
+{q:"Lễ nào là nghi thức đầu tiên sau khi đôi bạn được cha mẹ hai bên đồng ý?", options:["Lễ cưới.","Lễ đính hôn.","Lễ dạm (chạm ngõ).","Lễ thành hôn."], answer:2},
+{q:"Mục đích của việc nhà gái \"lại quả\" sau lễ hỏi là:", options:["Trả lại toàn bộ lễ vật.","Báo tin cho họ hàng biết việc đính hôn.","Chuẩn bị lễ cưới.","Cảm ơn nhà trai bằng tiền."], answer:1},
+{q:"Theo truyền thống Việt Nam, lễ cưới tổ chức tại nhà trai được gọi là:", options:["Lễ Vu Quy.","Lễ Nghênh thân.","Lễ Thành Hôn.","Lễ Dạm."], answer:2},
+{q:"Con người được tự do, nhưng sự tự do của con người có một …? (Docat)", options:["Ý nghĩa","Mục đích.","Đặc tính.","Tất cả đều sai."], answer:1},
+{q:"Quả thế, thưa anh em, anh em đã được gọi để hưởng tự do. Có điều là đừng … tự do để sống theo tính xác thịt, nhưng hãy lấy … mà … lẫn nhau (Gl, 5, 13-14) (điền vào chỗ trống)", options:["Lạm dụng, Đức ái, Phục vụ","Lạm dụng, Đức mến, Phục vụ","Lợi dụng, Đức mến, Yêu thương","Lợi dụng, Đức mến, Phục vụ"], answer:3},
+{q:"Các bí tích trong Hội thánh Công giáo luôn đòi hỏi yếu tố tự do — đúng hay sai?", options:["Đúng","Sai"], answer:0},
+{q:"Trong bí tích Hôn Phối \"TỰ DO\" là yếu tố căn bản. Nếu không có TỰ DO, bí tích hôn phối sẽ được tuyên bố là HÔN NHÂN HỮU HIỆU — đúng hay sai?", options:["Đúng","Sai"], answer:1},
+{q:"Đâu là định nghĩa của CĐ Vatican II về \"Tự Do\"?", options:["Tự do không có sẵn, nhưng chính con người phải làm nên. Tự do không có nghĩa là muốn làm gì thì làm, mà chỉ có nghĩa là làm những gì xây dựng thêm giá trị cho sự hiện hữu của tôi và những người chung quanh tôi.","Tự bản chất, tự do nền tảng mang một định hướng siêu việt. Tự do phủ định: từ bỏ tội lỗi.","Tự do đích thực là dấu chỉ cao cả nhất của hình ảnh Thiên Chúa trong con người. Bởi vì Thiên Chúa đã muốn để con người tự định liệu, hầu con người tự mình đi tìm Đấng Tạo Dựng và nhờ kết hợp với Ngài con người tiến tới sự hoàn thiện trọn vẹn và hạnh phúc.","Tự do khẳng định: trở thành chính mình trong cái mình LÀ, để bớt bị ràng buộc bởi cái CÓ và mở ra cùng cái VỚI."], answer:2},
+{q:"Tự do được thể hiện ở cấp độ cao hơn khi người ta không dám chọn sự thiện hảo lớn hơn — đúng hay sai?", options:["Đúng","Sai"], answer:1},
+{q:"Khao khát tự do là khao khát một giá trị vô biên... \"Anh em hãy nói năng và hành động như những người sẽ bị xét xử theo luật tự do.\" Ý tưởng lấy từ thư nào?", options:["Gioan","Gia-cô-bê","Phê-rô","Phi-lê-môn"], answer:1},
+{q:"Chúa Giê-su là con người tự do đích thực vì đã hoàn toàn trút bỏ vinh quang, mặc lấy thân nô lệ, trở nên giống phàm nhân sống như người trần thế, để yêu thương và cứu độ con người — đúng hay sai?", options:["Đúng","Sai"], answer:0},
+{q:"Chỉ …. mới giải thoát con người khỏi tội và ban cho con người … và tự do là một …. (điền vào chỗ trống)", options:["Các thánh - Tự do – Ơn ban","Chúa Ki-tô - Tự do đích thực – Ơn ban","Đức Maria - Tự do đích thực – Ân sủng","Chúa Ki-tô - tự do – Ơn huệ"], answer:1},
+{q:"Con người có thể tự sức mình thoát tội… nhưng lại dễ dàng sa lầy trong ảo tưởng về tự do — đúng hay sai?", options:["Sai","Đúng"], answer:0},
+{q:"Tự do phản chiếu hình ảnh Thiên Chúa nơi con người vì Thiên Chúa dựng nên con người ban cho có lý trí, ý chí và tự do — đúng hay sai?", options:["Sai","Đúng"], answer:1},
+];
+
+const letters = ["A","B","C","D"];
+const container = document.getElementById('quiz-container');
+const answers = new Array(questions.length).fill(null);
+let current = 0;
+
+function renderQuestion(qi){
+  container.innerHTML = '';
+  const item = questions[qi];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `<div class="q-number">Câu ${qi+1} / ${questions.length}</div>
+    <div class="q-text">${item.q}</div>
+    <div class="options" id="opts-${qi}"></div>
+    <div class="feedback" id="feedback-${qi}" style="display:none;"></div>`;
+  container.appendChild(card);
+  const optsDiv = card.querySelector(`#opts-${qi}`);
+  item.options.forEach((opt, oi) => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${qi}-${oi}`;
+    label.innerHTML = `<span class="letter">${letters[oi]}.</span><span>${opt}</span>`;
+    label.addEventListener('click', () => selectOption(qi, oi));
+    optsDiv.appendChild(label);
+  });
+
+  const navBtn = document.createElement('button');
+  navBtn.id = 'nav-btn';
+  navBtn.textContent = qi === questions.length - 1 ? 'Nộp bài' : 'Câu tiếp theo →';
+  navBtn.style.display = 'none';
+  navBtn.addEventListener('click', () => {
+    if(qi === questions.length - 1){
+      showResult();
+    } else {
+      current = qi + 1;
+      renderQuestion(current);
+    }
+  });
+  container.appendChild(navBtn);
+
+  updateProgress();
+}
+
+function selectOption(qi, oi){
+  if(answers[qi] !== null) return; // đã chọn và khóa câu này rồi
+  answers[qi] = oi;
+  const item = questions[qi];
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(i === item.answer){
+      el.classList.add('correct');
+    } else if(i === oi){
+      el.classList.add('incorrect');
+    }
+  }
+  const feedback = document.getElementById(`feedback-${qi}`);
+  if(oi === item.answer){
+    feedback.textContent = '✔ Chính xác!';
+    feedback.className = 'feedback feedback-correct';
+  } else {
+    feedback.textContent = '✘ Chưa đúng. Đáp án đúng là ' + letters[item.answer] + '.';
+    feedback.className = 'feedback feedback-incorrect';
+  }
+  feedback.style.display = 'block';
+  document.getElementById('nav-btn').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered/questions.length)*100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${questions.length} câu`;
+}
+
+function showResult(){
+  container.innerHTML = '';
+  let score = 0;
+  questions.forEach((item, qi) => { if(answers[qi] === item.answer) score++; });
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct === 100) msg = 'Xuất sắc! Bạn đã nắm vững toàn bộ bài học. 🎉';
+  else if(pct >= 80) msg = 'Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = 'Khá ổn, nhưng nên xem lại một số điểm.';
+  else msg = 'Hãy ôn lại bài học và thử lại nhé.';
+  document.getElementById('score-text').textContent = msg + ' (' + pct + '%)';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  document.getElementById('result').style.display = 'none';
+  renderQuestion(current);
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion(current);
+
+</script>
+</body>
+</html>
