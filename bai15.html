@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Bài 15 - Bí Tích Rửa Tội</title>
+<style>
+  :root{
+    --bg:#f5f1e8;
+    --card:#ffffff;
+    --accent:#7a3b2e;
+    --accent2:#b5834f;
+    --ok:#3a7d44;
+    --bad:#b3372c;
+    --text:#2c231b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Segoe UI', serif;
+    background:linear-gradient(180deg,#f5f1e8,#ece3d2);
+    color:var(--text);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  header h1{
+    font-size:1.5rem;
+    color:var(--accent);
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:#7a6a55;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:#e2d8c3;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .3s ease;
+  }
+  .question-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+    border-left:5px solid var(--accent2);
+  }
+  .q-number{
+    font-size:0.8rem;
+    color:var(--accent2);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:21pt;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 14px;
+    border:1.5px solid #e0d5c0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+    font-size:21pt;
+    line-height:1.4;
+  }
+  .option:hover{background:#f8f2e6;}
+  .option.selected{
+    border-color:var(--accent);
+    background:#f1e6d8;
+  }
+  .option.correct{
+    border-color:var(--ok);
+    background:#e4f3e6;
+  }
+  .option.incorrect{
+    border-color:var(--bad);
+    background:#f8e3e0;
+  }
+  .option input{margin-top:3px;}
+  .letter{
+    font-weight:bold;
+    color:var(--accent2);
+    min-width:18px;
+  }
+  #nav-btn, #retry-btn{
+    display:block;
+    width:100%;
+    padding:14px;
+    font-size:18pt;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
+    transition:background .2s;
+  }
+  #nav-btn:hover, #retry-btn:hover{background:#5f2e24;}
+  #result{
+    text-align:center;
+    background:var(--card);
+    border-radius:14px;
+    padding:28px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    display:none;
+  }
+  #result h2{color:var(--accent);margin-top:0;}
+  #score-num{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:var(--accent);
+  }
+  .feedback{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:17pt;
+  }
+  .feedback-correct{
+    color:var(--ok);
+    background:#e4f3e6;
+  }
+  .feedback-incorrect{
+    color:var(--bad);
+    background:#f8e3e0;
+  }
+  .unanswered-note{
+    color:var(--bad);
+    font-size:0.9rem;
+    text-align:center;
+    margin:4px 0 14px;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Bài 15 - Bí Tích Rửa Tội</h1>
+    <p>Trắc nghiệm 25 câu — hãy chọn đáp án đúng nhất</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <p id="progress-text" style="text-align:center;color:#7a6a55;font-size:0.9rem;margin:-16px 0 20px;"></p>
+
+  <div id="quiz-container"></div>
+
+  <div id="result">
+    <h2>Kết quả</h2>
+    <div id="score-num"></div>
+    <p id="score-text"></p>
+    <button id="retry-btn">Làm lại</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Bí tích Rửa Tội có cần thiết cho ơn cứu độ không?", options:["Bí tích Rửa Tội rất cần thiết, vì Chúa Giêsu đã nói: \"Ai tin và chịu phép Rửa, sẽ được cứu độ\".","Nên lãnh nhận bí tích Rửa Tội, vì đây là bí tích Chúa Giêsu thiết lập, tuy nhiên không buộc phải lãnh nhận vì còn 6 bí tích khác.","Không cần thiết, vì người Ki-tô hữu buộc phải lãnh nhận đủ 7 bí tích.","Bí tích Rửa Tội cần thiết, vì đây là bí tích Chúa Giêsu thiết lập và trao lại cho Giáo Hội cử hành"], answer:0},
+{q:"Theo định nghĩa, Bí tích Thánh Tẩy làm cho người lãnh nhận được gì?", options:["Trở thành người giàu có và bình an.","Giải thoát khỏi tội lỗi, tái sinh làm con Thiên Chúa, thành chi thể Đức Kitô và thành viên Hội Thánh.","Được chữa lành mọi bệnh tật thể xác.","Trở thành linh mục hoặc tu sĩ."], answer:1},
+{q:"Khi lãnh nhận Bí tích Thánh Tẩy, chúng ta được rửa sạch những tội nào?", options:["Chỉ tội cá nhân.","Chỉ tội tổ tông.","Mọi tội lỗi (tội tổ tông và tội riêng nếu có).","Tội lỗi trong tương lai."], answer:2},
+{q:"Tên gọi 'Rửa Tội' phổ biến nhất vì nó nhấn mạnh đến yếu tố nào?", options:["Lời thề hứa của người nhận.","Hành động đổ nước trên đầu người lãnh nhận để thanh tẩy.","Sự hiện diện của Chúa Thánh Thần.","Việc xức dầu thánh."], answer:1},
+{q:"Ba Bí tích Khai tâm bao gồm những bí tích nào?", options:["Rửa Tội, Hòa Giải, Thánh Thể","Rửa Tội, Thêm Sức, Hôn Phối","Rửa Tội, Thêm Sức, Thánh Thể","Rửa Tội, Xức Dầu Bệnh Nhân, Truyền Chức"], answer:2},
+{q:"Tại sao Bí tích Rửa Tội đôi khi được gọi là 'bí tích của kẻ chết'?", options:["Vì dành cho người đã qua đời.","Vì người phạm tội như đã chết về linh hồn, bí tích này mang lại sự sống ân sủng mới.","Vì người lãnh nhận phải mặc áo đen.","Vì nó gợi nhớ đến sự chết của Chúa Giêsu."], answer:1},
+{q:"Lời nguyện Trừ Tà và Xức Dầu Dự tòng có ý nghĩa gì?", options:["Giúp người lãnh nhận có sức khỏe thể xác.","Cầu xin sức mạnh của Chúa Kitô giúp bảo vệ, can đảm từ bỏ tội lỗi và chiến thắng cám dỗ.","Giúp người lãnh nhận trở nên thông minh hơn.","Để tẩy sạch tội lỗi ngay lập tức."], answer:1},
+{q:"Hành động dìm hoặc đổ nước ba lần trong nghi thức Rửa Tội biểu lộ điều gì?", options:["Cái chết đối với tội lỗi và đồng hình đồng dạng với Đức Kitô để bước vào sự sống mới.","Sự thanh tẩy cơ thể khỏi bụi bẩn.","Việc được ghi tên vào sổ Giáo xứ.","Tượng trưng cho ba ngày Chúa Giêsu nằm trong mồ."], answer:0},
+{q:"Lời đọc bắt buộc của chủ sự khi đổ nước Rửa Tội là gì?", options:["\"Tôi thanh tẩy bạn cho sạch mọi tội lỗi.\"","\"Con được trở thành người Công giáo từ nay.\"","\"Xin Chúa ban bình an cho con.\"","\"(Tên thánh), Cha (Tôi) rửa con, nhân danh Cha, và Con, và Thánh Thần.\""], answer:3},
+{q:"Việc Xức Dầu Thánh (Chrism) chia sẻ 3 chức vụ nào của Chúa Ki-tô?", options:["Giám mục, Linh mục, Phó tế.","Dạy học, Chữa bệnh, Cầu nguyện.","Tư tế, Tiên tri, Vương đế.","Rao giảng, Rửa tội, Thêm sức."], answer:2},
+{q:"Việc trao áo trắng cho người mới Rửa Tội mang ý nghĩa gì?", options:["Để mặc cho đẹp trong ngày lễ.","Tượng trưng cho việc đã được rửa sạch tì ố, 'mặc lấy Đức Kitô' và sống đời tinh tuyền.","Thể hiện sự giàu có của gia đình.","Để phân biệt với những người chưa Rửa Tội."], answer:1},
+{q:"Ánh sáng từ cây nến được trao cho người mới Rửa Tội mang ý nghĩa gì?", options:["Tượng trưng Đức Kitô chiếu rọi linh hồn họ, mời gọi họ thành 'ánh sáng cho trần gian'.","Soi sáng đường đi trong bóng tối.","Để làm ấm không gian nhà thờ.","Dùng để thắp sáng bàn thờ gia đình sau này."], answer:0},
+{q:"Trong điều kiện bình thường, ai là thừa tác viên thông thường của Bí tích Rửa Tội?", options:["Chỉ có Giám mục.","Giám mục, Linh mục, Phó tế.","Bất cứ người Công giáo nào.","Chỉ có Linh mục xứ."], answer:1},
+{q:"Trong trường hợp khẩn cấp (nguy hiểm tính mạng), ai có thể ban Bí tích Rửa Tội?", options:["Chỉ tu sĩ nam nữ.","Chỉ giáo lý viên.","Bất cứ ai (kể cả người chưa chịu phép rửa) miễn là làm đúng ý hướng của Hội Thánh.","Chỉ người có chức thánh."], answer:2},
+{q:"Điều kiện bắt buộc để một người bình thường cử hành Rửa Tội trong trường hợp khẩn cấp là gì?", options:["Phải mặc áo lễ và đọc toàn bộ nghi thức.","Phải có ý hướng của Hội Thánh, đổ nước lên đầu và đọc đúng công thức Rửa Tội.","Phải có giấy phép của Giám mục.","Phải làm dấu Thánh Giá 3 lần."], answer:1},
+{q:"Ai là người có khả năng lãnh nhận Bí tích Rửa Tội?", options:["Chỉ những trẻ sơ sinh.","Chỉ những người lớn đã học giáo lý.","Tất cả và chỉ những người chưa chịu Phép Rửa.","Bất cứ ai, kể cả người đã Rửa Tội rồi."], answer:1},
+{q:"Tại sao mỗi người chỉ được lãnh nhận Bí tích Rửa Tội một lần duy nhất trong đời?", options:["Vì nghi thức này rất dài và phức tạp.","Vì Hội Thánh quy định như vậy để tiết kiệm thời gian.","Vì Bí tích này in vào linh hồn một 'ấn tín thiêng liêng' vĩnh viễn không thể tẩy xóa.","Vì nước thánh chỉ có tác dụng một lần."], answer:2},
+{q:"Để được lãnh nhận Rửa Tội, người lớn cần phải trải qua giai đoạn chuẩn bị nào?", options:["Trải qua một kỳ tĩnh tâm 3 ngày.","Thời kỳ học đạo (thời kỳ dự tòng).","Đi phục vụ cộng đồng 1 tháng.","Đóng góp tài chính cho giáo xứ."], answer:1},
+{q:"Trẻ em sơ sinh được Rửa Tội dựa trên đức tin của ai?", options:["Của chính đứa trẻ.","Của cộng đồng xã hội.","Của linh mục làm phép Rửa.","Của cha mẹ, người đỡ đầu và toàn thể Hội Thánh."], answer:3},
+{q:"Trách nhiệm lớn nhất của người đỡ đầu là gì?", options:["Mua quà cho người Rửa Tội trong các dịp lễ.","Hỗ trợ tài chính cho người Rửa Tội.","Đồng hành, hướng dẫn và làm gương sáng về đời sống đức tin cho người lãnh nhận.","Đại diện gia đình cảm ơn linh mục."], answer:2},
+{q:"Khi chọn người đỡ đầu, Giáo hội khuyên các gia đình nên ưu tiên tiêu chí nào?", options:["Người thực sự sống đạo đức, có đức tin kiên vững và trưởng thành.","Người có tình cảm thân thiết nhất với gia đình.","Người giàu có, có địa vị xã hội.","Hàng xóm láng giềng gần gũi."], answer:0},
+{q:"Việc nhận 'tên thánh' khi Rửa Tội mang những ý nghĩa nào?", options:["Dấu chỉ thụ tạo mới, chọn mẫu gương sống đạo và có đấng bảo trợ thiêng liêng.","Sự phân biệt giai cấp trong Giáo hội.","Thay thế hoàn toàn tên khai sinh của nhà nước.","Sở thích cá nhân của cha mẹ."], answer:0},
+{q:"Hiệu quả thanh tẩy đầu tiên và nền tảng nhất của nước Rửa Tội là gì?", options:["Chữa lành bệnh tật thể xác.","Tha tội tổ tông, tội cá nhân (nếu có) và xóa bỏ mọi hình phạt do tội gây ra.","Giúp người lãnh nhận thông minh hơn.","Đảm bảo người lãnh nhận không bao giờ phạm tội nữa."], answer:1},
+{q:"'Ấn tín thiêng liêng' trong linh hồn người đã Rửa Tội có thể bị xóa bỏ khi nào?", options:["Khi phạm tội trọng.","Khi từ bỏ đức tin Công giáo.","Khi bị dứt phép thông công.","Vĩnh viễn không thể bị xóa bỏ dù trong bất cứ hoàn cảnh nào."], answer:3},
+{q:"Những trường hợp nào chưa lãnh nhận Bí tích Rửa Tội bằng nước nhưng vẫn có thể được cứu độ?", options:["Những người chết vì đức tin (các Thánh Anh Hài).","Những dự tòng ao ước Rửa tội nhưng chết trước khi lãnh nhận.","Những người chưa biết Chúa nhưng sống ngay lành theo lương tâm và trẻ em chết chưa Rửa Tội.","Cả 3 trường hợp trên đều đúng."], answer:3},
+];
+
+const letters = ["A","B","C","D"];
+const container = document.getElementById('quiz-container');
+const answers = new Array(questions.length).fill(null);
+let current = 0;
+
+function renderQuestion(qi){
+  container.innerHTML = '';
+  const item = questions[qi];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `<div class="q-number">Câu ${qi+1} / ${questions.length}</div>
+    <div class="q-text">${item.q}</div>
+    <div class="options" id="opts-${qi}"></div>
+    <div class="feedback" id="feedback-${qi}" style="display:none;"></div>`;
+  container.appendChild(card);
+  const optsDiv = card.querySelector(`#opts-${qi}`);
+  item.options.forEach((opt, oi) => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${qi}-${oi}`;
+    label.innerHTML = `<span class="letter">${letters[oi]}.</span><span>${opt}</span>`;
+    label.addEventListener('click', () => selectOption(qi, oi));
+    optsDiv.appendChild(label);
+  });
+
+  const navBtn = document.createElement('button');
+  navBtn.id = 'nav-btn';
+  navBtn.textContent = qi === questions.length - 1 ? 'Nộp bài' : 'Câu tiếp theo →';
+  navBtn.style.display = 'none';
+  navBtn.addEventListener('click', () => {
+    if(qi === questions.length - 1){
+      showResult();
+    } else {
+      current = qi + 1;
+      renderQuestion(current);
+    }
+  });
+  container.appendChild(navBtn);
+
+  updateProgress();
+}
+
+function selectOption(qi, oi){
+  if(answers[qi] !== null) return; // đã chọn và khóa câu này rồi
+  answers[qi] = oi;
+  const item = questions[qi];
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(i === item.answer){
+      el.classList.add('correct');
+    } else if(i === oi){
+      el.classList.add('incorrect');
+    }
+  }
+  const feedback = document.getElementById(`feedback-${qi}`);
+  if(oi === item.answer){
+    feedback.textContent = '✔ Chính xác!';
+    feedback.className = 'feedback feedback-correct';
+  } else {
+    feedback.textContent = '✘ Chưa đúng. Đáp án đúng là ' + letters[item.answer] + '.';
+    feedback.className = 'feedback feedback-incorrect';
+  }
+  feedback.style.display = 'block';
+  document.getElementById('nav-btn').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered/questions.length)*100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${questions.length} câu`;
+}
+
+function showResult(){
+  container.innerHTML = '';
+  let score = 0;
+  questions.forEach((item, qi) => { if(answers[qi] === item.answer) score++; });
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct === 100) msg = 'Xuất sắc! Bạn đã nắm vững toàn bộ bài học. 🎉';
+  else if(pct >= 80) msg = 'Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = 'Khá ổn, nhưng nên xem lại một số điểm.';
+  else msg = 'Hãy ôn lại bài học và thử lại nhé.';
+  document.getElementById('score-text').textContent = msg + ' (' + pct + '%)';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  document.getElementById('result').style.display = 'none';
+  renderQuestion(current);
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion(current);
+
+</script>
+</body>
+</html>
