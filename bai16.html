@@ -163,7 +163,7 @@
 <div class="wrap">
   <header>
     <h1>Bài 16: Hôn Nhân Công Giáo Trọn Vẹn - Một Vợ Một Chồng & Hòa Hợp Vợ Chồng</h1>
-    <p>Trắc nghiệm 25 câu — hãy chọn đáp án đúng nhất</p>
+    <p>Trắc nghiệm 30 câu — hãy chọn đáp án đúng nhất</p>
   </header>
 
   <div id="progress-wrap"><div id="progress-bar"></div></div>
@@ -181,31 +181,36 @@
 
 <script>
 const questions = [
-{q:"Người tín hữu cần có \"người thứ ba\" nào để hôn nhân được trọn vẹn?", options:["Cha mẹ hai bên","Chính Đức Ki-tô","Cha xứ","Cộng đoàn giáo xứ"], answer:1},
-{q:"Hôn nhân công giáo trọn vẹn cần hội đủ mấy yếu tố?", options:["Hai yếu tố","Ba yếu tố","Bốn yếu tố","Năm yếu tố"], answer:1},
-{q:"Ba yếu tố làm nên hôn nhân công giáo trọn vẹn là gì?", options:["Đã thành sự - Là bí tích - Đã hoàn hợp","Đã đăng ký - Có phép chuẩn - Có nhân chứng","Đã rửa tội - Có của hồi môn - Có nhà cửa","Đã thành sự - Có con cái - Sống chung"], answer:0},
-{q:"\"Đã thành sự\" trong hôn nhân công giáo nghĩa là gì?", options:["Được cử hành công khai có người chứng","Được cha mẹ đồng ý","Đã đăng ký kết hôn dân sự","Đã sống chung nhiều năm"], answer:0},
-{q:"\"Là bí tích\" trong hôn nhân công giáo nghĩa là gì?", options:["Có nghi thức tôn giáo trang trọng","Giữa hai người đã được rửa tội","Có sự chứng giám của giám mục","Được tổ chức tại nhà thờ"], answer:1},
-{q:"\"Đã hoàn hợp\" trong hôn nhân công giáo nghĩa là gì?", options:["Vợ chồng đã ăn ở với nhau","Vợ chồng đã có con","Vợ chồng đã sống chung nhà","Vợ chồng đã làm lễ cưới"], answer:0},
-{q:"Trường hợp nào sau đây là hôn nhân công giáo CHƯA trọn vẹn?", options:["Hôn nhân đã thành sự nhưng chưa ăn ở với nhau","Hôn nhân giữa hai người đã rửa tội và đã ăn ở với nhau","Hôn nhân được cử hành công khai và đôi bạn đã sống chung","Hôn nhân giữa hai người Công giáo có đầy đủ ba yếu tố"], answer:0},
-{q:"\"Đặc ân thánh Phaolô\" (1Cr 7,15) áp dụng cho trường hợp nào?", options:["Hai người Công giáo ly thân","Hai người chưa rửa tội đã kết hôn, sau đó một người trở lại đạo và người kia không muốn chung sống","Hôn nhân bị Hội Thánh tuyên bố vô hiệu","Vợ chồng không có con cái"], answer:1},
-{q:"Theo đặc ân thánh Phaolô, hôn nhân chỉ được tháo gỡ khi nào?", options:["Khi cả hai đồng ý ly hôn","Khi người mới theo đạo lấy một người khác","Khi có phép chuẩn của Giám mục","Khi hai người sống xa nhau quá 5 năm"], answer:1},
-{q:"Hội Thánh có quyền công bố hôn nhân vô hiệu khi nào?", options:["Khi vợ chồng cãi nhau nhiều lần","Khi hôn nhân đã không thành sự ngay từ đầu do mắc ngăn trở","Khi một trong hai người muốn ly hôn","Khi hai vợ chồng không có con"], answer:1},
-{q:"Nền tảng của sự trọn vẹn trong hôn nhân công giáo được Thiên Chúa thiết lập từ đâu?", options:["Từ việc tạo dựng trời đất","Từ việc rút xương sườn người nam để tạo ra người nữ","Từ Mười Điều Răn","Từ giao ước với ông Áp-ra-ham"], answer:1},
-{q:"Vì con người là hình ảnh Thiên Chúa nên con người cần được:", options:["Sử dụng như một công cụ","Tôn trọng và yêu thương","Kiểm soát chặt chẽ","Đối xử theo pháp luật"], answer:1},
-{q:"Hành vi tính dục trong hôn nhân được ví như:", options:["Một nghĩa vụ bắt buộc","Giường hôn nhân là bàn thờ của đôi bạn","Một thói quen sinh học","Một hình thức giải trí"], answer:1},
-{q:"Trong hôn nhân, đôi bạn tự hiến cho nhau chứ không phải:", options:["Chiều theo thú tính","Chiều theo ý cha mẹ","Chiều theo phong tục","Chiều theo dư luận xã hội"], answer:0},
-{q:"\"Đơn nhất\" trong hôn nhân công giáo nghĩa là gì?", options:["Một vợ một chồng","Sống độc thân","Không có con cái","Không ràng buộc pháp lý"], answer:0},
-{q:"Theo Mt 19,6 và St 2,24, vợ chồng được ví như thế nào?", options:["Hai người bạn đồng hành","Không còn là hai, nhưng là một xương một thịt","Hai cá thể độc lập","Hai đối tác kinh doanh"], answer:1},
-{q:"Sự hiệp thông vợ chồng được củng cố và hoàn thiện nhờ điều gì?", options:["Của cải vật chất","Bí tích Hôn Phối đem lại sự hiệp thông trong Đức Kitô","Sự đồng thuận của họ hàng hai bên","Thời gian chung sống lâu dài"], answer:1},
-{q:"Đa thê (nhiều vợ nhiều chồng) đi ngược lại với điều gì?", options:["Phong tục truyền thống","Tình yêu vợ chồng và sự bình đẳng giữa hai vợ chồng","Quy định của pháp luật dân sự","Ý muốn của cha mẹ hai bên"], answer:1},
-{q:"Đâu KHÔNG phải là nguyên nhân gây xung đột vợ chồng theo bài học?", options:["Sự khác biệt về tâm sinh lý giữa nam và nữ","Sự khác biệt về cá tính mỗi người","Việc hai vợ chồng cùng đi lễ nhà thờ","Bất đồng trong việc quản lý chi tiêu"], answer:2},
-{q:"Xung đột vợ chồng nếu không được giải quyết có thể dẫn đến hậu quả gì về mặt gia đình?", options:["Con cái học giỏi hơn","Ly thân, ly dị, gia đình tan vỡ","Kinh tế gia đình phát triển","Họ hàng hai bên gắn kết hơn"], answer:1},
-{q:"Biện pháp ngăn ngừa xung đột trước khi kết hôn là gì?", options:["Tìm hiểu nhau kỹ lưỡng, tránh ảo tưởng về nhau","Tổ chức đám cưới thật lớn","Chuẩn bị thật nhiều của hồi môn","Mời càng nhiều khách càng tốt"], answer:0},
-{q:"Khi xảy ra xung đột, thái độ đầu tiên cần có là gì?", options:["Im lặng bỏ đi","Tự chủ - kìm hãm tính nóng nảy và tự ái","Tìm người bênh vực mình","Đòi ly hôn ngay lập tức"], answer:1},
-{q:"Khi tranh cãi, mục đích của vợ chồng là gì?", options:["Tìm ra điều tốt hơn để đi đến chỗ hợp nhất","Ăn thua nhau để chứng minh mình đúng","Hạ nhục đối phương","Tránh né không nói chuyện"], answer:0},
-{q:"Trong đối thoại giải quyết xung đột, cần tránh điều gì?", options:["Lắng nghe ý kiến của người kia","Nhắc lại chuyện cũ, \"bới lông tìm vết\"","Giới hạn vấn đề đang tranh cãi","Trình bày quan điểm của mình"], answer:1},
-{q:"Theo bài học, phương cách nào giúp vợ chồng có sự bình tĩnh và nhận ra ý Chúa khi giải quyết xung đột?", options:["Nhờ trung gian hòa giải","Cầu nguyện chung với nhau","Chấp nhận khuyết điểm của mình","Hàn gắn làm lành ngay"], answer:1},
+{q:"Đức mến (theo 1 Cr 13,4-7) KHÔNG có đặc tính nào sau đây?", options:["Ghen tương","Nhẫn nhục","Hiền hậu","Tha thứ tất cả"], answer:0},
+{q:"Hôn nhân Công giáo được gọi là \"trọn vẹn\" khi hội đủ bao nhiêu yếu tố?", options:["2","3","4","5"], answer:1},
+{q:"Yếu tố \"ĐÃ THÀNH SỰ\" trong hôn nhân Công giáo được hiểu là gì?", options:["Vợ chồng đã ăn ở với nhau","Cả hai đã được rửa tội","Cử hành công khai có người chứng","Được Hội Thánh công bố vô hiệu"], answer:2},
+{q:"Yếu tố \"LÀ BÍ TÍCH\" trong hôn nhân Công giáo đòi hỏi điều kiện nào?", options:["Cử hành công khai","Vợ chồng đã ăn ở với nhau","Đã được Hội Thánh chuẩn nhận","Cả hai người đã được rửa tội"], answer:3},
+{q:"\"Đã hoàn hợp\" trong hôn nhân Công giáo nghĩa là gì?", options:["Vợ chồng đã ăn ở với nhau","Đã kết hôn hợp pháp trước pháp luật","Đã được Hội Thánh chuẩn nhận","Đã sống chung nhiều năm"], answer:0},
+{q:"Trường hợp nào sau đây KHÔNG thuộc diện hôn nhân \"chưa trọn vẹn\"?", options:["Hôn nhân đã thành sự nhưng chưa ăn ở với nhau","Hôn nhân đã thành sự, là bí tích và đã hoàn hợp","Hôn nhân theo đặc ân thánh Phaolô","Hôn nhân không thành sự do vướng ngăn trở"], answer:1},
+{q:"\"Đặc ân thánh Phaolô\" áp dụng cho trường hợp nào?", options:["Hai người Công giáo ly thân","Hôn nhân bị Hội Thánh tuyên bố vô hiệu","Hai người chưa rửa tội, sau đó một người trở lại đạo và người kia không muốn chung sống","Hôn nhân giữa người Công giáo và người ngoại đạo"], answer:2},
+{q:"\"Đặc ân thánh Phaolô\" được trích dẫn từ đoạn Kinh Thánh nào?", options:["Mt 19,6","St 2,24","1Cr 13,4-7","1Cr 7,12-15"], answer:3},
+{q:"Nền tảng của sự trọn vẹn trong hôn nhân Công giáo bắt nguồn từ đâu?", options:["Việc Thiên Chúa dựng nên người nữ từ xương sườn người nam","Luật pháp dân sự","Phong tục tập quán của xã hội","Sự thỏa thuận giữa hai gia đình"], answer:0},
+{q:"Vì con người là hình ảnh Thiên Chúa, con người cần được đối xử thế nào?", options:["Sử dụng như đồ vật","Tôn trọng và yêu thương","Kiểm soát và áp đặt","Xem như tài sản riêng"], answer:1},
+{q:"Câu nói \"Giường hôn nhân là bàn thờ của đôi bạn\" muốn diễn tả điều gì?", options:["Vợ chồng chiều theo bảng năng giới tính","Hôn nhân là một nghi lễ tôn giáo quan trọng","Đôi bạn tự hiến cho nhau cách thánh thiêng, không phải chiều theo bản năng","Vợ chồng phải sống khắc khổ"], answer:2},
+{q:"\"Đơn nhất\" trong hôn nhân Công giáo có nghĩa là gì?", options:["Vợ chồng sống độc lập với nhau","Kết hôn mà bị vô sinh - không có con cái","Chỉ kết hôn một lần duy nhất","Một vợ một chồng"], answer:3},
+{q:"Theo Mt 19,6, sau khi kết hôn vợ chồng được ví như điều gì?", options:["Một xương một thịt","Hai người xa lạ","Hai thực thể độc lập","Bạn đồng hành"], answer:0},
+{q:"Đâu KHÔNG phải là nguyên nhân gây xung đột vợ chồng theo bài học?", options:["Khác biệt về tâm sinh lý nam nữ","Cùng chung một đức tin","Khác biệt về cá tính","Bất đồng trong quản lý chi tiêu"], answer:1},
+{q:"Sự khác biệt về \"bậc thang giá trị\" được minh hoạ bằng ví dụ nào trong bài?", options:["Người nhanh nhẹn, người chậm chạp","Người tiết kiệm, người hoang phí","Người coi trọng tình nghĩa, người đặt nặng vật chất","Người nghiêm khắc, người chiều chuộng"], answer:2},
+{q:"Hậu quả xung đột về mặt đạo đức được nêu trong bài là gì?", options:["Gia đình tan vỡ","Vợ chồng lạnh nhạt","Con cái bị bỏ bê","Dễ rơi vào tệ nạn xã hội, ngoại tình"], answer:3},
+{q:"Biện pháp ngăn ngừa xung đột trước khi kết hôn được bài học đề nghị là gì?", options:["Tìm hiểu nhau kỹ lưỡng, tránh ảo tưởng về nhau","Sống thử trước hôn nhân","Nhờ cha mẹ quyết định thay","Kết hôn càng sớm càng tốt"], answer:0},
+{q:"Thái độ \"tự chủ\" khi xảy ra xung đột được hiểu là gì?", options:["Im lặng tuyệt đối, không nói gì","Kìm hãm tính nóng nảy và tự ái, tránh phản ứng vội vàng","Rời khỏi nhà để tránh mặt","Nhờ người khác giải quyết thay"], answer:1},
+{q:"Theo bài học, mục đích của việc vợ chồng đối thoại - giải quyết xung đột nên là gì?", options:["Chứng minh ai đúng ai sai","Hạ nhục đối phương","Tìm ra điều tốt hơn để đi đến chỗ hợp nhất","Giành phần thắng trong tranh luận"], answer:2},
+{q:"Trong phương cách \"đối thoại\", điều cần tránh là gì?", options:["Lắng nghe ý kiến của người kia","Trình bày quan điểm của mình","Giới hạn vấn đề đang bàn","Bới lông tìm vết, nhắc lại chuyện cũ"], answer:3},
+{q:"Trong phần \"4 Ghi nhớ\", nguyên tắc nào được nhắc đến CUỐI CÙNG?", options:["Cầu nguyện","Tự chủ","Đối thoại","Chấp nhận khuyết điểm"], answer:0},
+{q:"Theo phần Ghi nhớ, có tất cả bao nhiêu nguyên tắc giúp vợ chồng giải quyết xung đột?", options:["Năm","Bảy","Sáu","Tám"], answer:1},
+{q:"Người được chọn làm \"trung gian hoà giải\" cần có đặc điểm gì?", options:["Là người thân trong gia đình","Là người lớn tuổi nhất trong họ","Có uy tín, biết phân xử hợp tình hợp lý, hiểu cả hai bên","Là linh mục quản xứ"], answer:2},
+{q:"Việc cầu nguyện chung giúp vợ chồng điều gì khi đang tranh cãi?", options:["Quên đi vấn đề đang tranh cãi","Tránh né việc giải quyết mâu thuẫn","Không cần đối thoại nữa","Có sự bình tĩnh để thảo luận ôn hoà, nhận ra ý Chúa"], answer:3},
+{q:"Đôi bạn được mời gọi sống lời cam kết hôn nhân mỗi ngày bằng cách nào?", options:["Trao hiến trọn vẹn cho nhau","Giữ khoảng cách để tôn trọng tự do cá nhân","Sống theo cảm xúc nhất thời","Tuân theo ý muốn của gia đình hai bên"], answer:0},
+{q:"Điều gì giúp củng cố, thanh luyện và hoàn thiện sự hiệp thông vợ chồng theo bài học?", options:["Việc chia sẻ tài chính chung","Bí tích Hôn phối đem lại sự hiệp thông trong Đức Kitô","Việc sống chung nhiều năm","Sự đồng thuận của gia đình hai bên"], answer:1},
+{q:"\"Đa thê\" bị xem là đi ngược lại điều gì?", options:["Phong tục truyền thống","Luật pháp dân sự hiện hành","Tình yêu vợ chồng và sự bình đẳng giữa hai vợ chồng","Quy định của giáo xứ"], answer:2},
+{q:"Điều gì quan trọng nhất khi muốn giải quyết xung đột?", options:["Biết rõ điểm đúng sai, phải trái của từng người","Nhận thức được vấn đề ưu khuyết điểm","Người trung gian giúp đỡ","Có thiện chí muốn giải quyết"], answer:3},
+{q:"Nếu biết cách giải quyết những bất hoà, điều đó sẽ đem lại kết quả gì theo bài học?", options:["Giúp hai vợ chồng hiểu nhau hơn và tình yêu thêm triển nở","Gia đình chắc chắn không còn xung đột nữa","Con cái sẽ ngoan ngoãn hơn","Vợ chồng sẽ giàu có hơn"], answer:0},
+{q:"Câu \"Đức mến tha thứ tất cả, tin tưởng tất cả, chịu đựng tất cả\" được trích từ đâu?", options:["Mt 19,6","1Cr 13,4-7","St 2,24","1Cr 7,15"], answer:1},
 ];
 
 const letters = ["A","B","C","D"];
