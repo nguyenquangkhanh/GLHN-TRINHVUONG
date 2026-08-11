@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn tập Giáo lý Hôn Nhân</title>
+<style>
+:root{
+  --navy:#071b3a;
+  --navy2:#0d2d5c;
+  --blue:#164a8a;
+  --light:#eef4fb;
+  --white:#ffffff;
+  --green:#168a5a;
+  --red:#c93636;
+  --gold:#d9ad45;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:20px;
+  line-height:1.55;
+  background:linear-gradient(135deg,#06162f,#0d2d5c 55%,#102f58);
+  color:#17243a;
+}
+.container{max-width:1050px;margin:auto;padding:28px 18px 60px}
+header{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:white;border-radius:22px;padding:30px 28px;
+  box-shadow:0 12px 35px rgba(0,0,0,.28);
+  margin-bottom:22px;text-align:center;border:1px solid rgba(255,255,255,.12)
+}
+header .cross{font-size:42px;color:#f2d58a;margin-bottom:3px}
+h1{margin:0;font-size:34px;letter-spacing:.3px}
+.subtitle{margin:7px 0 0;opacity:.9}
+.progress-wrap{margin-top:20px}
+.progress{height:12px;background:rgba(255,255,255,.18);border-radius:20px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:#d9ad45;transition:.3s}
+#progressText{font-size:17px;margin-top:7px}
+.card{
+  background:white;border-radius:20px;padding:27px;
+  box-shadow:0 8px 28px rgba(0,0,0,.18);margin-bottom:20px
+}
+.question-number{font-weight:bold;color:var(--blue);margin-bottom:8px}
+.question{font-size:22px;font-weight:700;margin-bottom:17px}
+.option{
+  display:block;padding:15px 17px;margin:11px 0;border:2px solid #d8e0eb;
+  border-radius:13px;cursor:pointer;transition:.18s;background:#fbfcfe
+}
+.option:hover{border-color:#4d78ad;background:#f3f7fc}
+.option input{transform:scale(1.35);margin-right:13px;accent-color:var(--blue)}
+.option.correct{border-color:var(--green);background:#eaf8f1}
+.option.wrong{border-color:var(--red);background:#fff0f0}
+.option input:disabled{cursor:default}
+.explain{display:none;margin-top:14px;padding:13px 15px;border-radius:10px;font-weight:600}
+.explain.show{display:block}
+.feedback-correct{background:#eaf8f1;color:#116640}
+.feedback-wrong{background:#fff0f0;color:#9d2525}
+.controls{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:22px}
+button{
+  border:0;border-radius:12px;padding:13px 23px;font-size:20px;font-weight:bold;
+  cursor:pointer;color:white;background:var(--navy2);transition:.18s
+}
+button:hover{transform:translateY(-1px);filter:brightness(1.12)}
+button.secondary{background:#64748b}
+button.gold{background:#a77c16}
+.result{
+  display:none;background:white;border-radius:20px;padding:30px;text-align:center;
+  box-shadow:0 8px 28px rgba(0,0,0,.2);margin-top:20px
+}
+.score{font-size:50px;font-weight:800;color:var(--navy2)}
+.badge{display:inline-block;padding:7px 14px;border-radius:30px;background:#e9f0fa;color:var(--navy2);font-weight:bold}
+.small{font-size:17px;color:#667085}
+@media(max-width:700px){
+  body{font-size:20px}.container{padding:12px 10px 35px}
+  header{padding:23px 16px}h1{font-size:28px}.question{font-size:21px}
+  .card{padding:20px 16px}button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="cross">✝</div>
+  <h1>ÔN TẬP GIÁO LÝ HÔN NHÂN</h1>
+  <div class="subtitle">30 câu trắc nghiệm • Chọn một đáp án đúng</div>
+  <div class="progress-wrap">
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div id="progressText">Đã làm: 0/30</div>
+  </div>
+</header>
+
+<div id="quiz"></div>
+
+<div class="controls">
+  <button id="nextBtn" onclick="nextQuestion()" disabled>NEXT →</button>
+  <button class="secondary" onclick="resetQuiz()">↻ LÀM LẠI</button>
+</div>
+
+<div class="result" id="result">
+  <div class="badge">KẾT QUẢ ÔN TẬP</div>
+  <div class="score" id="score"></div>
+  <p id="message"></p>
+</div>
+
+<script>
+const questions = [
+["Hôn nhân là gì?",["Một hợp đồng dân sự giữa một người nam và một người nữ.","Một giao ước giữa một người nam và một người nữ nhằm yêu thương, nâng đỡ nhau, sinh sản và giáo dục con cái.","Một sự kết hợp dựa trên tình cảm và lợi ích kinh tế.","Một nghi thức tôn giáo dành riêng cho những người Công giáo."],1],
+["Hôn Nhân Công Giáo là gì?",["Hôn nhân được xã hội công nhận.","Hôn nhân giữa hai người cùng đạo Công giáo.","Hôn nhân được Chúa Giêsu nâng lên hàng Bí tích.","Hôn nhân được cử hành tại nhà thờ."],2],
+["Bí tích Hôn Nhân ban cho đôi bạn những ơn ích nào?",["Thánh hóa tình yêu vợ chồng.","Ban ơn giúp chu toàn nghĩa vụ đối với nhau và con cái.","Giúp đôi bạn sống đời hôn nhân theo ơn gọi Kitô hữu.","Cả A, B và C."],3],
+["Mẫu mực của Hôn Nhân Công Giáo là gì?",["Tình yêu của cha mẹ dành cho con cái.","Tình yêu giữa Chúa Kitô và Hội Thánh.","Tình yêu giữa ông bà và con cháu.","Tình yêu giữa những người cùng một cộng đoàn."],1],
+["Tình yêu giữa Chúa Kitô và Hội Thánh có những đặc điểm nào?",["Sự kết hiệp phong phú.","Sự hiến thân trọn vẹn.","Sự trung tín tuyệt đối.","Cả A, B và C."],3],
+["Hôn Nhân Công Giáo có mấy đặc tính chính?",["Một đặc tính.","Hai đặc tính: đơn hôn và bất khả phân ly.","Ba đặc tính: yêu thương, sinh sản và giáo dục.","Bốn đặc tính."],1],
+["“Đơn hôn” trong Hôn Nhân Công Giáo có nghĩa là gì?",["Một người chỉ được kết hôn một lần trong đời.","Một người nam kết hợp với một người nữ trong đời sống hôn nhân.","Hai người phải cùng một quốc tịch.","Hai người phải cùng một tôn giáo."],1],
+["Nền tảng của hai đặc tính đơn hôn và bất khả phân ly là gì?",["Pháp luật dân sự.","Truyền thống văn hóa.","Ý định của Thiên Chúa về Hôn Nhân.","Sự thỏa thuận của hai gia đình."],2],
+["Theo Mt 19,4-6, Chúa Giêsu dạy điều gì về Hôn Nhân?",["Người đàn ông có thể tùy ý phân ly vợ mình.","Người đã kết hôn có thể ly dị khi không còn yêu nhau.","“Sự gì Thiên Chúa đã phối hợp, loài người không được phân ly.”","Hôn nhân chỉ có giá trị khi có con cái."],2],
+["Mục đích của Hôn Nhân Công Giáo là gì?",["Trọn đời yêu thương nhau.","Sinh sản và giáo dục con cái.","Cùng giúp nhau nên thánh.","Cả A, B và C."],3],
+["Để sống trọn đời yêu thương nhau, đôi bạn cần làm gì?",["Sống đạo tốt và tôn trọng phẩm giá của nhau.","Lưu ý đến những khác biệt về tâm sinh lý.","Tôn trọng quyền lợi chính đáng của bạn mình.","Cả A, B và C."],3],
+["Việc sinh sản con cái có những ý nghĩa nào?",["Thiên Chúa cho con người được cộng tác với Người trong việc tạo dựng.","Con cái là hoa quả tốt đẹp của tình yêu vợ chồng.","Góp phần tăng thêm cộng đoàn nhân loại và phát triển Hội Thánh.","Cả A, B và C."],3],
+["Giáo dục con cái là gì?",["Chỉ dạy con học văn hóa.","Hướng dẫn và giúp con phát triển toàn diện về thể lý, trí tuệ, đức hạnh và tôn giáo.","Dạy con biết vâng lời cha mẹ.","Chuẩn bị cho con một nghề nghiệp ổn định."],1],
+["Đối với cha mẹ, việc giáo dục con cái vừa là bổn phận vừa là gì?",["Quyền lợi.","Nghĩa vụ xã hội.","Một vinh dự.","Một hình thức phục vụ cộng đồng."],2],
+["Muốn giáo dục con cái thành công, cha mẹ cần làm gì?",["Thăng tiến và thánh hóa bản thân.","Nhất trí trong đường hướng và cách thức giáo dục.","Tạo bầu khí gia đình hòa thuận, thánh thiện và tín nhiệm nhau.","Cả A, B và C."],3],
+["Luân lý tính dục trong đời sống Hôn Nhân là gì?",["Những quy định của xã hội về đời sống vợ chồng.","Tính cách hợp pháp do chính Thiên Chúa thiết lập cho đời sống vợ chồng.","Những điều khoản do hai vợ chồng tự thỏa thuận.","Những quy định chỉ áp dụng cho người độc thân."],1],
+["Luân lý tính dục có những nguyên tắc nào?",["Các hành vi trao hiến vợ chồng, tự bản chất, là lương thiện.","Luân lý Công Giáo tôn trọng thân xác nhưng không quá đề cao hành vi giới tính.","Phải có sự trong sạch và tiết độ trong đời sống vợ chồng.","Cả A, B và C."],3],
+["Tại sao Hội Thánh không cho phép vợ chồng ngừa thai bằng các phương pháp nhân tạo?",["Vì các phương pháp ấy luôn gây tốn kém.","Vì chúng trực tiếp đối nghịch với bản chất và mục đích của hành vi vợ chồng, đồng thời trực tiếp phạm đến sự sống vừa được hình thành.","Vì đó là phong tục không phù hợp với truyền thống Việt Nam.","Vì mọi hình thức điều hòa sinh sản đều bị cấm."],1],
+["Theo tài liệu, hậu quả luân lý của việc phá thai là gì?",["Chỉ là một lỗi nhỏ.","Không có hậu quả luân lý nếu cha mẹ đồng ý.","Đây là một trọng tội, kèm theo vạ tuyệt thông.","Chỉ bị phạt nếu phá thai nhiều lần."],2],
+["“Sinh sản có trách nhiệm” nghĩa là gì?",["Sinh càng nhiều con càng tốt.","Khi sinh con, cha mẹ phải chăm sóc, dưỡng dục để con sống xứng đáng với phẩm giá làm người và làm con của Chúa.","Chỉ cần bảo đảm điều kiện kinh tế cho con cái.","Chỉ cần lo cho con được học hành."],1],
+["Để có những quyết định đúng đắn về việc điều hòa sinh sản, đôi bạn cần có những yếu tố nào?",["Lương tâm ngay thẳng, chân chính.","Tinh thần trách nhiệm cao.","Tuân giữ giáo huấn của Hội Thánh.","Cả A, B và C."],3],
+["Các Bí tích, nhất là Bí tích Giải Tội và Thánh Thể, giúp gì cho đời sống đôi bạn?",["Thánh hóa tình yêu vợ chồng.","Ban nhiều ơn sủng giúp đôi bạn chu toàn trách nhiệm đối với nhau và con cái.","Giúp đôi bạn sống đời hôn nhân trong ân sủng Chúa.","Cả A, B và C."],3],
+["Thừa tác viên chính thức của Bí tích Hôn phối là ai?",["Linh mục.","Giám mục.","Chính đôi hôn phối.","Cha mẹ của đôi bạn."],2],
+["Yếu tố cấu tạo nên hôn nhân là gì?",["Tiệc cưới.","Sự chứng nhận của chính quyền.","Sự ưng thuận giữa hai người nam nữ với ý thức và tự do.","Việc trao nhẫn cưới."],2],
+["Để Bí tích Hôn phối thành sự, cần có những điều kiện nào?",["Một nam một nữ đã được rửa tội.","Có tự do kết hôn, không bị ép buộc và không mắc ngăn trở.","Có sự ưng thuận và cử hành theo thể thức của Hội Thánh.","Cả A, B và C."],3],
+["Ngăn trở hôn phối là gì?",["Những khó khăn kinh tế của đôi bạn.","Những hoàn cảnh hoặc trường hợp làm cho cuộc hôn phối không thành sự hoặc bất hợp pháp.","Những bất đồng giữa hai gia đình.","Những khác biệt về tính cách giữa hai người."],1],
+["Theo tài liệu, có bao nhiêu ngăn trở hôn phối?",["8 ngăn trở.","10 ngăn trở.","12 ngăn trở.","14 ngăn trở."],2],
+["Những trường hợp nào sau đây là ngăn trở hôn phối?",["Chức thánh.","Khấn dòng.","Còn bị ràng buộc bởi hôn phối trước.","Cả A, B và C."],3],
+["Vì sao sự ưng thuận kết hôn là yếu tố cần thiết làm nên hôn nhân?",["Vì sự ưng thuận nối kết hai vợ chồng lại với nhau.","Vì không một quyền hành nào của loài người có thể thay thế sự ưng thuận này.","Vì thiếu sự tự do ưng thuận thì hôn nhân không thành.","Cả A, B và C."],3],
+["Trường hợp nào sau đây thiếu sự tự do ưng thuận kết hôn?",["Không có đủ trí khôn.","Giả vờ ưng thuận nhưng thực sự không muốn.","Ưng thuận vì bạo lực hoặc vì sợ hãi.","Cả A, B và C."],3]
+];
+
+const letters=["A","B","C","D"];
+let current=0, score=0, answered=false;
+
+function renderQuestion(){
+  const q=questions[current];
+  document.getElementById("quiz").innerHTML=`
+    <div class="card">
+      <div class="question-number">Câu ${current+1}/30</div>
+      <div class="question">${q[0]}</div>
+      ${q[1].map((op,j)=>`
+        <label class="option" data-a="${j}" onclick="chooseAnswer(${j})">
+          <input type="radio" name="answer" value="${j}">
+          <b>${letters[j]}.</b> ${op}
+        </label>`).join("")}
+      <div class="explain" id="feedback"></div>
+    </div>`;
+  document.getElementById("nextBtn").disabled=true;
+  document.getElementById("nextBtn").textContent=current===29?"XEM KẾT QUẢ →":"NEXT →";
+  document.getElementById("progressText").textContent=`Câu ${current+1}/30`;
+  document.getElementById("bar").style.width=((current)/30*100)+"%";
+  answered=false;
+}
+
+function chooseAnswer(choice){
+  if(answered) return;
+  answered=true;
+  const correct=questions[current][2];
+  const opts=document.querySelectorAll(".option");
+  opts.forEach((o,j)=>{
+    o.querySelector("input").disabled=true;
+    if(j===correct) o.classList.add("correct");
+    if(j===choice && j!==correct) o.classList.add("wrong");
+  });
+  const feedback=document.getElementById("feedback");
+  if(choice===correct){
+    score++;
+    feedback.className="explain show feedback-correct";
+    feedback.innerHTML="✓ <b>ĐÚNG!</b> Chúc mừng, bạn đã chọn chính xác.";
+  }else{
+    feedback.className="explain show feedback-wrong";
+    feedback.innerHTML=`✗ <b>SAI!</b> Đáp án đúng là <b>${letters[correct]}</b>. ${questions[current][1][correct]}`;
+  }
+  document.getElementById("nextBtn").disabled=false;
+  document.getElementById("bar").style.width=((current+1)/30*100)+"%";
+}
+
+function nextQuestion(){
+  if(!answered) return;
+  if(current<29){
+    current++;
+    renderQuestion();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }else{
+    showResult();
+  }
+}
+
+function showResult(){
+  document.getElementById("quiz").style.display="none";
+  document.querySelector(".controls").style.display="none";
+  document.getElementById("result").style.display="block";
+  document.getElementById("score").textContent=`${score}/30`;
+  const msg=score>=27?"Xuất sắc! Bạn nắm rất vững nội dung Giáo lý Hôn Nhân."
+    :score>=24?"Rất tốt! Hãy ôn lại một vài điểm còn nhầm."
+    :score>=18?"Khá tốt! Bạn nên xem lại các câu chưa chắc."
+    :"Hãy ôn lại bài học và thử lại nhé!";
+  document.getElementById("message").innerHTML=msg;
+  document.getElementById("bar").style.width="100%";
+}
+
+function resetQuiz(){
+  current=0; score=0; answered=false;
+  document.getElementById("quiz").style.display="block";
+  document.querySelector(".controls").style.display="flex";
+  document.getElementById("result").style.display="none";
+  renderQuestion();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+renderQuestion();
+</script>
+</body>
+</html>
