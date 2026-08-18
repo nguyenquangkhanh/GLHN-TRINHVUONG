@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn Tập Thêm Sức - Xưng Tội</title>
+<style>
+  :root{
+    --navy-deep:#0a1a3c;
+    --navy:#12274d;
+    --navy-mid:#1b3a6b;
+    --navy-light:#274a80;
+    --gold:#d4af37;
+    --gold-light:#f0d98c;
+    --cream:#f5f2e9;
+    --text:#e9edf5;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    padding:0;
+    background:linear-gradient(180deg,var(--navy-deep),var(--navy) 40%,var(--navy-deep));
+    color:var(--text);
+    font-family:"Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size:15px;
+    line-height:1.6;
+    padding-bottom:60px;
+  }
+  header{
+    text-align:center;
+    padding:28px 16px 18px;
+    border-bottom:2px solid var(--gold);
+    background:radial-gradient(ellipse at top, var(--navy-mid), var(--navy-deep));
+  }
+  header .cross{
+    font-size:28px;
+    color:var(--gold);
+    margin-bottom:6px;
+  }
+  header h1{
+    margin:0;
+    font-size:19px;
+    color:var(--gold-light);
+    letter-spacing:0.5px;
+  }
+  header p{
+    margin:6px 0 0;
+    font-size:13px;
+    color:#b9c6e0;
+  }
+  .container{
+    max-width:640px;
+    margin:0 auto;
+    padding:16px;
+  }
+  .progress-bar{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:var(--navy-deep);
+    padding:10px 16px;
+    border-bottom:1px solid var(--navy-light);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+  }
+  .progress-track{
+    flex:1;
+    height:8px;
+    background:var(--navy-light);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--gold),var(--gold-light));
+    transition:width .3s ease;
+  }
+  .section-title{
+    margin:26px 0 12px;
+    padding:10px 14px;
+    background:linear-gradient(90deg,var(--navy-mid),var(--navy-light));
+    border-left:4px solid var(--gold);
+    border-radius:6px;
+    font-size:16px;
+    font-weight:700;
+    color:var(--gold-light);
+  }
+  .card{
+    background:var(--navy-mid);
+    border:1px solid var(--navy-light);
+    border-radius:10px;
+    margin-bottom:12px;
+    padding:14px 16px;
+    cursor:pointer;
+    transition:background .2s ease, transform .1s ease;
+    position:relative;
+  }
+  .card:active{transform:scale(0.99);}
+  .card.learned{
+    border-color:var(--gold);
+    background:linear-gradient(135deg, var(--navy-mid), #16305c);
+  }
+  .q-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .q-num{
+    color:var(--gold);
+    font-weight:700;
+    margin-right:6px;
+  }
+  .question{
+    font-weight:600;
+    color:var(--text);
+  }
+  .check{
+    flex-shrink:0;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    border:2px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:13px;
+    color:transparent;
+  }
+  .card.learned .check{
+    background:var(--gold);
+    color:var(--navy-deep);
+  }
+  .answer{
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px dashed var(--navy-light);
+    color:var(--gold-light);
+    display:none;
+    white-space:pre-line;
+  }
+  .card.open .answer{display:block;}
+  .answer b{color:#fff;}
+  .reading{
+    background:var(--navy-mid);
+    border:1px solid var(--navy-light);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:14px;
+  }
+  .reading h3{
+    margin:0 0 6px;
+    color:var(--gold-light);
+    font-size:15px;
+  }
+  .reading .verse{
+    font-style:italic;
+    color:#cdd8ec;
+    margin-bottom:8px;
+  }
+  .reading p{
+    margin:0;
+    text-align:justify;
+    color:var(--text);
+  }
+  .controls{
+    display:flex;
+    gap:10px;
+    margin:14px 0;
+    flex-wrap:wrap;
+  }
+  .btn{
+    flex:1;
+    min-width:120px;
+    text-align:center;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid var(--gold);
+    background:transparent;
+    color:var(--gold-light);
+    font-size:14px;
+    cursor:pointer;
+  }
+  .btn:active{background:var(--gold); color:var(--navy-deep);}
+  .hint{
+    text-align:center;
+    color:#8fa1c4;
+    font-size:12.5px;
+    margin:6px 0 20px;
+  }
+  footer{
+    text-align:center;
+    color:#7d8db3;
+    font-size:12px;
+    padding:20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="cross">✝</div>
+  <h1>GIÁO XỨ TRINH VƯƠNG</h1>
+  <p>Ôn tập Thêm Sức – Xưng tội, Rước lễ lần đầu</p>
+</header>
+
+<div class="progress-bar">
+  <span id="progressText">0 / 0 thuộc</span>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</div>
+
+<div class="container">
+  <div class="controls">
+    <button class="btn" onclick="expandAll()">Mở tất cả</button>
+    <button class="btn" onclick="collapseAll()">Đóng tất cả</button>
+    <button class="btn" onclick="resetProgress()">Xóa tiến độ</button>
+  </div>
+  <p class="hint">Chạm vào câu hỏi để xem đáp án. Chạm vào vòng tròn ✓ để đánh dấu đã thuộc.</p>
+
+  <div class="section-title">PHẦN 1. CÂU HỎI THÊM SỨC</div>
+
+  <div class="card" data-id="p1-1">
+    <div class="q-row">
+      <div class="question"><span class="q-num">1.</span>Khi lãnh nhận bí tích thêm sức là lãnh nhận ai?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Chúa Thánh Thần</b></div>
+  </div>
+
+  <div class="card" data-id="p1-2">
+    <div class="q-row">
+      <div class="question"><span class="q-num">2.</span>Bí tích thêm sức kiện toàn bí tích nào?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Rửa tội</b></div>
+  </div>
+
+  <div class="card" data-id="p1-3">
+    <div class="q-row">
+      <div class="question"><span class="q-num">3.</span>Có mấy ơn Chúa Thánh Thần?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>7 ơn:</b> Khôn ngoan, Thông minh, Hiểu biết, Lo liệu, Sức mạnh, Đạo đức, Kính sợ Thiên Chúa</div>
+  </div>
+
+  <div class="card" data-id="p1-4">
+    <div class="q-row">
+      <div class="question"><span class="q-num">4.</span>Kể ra các biểu tượng của Chúa Thánh Thần?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Nước, Sự Xức Dầu, Áng mây, ánh sáng, Dấu ấn, bàn tay, ngón tay, Chim bồ câu, lửa, khí</b></div>
+  </div>
+
+  <div class="card" data-id="p1-5">
+    <div class="q-row">
+      <div class="question"><span class="q-num">5.</span>Chủ đề năm thánh giáo phận là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Ta đã yêu con</b></div>
+  </div>
+
+  <div class="card" data-id="p1-6">
+    <div class="q-row">
+      <div class="question"><span class="q-num">6.</span>Chủ đề năm mục vụ của HĐGMVN là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Mỗi Ki-tô hữu là một môn đệ thừa sai</b></div>
+  </div>
+
+  <div class="card" data-id="p1-7">
+    <div class="q-row">
+      <div class="question"><span class="q-num">7.</span>Câu Lời Chúa về năm mục vụ của HĐGMVN là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>"Anh em là ánh sáng thế gian" (Mt 5,14)</b></div>
+  </div>
+
+  <div class="card" data-id="p1-8">
+    <div class="q-row">
+      <div class="question"><span class="q-num">8.</span>Kinh Đức Chúa Thánh Thần</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer">Chúng con lạy ơn Đức Chúa Thánh Thần, thiêng liêng sáng láng vô cùng, chúng con xin Đức Chúa Thánh Thần xuống đầy lòng chúng con, là kẻ tin cậy Đức Chúa Trời, và đốt lửa kính mến Đức Chúa Trời trong lòng chúng con; chúng con xin Đức Chúa Trời cho Đức Chúa Thánh Thần xuống.
+
+Sửa lại mọi sự trong ngoài chúng con. Chúng con cầu cùng Đức Chúa Trời, xưa đã cho Đức Chúa Thánh Thần xuống soi lòng dạy dỗ các Thánh Tông Đồ, thì rày chúng con cũng xin Đức Chúa Trời cho Đức Chúa Thánh Thần lại xuống an ủi dạy dỗ chúng con làm những việc lành, vì công nghiệp vô cùng Đức Chúa Giêsu Kitô là Chúa chúng con. Amen.</div>
+  </div>
+
+  <div class="card" data-id="p1-9">
+    <div class="q-row">
+      <div class="question"><span class="q-num">9.</span>Các hoa trái của Chúa Thánh Thần</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>12 hoa trái:</b>
+1. Bác ái – yêu mến Chúa và làm mọi việc vì lòng mến
+2. Vui vẻ (Hoan lạc) – niềm vui từ lòng nhân từ của Chúa
+3. Bình an – thư thái, an tĩnh trong tâm hồn
+4. Kiên nhẫn – chịu đựng gian khổ, nghịch cảnh
+5. Quảng đại – sẵn sàng rộng tay giúp đỡ tha nhân
+6. Nhân từ – thôi thúc làm điều lành cho người khác
+7. Lương thiện (Từ tâm) – sống ngay thẳng, tốt lành
+8. Hiền hòa – kìm giữ nóng giận, đối xử nhẹ nhàng
+9. Khoan dung – sẵn sàng tha thứ, dung thứ lỗi lầm
+10. Trung tín – giữ lòng trung thành, chân thật
+11. Khiêm nhu (Nhã nhặn) – sống khiêm tốn, chừng mực
+12. Tiết độ (Thanh khiết) – chế ngự dục vọng</div>
+  </div>
+
+  <div class="card" data-id="p1-10">
+    <div class="q-row">
+      <div class="question"><span class="q-num">10.</span>Nghi thức Thêm sức gồm mấy phần?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Ba phần:</b>
+1. Tuyên xưng đức tin
+2. Đọc lời nguyện xin ơn Chúa Thánh Thần
+3. Xức dầu thánh</div>
+  </div>
+
+  <div class="card" data-id="p1-11">
+    <div class="q-row">
+      <div class="question"><span class="q-num">11.</span>Bí tích là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer">Bí tích là <b>dấu chỉ bên ngoài</b> <b>Chúa Giêsu đã lập</b> và truyền lại cho Hội Thánh cử hành, để diễn tả và <b>thông ban cho chúng ta ân sủng bên trong</b> là sự sống thần linh.</div>
+  </div>
+
+  <div class="card" data-id="p1-12">
+    <div class="q-row">
+      <div class="question"><span class="q-num">12.</span>Bí tích Thêm sức là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer">Là bí tích <b>Chúa Giêsu đã lập</b>, để <b>ban tràn đầy Chúa Thánh Thần</b>, hầu giúp chúng ta <b>sống ơn Bí tích Rửa Tội</b> cách mạnh mẽ và tốt đẹp hơn.</div>
+  </div>
+
+  <div class="card" data-id="p1-13">
+    <div class="q-row">
+      <div class="question"><span class="q-num">13.</span>Chúa Thánh Thần thường được gọi bằng những danh hiệu nào?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer">1. Đấng Bảo Trợ
+2. Thần Chân Lý
+3. Đấng An Ủi
+4. Đấng Ban Sự Sống</div>
+  </div>
+
+  <div class="section-title">PHẦN 2. CÂU HỎI XƯNG TỘI - RƯỚC LỄ LẦN ĐẦU</div>
+
+  <div class="card" data-id="p2-1">
+    <div class="q-row">
+      <div class="question"><span class="q-num">1.</span>Chịu lễ là chịu ai?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Chúa Giêsu</b></div>
+  </div>
+
+  <div class="card" data-id="p2-2">
+    <div class="q-row">
+      <div class="question"><span class="q-num">2.</span>Chúa Giêsu là ai?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Ngôi Thứ Hai ra đời</b></div>
+  </div>
+
+  <div class="card" data-id="p2-3">
+    <div class="q-row">
+      <div class="question"><span class="q-num">3.</span>Sinh nhật của Chúa Giêsu là ngày nào?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Ngày 25/12</b></div>
+  </div>
+
+  <div class="card" data-id="p2-4">
+    <div class="q-row">
+      <div class="question"><span class="q-num">4.</span>Ý nghĩa từ Amen là gì?</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer"><b>Tôi tin đó chính là Đức Giêsu</b></div>
+  </div>
+
+  <div class="card" data-id="p2-5">
+    <div class="q-row">
+      <div class="question"><span class="q-num">5.</span>Các bước xưng tội</div>
+      <div class="check">✓</div>
+    </div>
+    <div class="answer">1. Xét mình
+2. Ăn năn
+3. Xưng tội
+4. Đền tội</div>
+  </div>
+
+  <div class="section-title">PHẦN 3. BÀI ĐỌC TRONG THÁNH LỄ THÊM SỨC</div>
+
+  <div class="reading">
+    <h3>Bài Đọc I — Cv 2, 1-11</h3>
+    <div class="verse">"Các vị được tràn đầy Chúa Thánh Thần và bắt đầu lên tiếng nói".</div>
+    <p><b>Bài trích sách Tông đồ Công vụ.</b><br><br>
+    Khi đến ngày lễ Ngũ Tuần, tất cả các môn đệ đều tề tựu một nơi, bỗng từ trời phát ra tiếng động như tiếng gió mạnh thổi đến, lùa vào đầy nhà nơi họ đang sum họp. Lại có những lưỡi như thể bằng lửa xuất hiện và rải rác đậu trên từng người. Hết thảy mọi người đều được tràn đầy Chúa Thánh Thần, và bắt đầu nói tiếng khác nhau tuỳ theo Thánh Thần ban cho họ nói. Khi ấy, cư ngụ tại Giêrusalem, có những người Do-thái đạo đức từ khắp các nước dưới gầm trời tụ về. Nghe tiếng ấy phát ra thì đoàn lũ tuôn đến, tâm trí bỡ ngỡ, vì mỗi người đều nghe các môn đệ nói tiếng thổ âm của mình. Mọi người đều sửng sốt và bỡ ngỡ nói rằng: "Nào tất cả những người đang nói đây không phải là người Galilê ư? Nhưng tại sao mỗi người chúng tôi lại nghe họ nói tiếng bản xứ của chúng tôi: Chúng tôi là người Parthi, Mêđi, Êlam, Mêsopotamia, Giuđêa, Cappađôcia, Pôntô, Tiểu Á, Phrygia, Pam-phylia, Ai-cập, Lybia, cận Xyrênê, và người Rôma cư ngụ ở đây, là Do-thái và tòng giáo, là người Crêta và Árập, chúng tôi đều nghe họ nói tiếng của chúng tôi, mà ca tụng những kỳ công của Thiên Chúa!" Mọi người đều sửng sốt bỡ ngỡ nói với nhau rằng: "Thế này nghĩa là gì?" Nhưng lại có người khác nhạo báng rằng: "Họ đầy rượu rồi".</p>
+  </div>
+
+  <div class="reading">
+    <h3>Bài Đọc II — 1 Cr 12, 3b-7. 12-13</h3>
+    <div class="verse">"Trong một Thánh Thần, tất cả chúng ta được thanh tẩy để làm nên một thân thể".</div>
+    <p><b>Bài trích thư thứ nhất của Thánh Phaolô Tông đồ gửi tín hữu Côrintô.</b><br><br>
+    Anh chị em thân mến, không ai có thể nói: "Đức Giêsu là Chúa" mà lại không do Thánh Thần. Vậy có nhiều thứ ân sủng, nhưng chỉ có một Thánh Thần. Có nhiều thứ chức vụ, nhưng chỉ có một Chúa. Có nhiều thứ công việc, nhưng chỉ có một Thiên Chúa là Đấng làm mọi sự trong mọi người. Sự xuất hiện của Thánh Thần được ban cho từng người, tuỳ theo lợi ích. Cũng như chỉ có một thân thể, nhưng có nhiều chi thể, mà các chi thể tuy nhiều, nhưng chỉ là một thân thể, thì Chúa Kitô cũng vậy. Vì chưng trong một Thánh Thần, tất cả chúng ta được thanh tẩy để làm nên một thân thể, cho dù là Do-thái hay dân ngoại, nô lệ hay tự do: tất cả chúng ta đã uống trong một Thánh Thần.<br><br>
+    <i>Đó là lời Chúa.</i></p>
+  </div>
+
+  <div class="reading">
+    <h3>Phúc Âm — Ga 20, 19-23</h3>
+    <div class="verse">"Như Cha đã sai Thầy, Thầy cũng sai các con: Các con hãy nhận lấy Thánh Thần".</div>
+    <p><b>Tin Mừng Chúa Giêsu Kitô theo Thánh Gioan.</b><br><br>
+    Vào buổi chiều ngày thứ nhất trong tuần, những cửa nhà các môn đệ họp đều đóng kín, vì sợ người Do-thái, Chúa Giêsu hiện đến, đứng giữa các ông và nói rằng: "Bình an cho các con". Khi nói điều đó, Người cho các ông xem tay và cạnh sườn Người. Bấy giờ các môn đệ vui mừng vì xem thấy Chúa. Chúa Giêsu lại phán bảo các ông rằng: "Bình an cho các con. Như Cha đã sai Thầy, Thầy cũng sai các con". Nói thế rồi, Người thổi hơi và phán bảo các ông: "Các con hãy nhận lấy Thánh Thần, các con tha tội cho ai, thì tội người ấy được tha. Các con cầm tội ai, thì tội người ấy bị cầm lại".</p>
+  </div>
+
+</div>
+
+<footer>Giáo xứ Trinh Vương · Chúc các em học thuộc bài thật tốt ✝</footer>
+
+<script>
+  const cards = document.querySelectorAll('.card');
+  const STORAGE_KEY = 'thsem_progress_v1';
+
+  function loadProgress(){
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function saveProgress(p){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+  }
+  function updateProgressBar(){
+    const p = loadProgress();
+    const total = cards.length;
+    const learned = cards.length ? Object.values(p).filter(Boolean).length : 0;
+    document.getElementById('progressText').textContent = learned + ' / ' + total + ' thuộc';
+    document.getElementById('progressFill').style.width = (total? (learned/total*100):0) + '%';
+  }
+
+  cards.forEach(card=>{
+    const id = card.dataset.id;
+    const progress = loadProgress();
+    if(progress[id]) card.classList.add('learned');
+
+    card.addEventListener('click', (e)=>{
+      if(e.target.classList.contains('check')){
+        const p = loadProgress();
+        p[id] = !p[id];
+        saveProgress(p);
+        card.classList.toggle('learned');
+        updateProgressBar();
+      } else {
+        card.classList.toggle('open');
+      }
+    });
+  });
+
+  function expandAll(){ cards.forEach(c=>c.classList.add('open')); }
+  function collapseAll(){ cards.forEach(c=>c.classList.remove('open')); }
+  function resetProgress(){
+    if(confirm('Xóa toàn bộ tiến độ đã đánh dấu?')){
+      localStorage.removeItem(STORAGE_KEY);
+      cards.forEach(c=>c.classList.remove('learned'));
+      updateProgressBar();
+    }
+  }
+
+  updateProgressBar();
+</script>
+
+</body>
+</html>
