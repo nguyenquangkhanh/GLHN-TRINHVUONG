@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Kiểm Tra Ôn Tập 2 - Giáo Lý Hôn Nhân</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-light:#1b3a6b;
+    --navy-accent:#274a7a;
+    --gold:#c9a227;
+    --green:#1f7a3d;
+    --red:#b3261e;
+    --bg:#eef2f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    font-size:18px;
+    background:var(--bg);
+    color:var(--navy);
+    margin:0;
+    padding:20px;
+  }
+  .container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:20px 24px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header .titles h1{
+    margin:0 0 4px 0;
+    font-size:22px;
+  }
+  header .titles p{
+    margin:0;
+    color:#cdd9ee;
+    font-size:16px;
+  }
+  #score-badge{
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    padding:8px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  #progress-bar-wrap{
+    background:#d7e0f0;
+    border-radius:20px;
+    height:14px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  #progress-bar{
+    background:var(--gold);
+    height:100%;
+    width:0%;
+    transition:width .3s ease;
+  }
+  #progress-label{
+    text-align:right;
+    color:var(--navy-light);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin:0 0 14px 0;
+    font-size:19px;
+    font-weight:700;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--navy-accent);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    min-height:320px;
+  }
+  .q-title{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+    font-size:19px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border:2px solid #c7d3e8;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f6f8fc;
+    transition:.15s;
+  }
+  .option:hover{
+    border-color:var(--navy-light);
+    background:#e9eef8;
+  }
+  .option input{
+    margin-top:4px;
+    transform:scale(1.2);
+    accent-color:var(--navy);
+  }
+  .option.correct{
+    background:#e3f4e8;
+    border-color:var(--green);
+    color:var(--green);
+    font-weight:700;
+  }
+  .option.incorrect{
+    background:#fbe6e5;
+    border-color:var(--red);
+    color:var(--red);
+    font-weight:700;
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  #feedback{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:19px;
+    display:none;
+  }
+  #feedback.correct-fb{
+    background:#e3f4e8;
+    color:var(--green);
+    display:block;
+  }
+  #feedback.incorrect-fb{
+    background:#fbe6e5;
+    color:var(--red);
+    display:block;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  #next-btn{
+    padding:14px 28px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:none;
+  }
+  #next-btn:hover{
+    background:var(--navy-light);
+  }
+  #result{
+    display:none;
+    background:var(--navy);
+    color:#fff;
+    padding:28px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:24px;
+  }
+  #result h2{
+    margin-top:0;
+    font-size:28px;
+    color:var(--gold);
+  }
+  #result p{
+    font-size:20px;
+  }
+  #restart-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  #restart-btn:hover{
+    background:var(--navy-light);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="titles">
+      <h1>KIỂM TRA ÔN TẬP 2</h1>
+      <p>GIÁO LÝ HÔN NHÂN</p>
+    </div>
+    <div id="score-badge">Đúng: 0</div>
+  </header>
+
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+
+  <div id="result">
+    <h2 id="score-text"></h2>
+    <p id="score-detail"></p>
+    <button id="restart-btn" type="button">LÀM LẠI</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="section-title" id="section-title" style="display:none;"></div>
+    <div class="card">
+      <div class="q-title" id="q-title"></div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button id="next-btn" type="button">CÂU TIẾP THEO →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+ {section:"PHẦN I - ÔN TẬP GIÁO LÝ", q:"Câu 1: Hôn nhân là gì?", options:{A:"Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.",B:"Hôn nhân là một giao ước giữa hai người, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.",C:"Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 2: Hôn nhân Công giáo là gì?", options:{A:"Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo.",B:"Hôn nhân Công giáo là Hôn nhân được Chúa Giê-su nâng lên hàng Bí tích.",C:"Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo, hoặc giữa một người theo Đạo Công Giáo và một người không theo.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 3: Tình yêu giữa Chúa Ki-tô và Hội Thánh có những đặc điểm nào?", options:{A:"Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự kết hợp phong phú giữa Chúa Ki-tô và Hội Thánh.",B:"Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự hiến thân trọn vẹn của Chúa Ki-tô cho Hội Thánh.",C:"Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự trung tín tuyệt đối của Chúa Ki-tô đối với Hội Thánh.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 4: Hôn nhân Công giáo có mấy đặc tính chính yếu?", options:{A:"Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Tôn trọng nhau suốt đời.",B:"Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Yêu thương cùng tôn trọng nhau suốt đời.",C:"Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Bất khả phân ly (không được ly hôn).",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 5: Mục đích của Hôn nhân Công giáo là gì?", options:{A:"Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau, sinh sản và giáo dục con cái và cùng giúp nhau nên thánh.",B:"Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và cùng giúp nhau nên thánh.",C:"Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và giúp con cái cùng nên thánh.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 6: Làm thế nào để đôi bạn sống trọn đời yêu thương nhau?", options:{A:"Để sống trọn đời yêu thương nhau, đôi bạn phải sống đạo tốt, đồng thời, phải tôn trọng phẩm giá và quyền lợi chính đáng của bạn đời của mình.",B:"Để sống trọn đời yêu thương nhau, đôi bạn phải lưu ý đến nhu cầu cũng như sở thích của người bạn đời. Đồng thời, phải biết luôn làm mới bản thân mình về tâm hồn cũng như thể xác.",C:"Để sống trọn đời yêu thương nhau, đôi bạn phải lưu ý đến những khác biệt về tâm sinh lý trong đời sống vợ chồng.",D:"Cả A và C"}, answer:"D"},
+ {q:"Câu 7: Việc sinh sản con cái có những ý nghĩa nào?", options:{A:"Thiên Chúa cho loài người được vinh dự cộng tác với Người trong việc tạo dựng; Con cái là hoa quả tốt đẹp của tình yêu vợ chồng.",B:"Thiên Chúa cho loài người được vinh dự cộng tác với Người trong việc tạo dựng; Con cái là hoa quả tốt đẹp của tình yêu vợ chồng; Góp phần tăng thêm cộng đoàn nhân loại và phát triển Hội Thánh.",C:"Con cái là hoa quả tốt đẹp của tình yêu vợ chồng, nên phải nuôi dạy và chăm sóc con cái sao cho xứng với quà tặng mà Thiên Chúa đã thương ban.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 8: Bí tích Hôn nhân giúp đôi bạn nên thánh cách nào?", options:{A:"Nhờ ơn thiêng của Bí tích Hôn nhân, đôi bạn nên thánh trong niềm vui đón nhận nhau, sinh sản và giáo dục con cái.",B:"Bí tích Hôn nhân giúp đôi bạn nên thánh trong niềm vui đón nhận nhau, hy sinh cho nhau và cùng nhau đi đến cuối con đường.",C:"Bí tích Hôn nhân giúp đôi bạn nên thánh nhờ sự hy sinh và hiến thân cho nhau, để cùng nhau đi đến cuối con đường.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 9: Muốn giáo dục thành công, cha mẹ phải thế nào?", options:{A:"Thăng tiến và thánh hóa bản thân.",B:"Nhất trí với nhau trong đường hướng và cách thức giáo dục.",C:"Tạo bầu khí gia đình hòa thuận, thánh thiện và tín nhiệm nhau.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 10: Luân lý tính dục trong đời sống Hôn nhân là gì?", options:{A:"Là những lời dạy dỗ và giáo huấn của Giáo Hội, giúp cho đôi vợ chồng sống sao cho xứng với ơn gọi của họ trong giao ước hôn nhân.",B:"Là tính cách hợp pháp do chính Thiên Chúa thiết lập cho đời sống vợ chồng.",C:"Là những điều răn và giới luật, giúp cho đôi vợ chồng sống sao cho đúng với giáo huấn của Giáo Hội.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 11: Để có quyết định đúng đắn về việc điều hòa sinh sản, đôi bạn phải có những yếu tố nào?", options:{A:"Lương tâm ngay thẳng và tinh thần trách nhiệm cao.",B:"Lương tâm ngay thẳng, chân chính. Tinh thần trách nhiệm cao. Tuân giữ giáo huấn của Hội Thánh về việc điều hòa sinh sản.",C:"Tinh thần trách nhiệm cao. Tuân giữ giáo huấn của Hội Thánh về việc điều hòa sinh sản.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 12: Các Bí tích giúp gì cho đời sống đôi bạn?", options:{A:"Các Bí tích có mục đích thánh hóa loài người. Riêng đối với đôi bạn, các Bí tích, nhất là Bí tích Giải tội và Thánh Thể, còn thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng, giúp đôi bạn chu toàn trách nhiệm đối với nhau và đối với con cái.",B:"Các Bí tích có mục đích thánh hóa loài người, xây dựng nhiệm thể Chúa Ki-tô và thờ phượng Thiên Chúa. Riêng đối với đôi bạn, các Bí tích, nhất là Bí tích Giải tội và Thánh Thể, còn thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng, giúp đôi bạn chu toàn trách nhiệm đối với nhau và đối với con cái.",C:"Các Bí tích có mục đích thánh hóa loài người. Riêng đối với đôi bạn, các Bí tích còn thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng, giúp đôi bạn chu toàn trách nhiệm đối với nhau và đối với con cái.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 13: Hôn nhân liên hệ với Bí tích Rửa tội thế nào?", options:{A:"Vì Bí tích Rửa tội là cửa ngõ vào Nước Trời, nên do tình thương và trách nhiệm, cha mẹ phải lo liệu cho con cái được rửa tội theo qui định của Hội Thánh.",B:"Vì chỉ những ai đã rửa tội mới có thể cử hành Bí tích Hôn nhân. Hơn nữa, Bí tích Rửa tội là cửa ngõ vào Nước Trời.",C:"Có liên hệ cơ bản, vì chỉ những ai đã rửa tội mới có thể cử hành Bí tích Hôn nhân. Hơn nữa, Bí tích Rửa tội là cửa ngõ vào Nước Trời, nên do tình thương và trách nhiệm, cha mẹ phải lo liệu cho con cái được rửa tội theo qui định của Hội Thánh.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 14: Cha mẹ phải lo liệu việc Rửa tội cho con cái thế nào?", options:{A:"Lúc bình thường: Sau khi sinh con khoảng 1 tháng, cha mẹ cùng người đỡ đầu, đem con đến nhà thờ để linh mục rửa tội.",B:"Khi nguy tử: Cha mẹ hoặc người khác rửa tội cho con.",C:"Trường hợp sẩy thai bất cứ vào giai đoạn nào cũng phải rửa tội.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 15: Đọc Lời Chúa trong gia đình thì được những ích lợi gì?", options:{A:"Khi đọc Lời Chúa trong gia đình, mọi người được hướng dẫn bởi cùng một giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.",B:"Mọi người cùng được nghe, nên sẽ cùng được hướng dẫn bởi cùng một giáo huấn. Hơn nữa, chính Lời Chúa sẽ hướng dẫn từng thành viên, giúp họ biến đổi con người mình.",C:"Mọi người không những được thánh hóa, nuôi dưỡng, mà còn được hướng dẫn bởi cùng một giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 16: Kinh nguyện trong gia đình có cần thiết không?", options:{A:"Rất cần thiết, vì qua giờ kinh gia đình, mọi thành viên trong gia đình có cơ hội ngồi lại bên nhau. Nhờ ánh sáng Lời Chúa soi chiếu, giúp gia đình sống tốt ơn gọi Ki-tô hữu và dạy con cái biết cầu nguyện.",B:"Rất cần thiết, vì Kinh nguyện chung giúp gia đình sống tốt đẹp ơn gọi Ki-tô hữu và dạy con cái biết cầu nguyện.",C:"Rất cần thiết, vì qua giờ kinh gia đình, mọi thành viên trong gia đình có cơ hội ngồi lại bên nhau. Nhờ ánh sáng Lời Chúa soi chiếu, giúp các thành viên trong gia đình sống tốt ơn gọi của mỗi người.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 17: Hội Thánh liên hệ thế nào với gia đình?", options:{A:"Hội Thánh sinh ra, dưỡng dục và xây dựng gia đình Công Giáo.",B:"Hội Thánh sinh ra gia đình, hay nói cách khác, gia đình là con cái và là một thành phần của Hội Thánh, nên gia đình và Hội Thánh có mối quan hệ hỗ tương với nhau.",C:"Gia đình là một thành phần của Hội Thánh, nên gia đình và Hội Thánh có mối quan hệ hỗ tương với nhau, cả hai bên đều phụ thuộc lẫn nhau.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 18: Gia đình liên hệ thế nào với Hội Thánh?", options:{A:"Gia đình là một thành phần của Hội Thánh, vì thế, gia đình dự phần vào sứ mệnh cứu rỗi của Hội Thánh theo cách thức riêng của mình.",B:"Gia đình là một thành phần của Hội Thánh, nên gia đình và Hội Thánh có mối quan hệ hỗ tương với nhau, cả hai bên đều phụ thuộc lẫn nhau.",C:"Gia đình dự phần vào sứ mệnh cứu rỗi của Hội Thánh theo cách thức riêng của mình.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 19: Gia đình có nghĩa vụ gì đối với Hội Thánh?", options:{A:"Gia đình có nghĩa vụ Hiệp thông với Hội Thánh, đồng thời tuân giữ các giáo huấn của Hội Thánh.",B:"Gia đình có nghĩa vụ Hiệp thông với Hội Thánh; tuân giữ các giáo huấn của Hội Thánh; thi hành 3 chức năng Tư tế, Ngôn sứ và Vương giả theo cách thức riêng của mình.",C:"Gia đình có nghĩa vụ Hiệp thông với Hội Thánh, tuân giữ và thi hành 3 chức năng Tư tế, Ngôn sứ và Vương giả theo cách thức riêng của mình.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 20: Gia đình và xã hội có liên hệ gì với nhau?", options:{A:"Gia đình là khung cảnh đầu tiên thể hiện tính xã hội của con người và là khung cảnh đầu tiên để con người tập dấn thân hoạt động xã hội.",B:"Gia đình và xã hội là hai thực thể riêng biệt và độc lập với nhau.",C:"Gia đình là nền tảng của xã hội.",D:"Cả A và C"}, answer:"D"},
+
+ {section:"PHẦN II - SỐNG LỜI CHÚA", q:"Câu 21: Hoàn tất câu Kinh Thánh: \"Lạy Cha, xin cho họ được hoàn toàn …; như vậy, thế gian sẽ nhận biết là chính Cha đã sai Con và đã yêu thương họ như đã yêu thương Con.\" (Ga 17, 23)", options:{A:"Minh mẫn",B:"Sáng suốt",C:"Nên một",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 22: Hoàn tất câu Kinh Thánh: \"Anh em là giống nòi được tuyển chọn... để … những công trình vĩ đại của Người...\" (1Pr 2, 9)", options:{A:"Loan truyền",B:"Hoàn thành",C:"Tiếp nối",D:"Cả A, B và C"}, answer:"A"},
+
+ {section:"PHẦN III - ÔN TẬP KINH NGUYỆN", q:"Câu 23: Hoàn tất lời kinh trong Kinh Đức Chúa Thánh Thần: «Chúng con lạy ơn Đức Chúa Thánh Thần... sáng láng vô cùng»", options:{A:"Thiêng liêng",B:"Thông minh",C:"Khôn ngoan",D:"Tất cả đều đúng"}, answer:"A"},
+ {q:"Câu 24: Hoàn tất lời kinh trong Kinh Lạy Cha: \"Xin chớ để chúng con ... cám dỗ nhưng cứu chúng con cho khỏi sự dữ\"", options:{A:"Xa chước",B:"Sa chước",C:"Xa trước",D:"Tất cả đều sai"}, answer:"B"},
+ {q:"Câu 25: Hoàn tất lời kinh trong Kinh Tin: \"Bấy nhiêu điều ấy, cùng các điều Hội Thánh dạy, thì con ...\"", options:{A:"Xin vững vàng",B:"Tin chắc rằng",C:"Tin vững vàng",D:"Tất cả đều đúng"}, answer:"C"},
+ {q:"Câu 26: Hoàn tất lời kinh trong Kinh Ăn năn tội: \"Lạy Chúa,... Chúa đã dựng nên con, mà cho Con Chúa ...\"", options:{A:"Xuống trần",B:"Xuống đời",C:"Ra đời",D:"Tất cả đều đúng"}, answer:"C"},
+ {q:"Câu 27: Hoàn tất lời kinh trong Kinh Mười Điều răn: \"Thứ bảy: ... của người\"", options:{A:"Cứ lấy",B:"Hãy lấy",C:"Chớ lấy",D:"Tất cả đều sai"}, answer:"C"},
+ {q:"Câu 28: Hoàn tất lời kinh trong Kinh Tám mối Phúc thật: «Thứ tư: Ai khao khát nhân đức trọn lành, ấy là phúc thật, vì chưng sẽ được...»", options:{A:"No đủ vậy",B:"Yên ủi vậy",C:"Gọi là Con Đức Chúa Trời vậy",D:"Tất cả đều sai"}, answer:"A"},
+
+ {section:"PHẦN IV - ÔN TẬP ĐIỀU HOÀ SINH SẢN", q:"Câu 29: Sinh sản có trách nhiệm nghĩa là gì?", options:{A:"Chỉ cần sinh con theo mong muốn.",B:"Khi sinh con, cha mẹ phải lo nuôi dưỡng và giáo dục con nên người.",C:"Sinh càng nhiều con càng tốt.",D:"Không cần quan tâm đến việc giáo dục con."}, answer:"B"},
+ {q:"Câu 30: Vì sao vợ chồng cần sinh sản có trách nhiệm?", options:{A:"Để có nhiều con hơn.",B:"Để tránh mọi khó khăn trong gia đình.",C:"Để thi hành đúng ý định của Thiên Chúa và đáp ứng tình yêu vợ chồng.",D:"Để gia đình được giàu có."}, answer:"C"},
+ {q:"Câu 31: Một trong những thái độ cần có của vợ chồng Kitô hữu khi sinh sản có trách nhiệm là gì?", options:{A:"Làm chủ bản năng tính dục.",B:"Luôn sinh thật nhiều con.",C:"Chỉ quyết định một mình.",D:"Không cần quan tâm hoàn cảnh gia đình."}, answer:"A"},
+ {q:"Câu 32: Khi quyết định sinh con hay tạm ngừng, vợ chồng cần làm gì?", options:{A:"Người chồng tự quyết định.",B:"Người vợ tự quyết định.",C:"Cùng nhau xem xét hoàn cảnh cụ thể và quyết định.",D:"Nhờ người khác quyết định thay."}, answer:"C"},
+ {q:"Câu 33: Cách thức ngừa thai tự nhiên là gì?", options:{A:"Dùng thuốc tránh thai.",B:"Dùng bao cao su.",C:"Tiết dục định kỳ, kiêng cữ trong thời kỳ người vợ dễ thụ thai.",D:"Thắt ống dẫn tinh."}, answer:"C"},
+ {q:"Câu 34: Phương pháp Ogino dựa vào yếu tố nào để xác định ngày trứng rụng?", options:{A:"Chu kỳ kinh nguyệt.",B:"Chất nhờn.",C:"Nhiệt độ cơ thể.",D:"Nhịp tim."}, answer:"A"},
+ {q:"Câu 35: Phương pháp Billings dựa vào hiện tượng nào?", options:{A:"Chu kỳ kinh nguyệt.",B:"Chất nhờn.",C:"Nhiệt độ cơ thể.",D:"Huyết áp."}, answer:"B"},
+ {q:"Câu 36: Người Công giáo được sử dụng cách thức nào để ngừa thai?", options:{A:"Ngừa thai nhân tạo.",B:"Ngừa thai bằng thuốc.",C:"Cách thức ngừa thai tự nhiên khi có lý do chính đáng.",D:"Bất kỳ phương pháp nào."}, answer:"C"},
+ {q:"Câu 37: Phương pháp nào sau đây là cách thức ngừa thai nhân tạo?", options:{A:"Tiết dục định kỳ.",B:"Phương pháp Ogino.",C:"Phương pháp Billings.",D:"Dùng bao cao su."}, answer:"D"},
+ {q:"Câu 38: Phá thai được nhìn nhận như thế nào?", options:{A:"Là việc không có vấn đề về luân lý.",B:"Là tội nhẹ.",C:"Là tội rất nặng vì đây là tội giết người.",D:"Chỉ là vấn đề cá nhân."}, answer:"C"}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const qTitle = document.getElementById('q-title');
+const optionsDiv = document.getElementById('options');
+const sectionTitle = document.getElementById('section-title');
+const feedback = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const scoreBadge = document.getElementById('score-badge');
+const progressBar = document.getElementById('progress-bar');
+const progressLabel = document.getElementById('progress-label');
+const quizArea = document.getElementById('quiz-area');
+const resultDiv = document.getElementById('result');
+
+function renderQuestion(idx){
+  answered = false;
+  const item = quizData[idx];
+
+  if(item.section){
+    sectionTitle.textContent = item.section;
+    sectionTitle.style.display = 'block';
+  } else {
+    sectionTitle.style.display = 'none';
+  }
+
+  qTitle.textContent = item.q;
+  optionsDiv.innerHTML = '';
+  feedback.style.display = 'none';
+  feedback.className = '';
+  nextBtn.style.display = 'none';
+
+  Object.keys(item.options).forEach(key => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${key}`;
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'currentQ';
+    input.value = key;
+    const span = document.createElement('span');
+    span.textContent = `${key}. ${item.options[key]}`;
+    label.appendChild(input);
+    label.appendChild(span);
+    label.addEventListener('click', () => selectAnswer(key));
+    optionsDiv.appendChild(label);
+  });
+
+  progressBar.style.width = ((idx) / quizData.length * 100) + '%';
+  progressLabel.textContent = `Câu ${idx + 1} / ${quizData.length}`;
+}
+
+function selectAnswer(key){
+  if(answered) return;
+  answered = true;
+  const item = quizData[current];
+  const correct = item.answer;
+  const isCorrect = key === correct;
+
+  if(isCorrect) score++;
+  scoreBadge.textContent = `Đúng: ${score}`;
+
+  Object.keys(item.options).forEach(k => {
+    const label = document.getElementById(`opt-${k}`);
+    label.classList.add('disabled');
+    if(k === correct) label.classList.add('correct');
+    else if(k === key) label.classList.add('incorrect');
+  });
+
+  feedback.textContent = isCorrect ? '✔ Chính xác!' : `✘ Sai rồi! Đáp án đúng là: ${correct}`;
+  feedback.className = isCorrect ? 'correct-fb' : 'incorrect-fb';
+  feedback.style.display = 'block';
+
+  progressBar.style.width = ((current + 1) / quizData.length * 100) + '%';
+
+  if(current < quizData.length - 1){
+    nextBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'none';
+    setTimeout(showResult, 600);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  renderQuestion(current);
+});
+
+function showResult(){
+  quizArea.style.display = 'none';
+  const pct = Math.round(score / quizData.length * 100);
+  document.getElementById('score-text').textContent = `Điểm số: ${score} / ${quizData.length}`;
+  document.getElementById('score-detail').textContent = `Tỷ lệ đúng: ${pct}%`;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+renderQuestion(current);
+</script>
+</body>
+</html>
