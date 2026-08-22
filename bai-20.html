@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc Nghiệm - Tội Lỗi và Bí Tích Hoà Giải</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-light:#1b3a6b;
+    --navy-accent:#274a7a;
+    --gold:#c9a227;
+    --green:#1f7a3d;
+    --red:#b3261e;
+    --bg:#eef2f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    font-size:18px;
+    background:var(--bg);
+    color:var(--navy);
+    margin:0;
+    padding:20px;
+  }
+  .container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:20px 24px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header .titles h1{
+    margin:0 0 4px 0;
+    font-size:22px;
+  }
+  header .titles p{
+    margin:0;
+    color:#cdd9ee;
+    font-size:16px;
+  }
+  #score-badge{
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    padding:8px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  #progress-bar-wrap{
+    background:#d7e0f0;
+    border-radius:20px;
+    height:14px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  #progress-bar{
+    background:var(--gold);
+    height:100%;
+    width:0%;
+    transition:width .3s ease;
+  }
+  #progress-label{
+    text-align:right;
+    color:var(--navy-light);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin:0 0 14px 0;
+    font-size:19px;
+    font-weight:700;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--navy-accent);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    min-height:320px;
+  }
+  .q-title{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+    font-size:19px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border:2px solid #c7d3e8;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f6f8fc;
+    transition:.15s;
+  }
+  .option:hover{
+    border-color:var(--navy-light);
+    background:#e9eef8;
+  }
+  .option input{
+    margin-top:4px;
+    transform:scale(1.2);
+    accent-color:var(--navy);
+  }
+  .option.correct{
+    background:#e3f4e8;
+    border-color:var(--green);
+    color:var(--green);
+    font-weight:700;
+  }
+  .option.incorrect{
+    background:#fbe6e5;
+    border-color:var(--red);
+    color:var(--red);
+    font-weight:700;
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  #feedback{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:19px;
+    display:none;
+  }
+  #feedback.correct-fb{
+    background:#e3f4e8;
+    color:var(--green);
+    display:block;
+  }
+  #feedback.incorrect-fb{
+    background:#fbe6e5;
+    color:var(--red);
+    display:block;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  #next-btn{
+    padding:14px 28px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:none;
+  }
+  #next-btn:hover{
+    background:var(--navy-light);
+  }
+  #result{
+    display:none;
+    background:var(--navy);
+    color:#fff;
+    padding:28px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:24px;
+  }
+  #result h2{
+    margin-top:0;
+    font-size:28px;
+    color:var(--gold);
+  }
+  #result p{
+    font-size:20px;
+  }
+  #restart-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  #restart-btn:hover{
+    background:var(--navy-light);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="titles">
+      <h1>TRẮC NGHIỆM</h1>
+      <p>TỘI LỖI - BÍ TÍCH HOÀ GIẢI</p>
+    </div>
+    <div id="score-badge">Đúng: 0</div>
+  </header>
+
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+
+  <div id="result">
+    <h2 id="score-text"></h2>
+    <p id="score-detail"></p>
+    <button id="restart-btn" type="button">LÀM LẠI</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="section-title" id="section-title" style="display:none;"></div>
+    <div class="card">
+      <div class="q-title" id="q-title"></div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button id="next-btn" type="button">CÂU TIẾP THEO →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+ {section:"BÀI 20: TỘI LỖI - BÍ TÍCH HOÀ GIẢI", q:"Câu 1: Thiên Chúa thương xót tội nhân thế nào?", options:{A:"Thiên Chúa ban cho các tội nhân Lời Chúa và Thánh Thần, giúp họ nhận ra tội lỗi của mình, đồng thời ban cho họ lương tâm ngay thẳng và niềm hy vọng vào ơn tha thứ của Ngài.",B:"Thiên Chúa ban cho các tội nhân ơn thánh, giúp họ nhận ra tội lỗi của mình, đồng thời ban cho họ lương tâm ngay thẳng và niềm hy vọng vào ơn tha thứ của Ngài.",C:"Thiên Chúa ban cho các tội nhân ơn thánh, đồng thời ban cho họ lương tâm ngay thẳng và niềm hy vọng vào ơn tha thứ của Ngài.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 2: Tội là gì?", options:{A:"Tội là lời nói, việc làm trái với Luật Chúa dạy.",B:"Tội là lời nói, việc làm xúc phạm đến Chúa, làm hại chính mình và người khác.",C:"Tội là lời nói, việc làm hoặc ước muốn trái với Luật Chúa dạy, là xúc phạm đến Chúa, làm hại chính mình và người khác.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 3: Tội trọng là gì?", options:{A:"Tội trọng là cố tình phạm Luật Thiên Chúa, trong những điều mà chúng ta đã kịp suy biết.",B:"Tội trọng là cố tình phạm Luật Thiên Chúa, trong những điều quan trọng mà chúng ta đã kịp suy biết.",C:"Tội trọng là phạm những điều quan trọng mà chúng ta đã kịp suy biết.",D:"Tất cả đều sai"}, answer:"B"},
+ {q:"Câu 4: Tội trọng làm hại chúng ta thế nào?", options:{A:"Tội trọng làm chúng ta phải xa lìa Thiên Chúa mãi mãi.",B:"Tội trọng làm mất tình nghĩa giữa chúng ta với Thiên Chúa và nếu không hoán cải, chúng ta phải xa cách Ngài đời đời.",C:"Tội trọng làm chúng ta bị loại ra khỏi gia đình con cái Thiên Chúa, không còn được sống trong tình nghĩa với Ngài.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 5: Khi nào các tín hữu buộc phải xưng các tội trọng?", options:{A:"Khi đến tuổi khôn, mọi tín hữu bắt buộc phải xưng các tội trọng của mình, và trong mọi trường hợp, phải xưng các tội trọng trước khi rước lễ.",B:"Khi đến tuổi khôn, tức là khi con người kịp suy biết, mọi tín hữu bắt buộc phải xưng các tội trọng của mình, và trong mọi trường hợp, phải xưng các tội trọng trước khi rước lễ.",C:"Khi đến tuổi khôn, mọi tín hữu bắt buộc phải xưng các tội trọng của mình, ít nhất một năm một lần và trong mọi trường hợp, phải xưng các tội trọng trước khi rước lễ.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 6: Tội nhẹ là gì?", options:{A:"Tội nhẹ là phạm một điều luật nhẹ do chưa kịp suy biết.",B:"Tội nhẹ là phạm những tội vặt thường ngày mà mình không cố ý phạm.",C:"Tội nhẹ là phạm một điều luật nhẹ hoặc một điều quan trọng, nhưng chưa kịp suy biết hay chưa hoàn toàn ưng theo.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 7: Tội nhẹ làm hại chúng ta thế nào?", options:{A:"Tội nhẹ không làm mất tình nghĩa giữa chúng ta với Thiên Chúa, nhưng làm cho chúng ta giảm bớt lòng yêu mến Chúa, dễ hướng chiều về điều xấu và dễ phạm tội trọng hơn.",B:"Tội nhẹ làm cho chúng ta giảm bớt lòng yêu mến Chúa, dễ hướng chiều về điều xấu và dễ phạm tội trọng hơn.",C:"Tội nhẹ không gây ảnh hưởng nhiều đến công phúc chúng ta lập được, mà chỉ làm cho chúng ta giảm bớt lòng yêu mến Chúa.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 8: Các thói xấu có liên hệ với những tội nào?", options:{A:"Các thói xấu có liên hệ với bảy mối tội đầu gồm: Kiêu ngạo, hà tiện, dâm ô, nóng nảy, mê ăn uống, ghen ghét và lười biếng.",B:"Các thói xấu có liên hệ với bảy mối tội đầu gồm: Kiêu ngạo, hà tiện, dâm ô, giận hờn, nóng nảy, gian dối và lười biếng.",C:"Các thói xấu có liên hệ với bảy mối tội đầu gồm: Kiêu ngạo, hà tiện, dâm ô, hờn giận, mê ăn uống, ghen ghét và lười biếng.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 9: Khi nào chúng ta có trách nhiệm đối với tội của người khác?", options:{A:"Khi tham gia trực tiếp và tự nguyện; Khi ra lệnh, xúi giục hoặc tán thành.",B:"Khi không tố cáo hoặc ngăn cản khi có bổn phận phải ngăn cản.",C:"Khi bao che cho những người đã làm điều xấu.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 10: Ta phải có thái độ nào đối với tội lỗi?", options:{A:"Ta phải dứt khoát với tội lỗi, quyết tâm không phạm tội, siêng năng xưng tội rước lễ và cố gắng đổi mới đời sống hằng ngày.",B:"Ta phải dứt khoát với tội lỗi, xa lánh dịp tội, siêng năng xưng tội rước lễ và cố gắng đổi mới đời sống hằng ngày.",C:"Ta phải dứt khoát với tội lỗi bằng việc siêng năng xưng tội rước lễ và cố gắng đổi mới đời sống hằng ngày.",D:"Cả A và C"}, answer:"B"},
+ {q:"Câu 11: Bí tích Hoà Giải là gì?", options:{A:"Là Bí tích Chúa Giê-su đã lập, để tha các tội riêng chúng ta đã phạm từ khi lãnh Bí tích Rửa Tội về sau, cùng giao hòa chúng ta với Thiên Chúa và Hội Thánh.",B:"Là Bí tích Chúa Giê-su đã lập, để tha tội nguyên tổ cùng các tội riêng chúng ta đã phạm.",C:"Là Bí tích Chúa Giê-su đã lập, để tha tội nguyên tổ cùng các tội riêng chúng ta đã phạm. Cùng giao hòa chúng ta với Thiên Chúa và Hội Thánh.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 12: Những ai trong Hội Thánh có quyền tha tội?", options:{A:"Chỉ có các Giám mục và những linh mục được quyền giải tội, mới đủ thẩm quyền tha tội mà thôi.",B:"Các Giám mục và những linh mục được quyền giải tội, đều có quyền tha tội nhân danh Thiên Chúa Ba Ngôi.",C:"Tất cả các Giám mục và linh mục đều có quyền tha tội nhân danh Thiên Chúa Ba Ngôi.",D:"Tất cả đều đúng."}, answer:"B"},
+ {q:"Câu 13: Khi nào các tín hữu buộc phải xưng các tội trọng?", options:{A:"Khi đến tuổi khôn, mọi tín hữu đều được mời gọi xưng các tội trọng của mình; và trong mọi trường hợp, phải xưng các tội trọng trước khi rước lễ.",B:"Khi đến tuổi khôn, mọi tín hữu đều được mời gọi xưng các tội trọng của mình; và nên xưng các tội trọng trước khi rước lễ.",C:"Khi đến tuổi khôn, mọi tín hữu buộc phải xưng các tội trọng của mình ít nhất một năm một lần và trong mọi trường hợp, phải xưng các tội trọng trước khi rước lễ.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 14: Vì sao Hội Thánh khuyên ta nên xưng các tội nhẹ?", options:{A:"Vì việc xưng các tội nhẹ giúp chúng ta có được một lương tâm ngay thẳng và chiến đấu chống lại những hướng chiều về đàng xấu, nhờ đó được Đức Ki-tô chữa lành và tiến triển trong đời sống theo Thánh Thần.",B:"Vì việc xưng các tội nhẹ giúp chúng ta có được một lương tâm ngay thẳng và chiến đấu chống lại những hướng chiều về đàng xấu.",C:"Vì việc xưng các tội nhẹ giúp chúng ta có được một lương tâm ngay thẳng và chiến đấu chống lại những hướng chiều về đàng xấu, nhờ đó, chúng ta ngày càng tiến tới trên con đường hoàn thiện.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 15: Tội của tổ tông A-đam và E-và trong Vườn Địa Đàng là tội gì?", options:{A:"Tội lười biếng lao động",B:"Tội kiêu ngạo và không vâng lời Thiên Chúa",C:"Tội nói dối với con rắn",D:"Tội ghen ghét nhau"}, answer:"B"},
+ {q:"Câu 16: Theo thư thứ nhất của thánh Gioan (1 Ga 5,16-17), tội được chia làm mấy loại chính?", options:{A:"1 loại (Mọi tội đều nặng như nhau)",B:"3 loại (Tội tư tưởng, lời nói, việc làm)",C:"2 loại (Tội trọng và tội nhẹ)",D:"7 loại (7 mối tội đầu)"}, answer:"C"},
+ {q:"Câu 17: Một lỗi phạm được coi là tội trọng khi hội đủ mấy yếu tố?", options:{A:"2 yếu tố",B:"3 yếu tố",C:"4 yếu tố",D:"Chỉ cần 1 yếu tố"}, answer:"B"},
+ {q:"Câu 18: Hậu quả đầu tiên và nặng nề nhất của tội trọng đối với linh hồn là gì?", options:{A:"Bị mọi người xa lánh",B:"Bị ốm đau, xui xẻo",C:"Cắt đứt tình nghĩa với Thiên Chúa, mất ơn thánh sủng",D:"Mất hết tiền bạc tài sản"}, answer:"C"},
+ {q:"Câu 19: Tại sao chúng ta không được coi thường tội nhẹ?", options:{A:"Vì tội nhẹ cũng bị phạt xuống Hỏa ngục ngay lập tức",B:"Vì tội nhẹ làm giảm lòng mến Chúa, dễ hướng chiều về điều xấu và dễ sa vào tội trọng hơn",C:"Vì tội nhẹ không thể được tha thứ",D:"Vì tội nhẹ làm ta mất danh dự trước mặt người khác"}, answer:"B"},
+ {q:"Câu 20: \"7 mối tội đầu\" được hiểu là gì?", options:{A:"Là 7 tội ác kinh khủng nhất của nhân loại",B:"Là 7 tội không bao giờ được tha thứ",C:"Là những nết xấu làm gốc rễ, dễ sinh ra các tội lỗi khác",D:"Là 7 hình phạt của Thiên Chúa"}, answer:"C"},
+ {q:"Câu 21: Hiện tượng \"ảo tưởng sức mạnh\", coi mình là trung tâm, thích khoe khoang thái quá trên mạng xã hội là biểu hiện của mối tội nào?", options:{A:"Kiêu ngạo",B:"Hà tiện",C:"Dâm ô",D:"Lười biếng"}, answer:"A"},
+ {q:"Câu 22: Áp lực đồng trang lứa khiến người trẻ hay sân si, đố kỵ, và muốn dìm người khác xuống thay vì nỗ lực. Đó là dấu hiệu của:", options:{A:"Lười biếng",B:"Hờn giận",C:"Kiêu ngạo",D:"Ghen ghét"}, answer:"D"},
+ {q:"Câu 23: Trong giáo lý Công giáo, ăn năn tội (sám hối) bao gồm những yếu tố cốt lõi nào?", options:{A:"Đau đớn trong linh hồn và gớm ghét tội lỗi đã phạm",B:"Quyết tâm dốc lòng từ nay không phạm tội nữa",C:"Khóc lóc thật lớn tiếng để mọi người thấy",D:"Cả A và B đều đúng"}, answer:"D"},
+ {q:"Câu 24: Động cơ cốt lõi của Ăn năn tội cách trọn (Sám hối trọn hảo) là gì?", options:{A:"Vì sợ bị mất danh dự trước mặt cộng đoàn",B:"Vì sợ phải chịu hình phạt Hỏa ngục",C:"Bắt nguồn từ tình yêu mến Thiên Chúa trên hết mọi sự",D:"Vì muốn chứng tỏ bản thân đạo đức"}, answer:"C"},
+ {q:"Câu 25: Động cơ chính của Ăn năn tội cách chẳng trọn (Sám hối bất toàn) là gì?", options:{A:"Vì yêu mến Chúa hết lòng, hết sức",B:"Vì nhận ra sự ghê tởm của tội và sợ hãi những hình phạt của Thiên Chúa",C:"Vì được cha mẹ, thầy cô khen ngợi",D:"Vì muốn được Rước lễ để khoe với bạn bè"}, answer:"B"}
+];
+let current = 0;
+let score = 0;
+let answered = false;
+
+const qTitle = document.getElementById('q-title');
+const optionsDiv = document.getElementById('options');
+const sectionTitle = document.getElementById('section-title');
+const feedback = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const scoreBadge = document.getElementById('score-badge');
+const progressBar = document.getElementById('progress-bar');
+const progressLabel = document.getElementById('progress-label');
+const quizArea = document.getElementById('quiz-area');
+const resultDiv = document.getElementById('result');
+
+function renderQuestion(idx){
+  answered = false;
+  const item = quizData[idx];
+
+  if(item.section){
+    sectionTitle.textContent = item.section;
+    sectionTitle.style.display = 'block';
+  } else {
+    sectionTitle.style.display = 'none';
+  }
+
+  qTitle.textContent = item.q;
+  optionsDiv.innerHTML = '';
+  feedback.style.display = 'none';
+  feedback.className = '';
+  nextBtn.style.display = 'none';
+
+  Object.keys(item.options).forEach(key => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${key}`;
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'currentQ';
+    input.value = key;
+    const span = document.createElement('span');
+    span.textContent = `${key}. ${item.options[key]}`;
+    label.appendChild(input);
+    label.appendChild(span);
+    label.addEventListener('click', () => selectAnswer(key));
+    optionsDiv.appendChild(label);
+  });
+
+  progressBar.style.width = ((idx) / quizData.length * 100) + '%';
+  progressLabel.textContent = `Câu ${idx + 1} / ${quizData.length}`;
+}
+
+function selectAnswer(key){
+  if(answered) return;
+  answered = true;
+  const item = quizData[current];
+  const correct = item.answer;
+  const isCorrect = key === correct;
+
+  if(isCorrect) score++;
+  scoreBadge.textContent = `Đúng: ${score}`;
+
+  Object.keys(item.options).forEach(k => {
+    const label = document.getElementById(`opt-${k}`);
+    label.classList.add('disabled');
+    if(k === correct) label.classList.add('correct');
+    else if(k === key) label.classList.add('incorrect');
+  });
+
+  feedback.textContent = isCorrect ? '✔ Chính xác!' : `✘ Sai rồi! Đáp án đúng là: ${correct}`;
+  feedback.className = isCorrect ? 'correct-fb' : 'incorrect-fb';
+  feedback.style.display = 'block';
+
+  progressBar.style.width = ((current + 1) / quizData.length * 100) + '%';
+
+  if(current < quizData.length - 1){
+    nextBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'none';
+    setTimeout(showResult, 600);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  renderQuestion(current);
+});
+
+function showResult(){
+  quizArea.style.display = 'none';
+  const pct = Math.round(score / quizData.length * 100);
+  document.getElementById('score-text').textContent = `Điểm số: ${score} / ${quizData.length}`;
+  document.getElementById('score-detail').textContent = `Tỷ lệ đúng: ${pct}%`;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+renderQuestion(current);
+</script>
+</body>
+</html>
