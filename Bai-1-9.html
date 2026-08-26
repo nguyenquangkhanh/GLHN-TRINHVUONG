@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giáo Lý Dự Tòng - Bài 1-9</title>
+<style>
+  :root {
+    --navy-deep: #0a1a3a;
+    --navy: #0f2557;
+    --navy-mid: #1a3a7a;
+    --navy-light: #2f4f8f;
+    --gold: #c9a24b;
+    --gold-light: #e8d5a3;
+    --cream: #f4f1ea;
+    --white: #ffffff;
+    --red-wrong: #b04a4a;
+    --green-right: #3c7a5c;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, var(--navy-mid) 0%, var(--navy-deep) 55%, #060f24 100%);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 22px;
+  }
+
+  .cross {
+    width: 46px;
+    height: 46px;
+    margin: 0 auto 10px;
+    display: block;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .header p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(244,241,234,0.6);
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .progress-track {
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    margin: 18px 0 24px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border: 1px solid rgba(201,162,75,0.25);
+    border-radius: 14px;
+    padding: 28px 26px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .lesson-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(201,162,75,0.12);
+    border: 1px solid rgba(201,162,75,0.35);
+    color: var(--gold-light);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+
+  .q-counter {
+    font-size: 0.8rem;
+    color: rgba(244,241,234,0.5);
+    margin-bottom: 6px;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+
+  .prompt {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--white);
+    margin: 0 0 20px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    text-align: left;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--cream);
+    padding: 13px 16px;
+    border-radius: 10px;
+    font-size: 0.98rem;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: 'Georgia', serif;
+    display: flex;
+    gap: 10px;
+  }
+  .option:hover:not(:disabled) {
+    background: rgba(201,162,75,0.12);
+    border-color: rgba(201,162,75,0.4);
+  }
+  .option .letter {
+    font-weight: 700;
+    color: var(--gold-light);
+    flex-shrink: 0;
+  }
+  .option:disabled { cursor: default; }
+
+  .option.correct {
+    background: rgba(60,122,92,0.25);
+    border-color: var(--green-right);
+  }
+  .option.wrong {
+    background: rgba(176,74,74,0.25);
+    border-color: var(--red-wrong);
+  }
+
+  .feedback {
+    margin-top: 18px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    line-height: 1.55;
+    font-family: 'Trebuchet MS', sans-serif;
+    animation: fadeIn 0.3s ease;
+  }
+  .feedback.correct {
+    background: rgba(60,122,92,0.15);
+    border: 1px solid rgba(60,122,92,0.4);
+    color: #bfe3cf;
+  }
+  .feedback.wrong {
+    background: rgba(176,74,74,0.15);
+    border: 1px solid rgba(176,74,74,0.4);
+    color: #f0c6c6;
+  }
+  .feedback .verdict {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+    font-family: 'Georgia', serif;
+    font-size: 1rem;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .next-btn {
+    margin-top: 20px;
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--gold), #a8823a);
+    color: var(--navy-deep);
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', sans-serif;
+    display: none;
+  }
+  .next-btn:hover { filter: brightness(1.08); }
+
+  .result-screen {
+    text-align: center;
+    display: none;
+  }
+  .result-screen .cross { width: 56px; height: 56px; }
+  .result-score {
+    font-size: 2.6rem;
+    color: var(--gold-light);
+    font-weight: 700;
+    margin: 10px 0 6px;
+  }
+  .result-label {
+    color: rgba(244,241,234,0.7);
+    font-family: 'Trebuchet MS', sans-serif;
+    margin-bottom: 22px;
+  }
+  .restart-btn {
+    padding: 12px 28px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    border-radius: 10px;
+    font-family: 'Trebuchet MS', sans-serif;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  .restart-btn:hover { background: rgba(201,162,75,0.1); }
+
+  @media (max-width: 480px) {
+    .card { padding: 22px 18px; }
+    .prompt { font-size: 1.05rem; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <svg class="cross" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#e8d5a3"/>
+          <stop offset="100%" stop-color="#c9a24b"/>
+        </linearGradient>
+      </defs>
+      <rect x="42" y="8" width="16" height="84" rx="3" fill="url(#goldGrad)"/>
+      <rect x="14" y="34" width="72" height="16" rx="3" fill="url(#goldGrad)"/>
+    </svg>
+    <h1>Giáo Lý Dự Tòng</h1>
+    <p>Bài 1 – Bài 9 · Trắc nghiệm</p>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+  <div class="card" id="quizCard">
+    <div class="q-counter" id="qCounter"></div>
+    <div class="lesson-tag" id="lessonTag"></div>
+    <p class="prompt" id="prompt"></p>
+    <div class="options" id="options"></div>
+    <div id="feedbackBox"></div>
+    <button class="next-btn" id="nextBtn">Câu tiếp theo →</button>
+  </div>
+
+  <div class="card result-screen" id="resultScreen">
+    <svg class="cross" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <rect x="42" y="8" width="16" height="84" rx="3" fill="url(#goldGrad)"/>
+      <rect x="14" y="34" width="72" height="16" rx="3" fill="url(#goldGrad)"/>
+    </svg>
+    <div class="result-score" id="finalScore"></div>
+    <div class="result-label">câu trả lời đúng</div>
+    <button class="restart-btn" id="restartBtn">Làm lại từ đầu</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{lesson:"Bài 1 · Loài người kiếm tìm Thiên Chúa", prompt:"Câu 1: Thiên Chúa là Đấng nào?", options:[
+"Thiên Chúa hay còn gọi là Ông Trời, Ngài là Đấng dựng nên trời đất muôn vật, là Đấng ban hạnh phúc chân thật cho con người.",
+"Thiên Chúa là Đấng dựng nên trời đất muôn vật, là Đấng ban hạnh phúc chân thật cho con người.",
+"Thiên Chúa là Đấng dựng nên trời đất muôn vật, trong đó, con người là đỉnh cao của tạo dựng.",
+"Cả A, B và C"], correct:1, explain:"Đáp án đúng nhấn mạnh Thiên Chúa là Đấng dựng nên trời đất muôn vật và ban hạnh phúc chân thật cho con người."},
+
+{lesson:"Bài 1 · Loài người kiếm tìm Thiên Chúa", prompt:"Câu 2: Loài người dựa vào đâu để tìm biết Thiên Chúa?", options:[
+"Loài người dựa vào hiểu biết của chính mình cùng sự hiểu biết mà niềm tin Tôn giáo mang lại, để tìm biết Thiên Chúa.",
+"Loài người dựa vào hiểu biết của chính mình, cùng với sự hướng dẫn của khoa học và sự trợ giúp của niềm tin Tôn giáo, mà nhận biết Thiên Chúa.",
+"Loài người dựa vào trật tự trong vũ trụ, vào những khát vọng chân chính, vào tôn giáo, cách riêng đạo Công Giáo, mà nhận biết Thiên Chúa.",
+"Cả A, B và C"], correct:2, explain:"Loài người nhận biết Thiên Chúa qua trật tự vũ trụ, khát vọng chân chính và tôn giáo, đặc biệt là đạo Công Giáo."},
+
+{lesson:"Bài 2 · Thiên Chúa nói với loài người", prompt:"Câu 3: Thiên Chúa dùng cách thức nào để tỏ mình cho loài người?", options:[
+"Thiên Chúa dùng nhiều cách thức, nhưng cách rõ ràng nhất là Thánh Kinh.",
+"Thiên Chúa tỏ mình ra cho loài người qua Đức Giê-su là Con Một yêu dấu của Ngài.",
+"Thiên Chúa tỏ mình ra cho loài người qua các trật tự lạ lùng trong vũ trụ, và nhất là qua Đức Giê-su là Con Một yêu dấu của Ngài.",
+"Cả A, B và C"], correct:0, explain:"Thiên Chúa tỏ mình qua nhiều cách, nhưng rõ ràng nhất là qua Thánh Kinh."},
+
+{lesson:"Bài 2 · Thiên Chúa nói với loài người", prompt:"Câu 4: Thánh Kinh là gì?", options:[
+"Thánh Kinh là Lời của Thiên Chúa nói với con người. Thánh Kinh gồm 46 cuốn Cựu Ước và 27 cuốn Tân Ước.",
+"Thánh Kinh là bộ sách được linh ứng ghi chép ý định và hành động cứu chuộc loài người của Thiên Chúa. Thánh Kinh gồm 46 cuốn Cựu Ước và 27 cuốn Tân Ước.",
+"Thánh Kinh là bộ sách được linh ứng ghi chép ý định và hành động cứu chuộc loài người của Thiên Chúa. Thánh Kinh gồm 27 cuốn Cựu Ước và 46 cuốn Tân Ước.",
+"Cả A, B và C"], correct:1, explain:"Thánh Kinh là bộ sách được linh ứng, gồm 46 cuốn Cựu Ước và 27 cuốn Tân Ước."},
+
+{lesson:"Bài 2 · Thiên Chúa nói với loài người", prompt:"Câu 5: Nội dung Thánh Kinh là gì?", options:[
+"Là chương trình và hành động cứu độ của Thiên Chúa được Chúa Giê-su thực hiện.",
+"Là chương trình và hành động cứu độ của Thiên Chúa được Chúa Giê-su thực hiện. Chương trình và hành động này trải dài suốt lịch sử loài người.",
+"Là chương trình và hành động cứu độ của Thiên Chúa được Chúa Giê-su thực hiện. Nhằm bày tỏ vinh quang của Thiên Chúa cho con người.",
+"Cả A, B và C"], correct:1, explain:"Nội dung Thánh Kinh là chương trình cứu độ trải dài suốt lịch sử loài người."},
+
+{lesson:"Bài 3 · Đón nhận Lời Chúa", prompt:"Câu 6: Ta phải đón nhận Thánh Kinh thế nào?", options:[
+"Ta phải đón nhận Thánh Kinh trong tâm tình vui mừng, tạ ơn.",
+"Ta phải đón nhận Thánh Kinh trong tâm tình vui mừng, tạ ơn. Đồng thời phải đọc và học hỏi, cùng giúp người khác hiểu về Lời của Thiên Chúa.",
+"Ta phải đón nhận Thánh Kinh trong tâm tình vui mừng, tạ ơn. Đồng thời, phải đọc và học hỏi, khám phá ra ý định của Thiên Chúa qua Lời của Ngài, cùng giúp người khác hiểu về Thánh Kinh.",
+"Tất cả đều đúng."], correct:0, explain:"Đáp án cơ bản nhất là đón nhận Thánh Kinh trong tâm tình vui mừng, tạ ơn."},
+
+{lesson:"Bài 3 · Đón nhận Lời Chúa", prompt:"Câu 7: Ta phải đọc Thánh Kinh thế nào?", options:[
+"Ta phải đọc Thánh Kinh trong đức tin với tâm tình khiêm tốn, đơn sơ, theo sự hướng dẫn của Hội Thánh.",
+"Ta phải đọc Thánh Kinh trong đức tin với tâm tình khiêm tốn, đơn sơ, theo sự hướng dẫn của Hội Thánh. Đồng thời khám phá nơi đó ý định của Thiên Chúa để có thể làm theo thánh ý Ngài.",
+"Ta phải đọc Thánh Kinh trong đức tin với tâm tình khiêm tốn, đơn sơ, theo sự hướng dẫn của Hội Thánh, trong ước muốn được dạy dỗ và sẵn sàng thực hiện điều Chúa dạy.",
+"Tất cả đều đúng."], correct:2, explain:"Đọc Thánh Kinh cần khiêm tốn, đơn sơ, theo Hội Thánh, và sẵn sàng thực hiện điều Chúa dạy."},
+
+{lesson:"Bài 4 · Thiên Chúa dựng nên trời đất muôn vật và loài người", prompt:"Câu 8: Trời đất muôn vật bởi đâu mà có?", options:[
+"Trời đất muôn vật do Đấng Tạo Hóa làm ra.",
+"Trời đất muôn vật bởi Thiên Chúa dựng nên.",
+"Trời đất muôn vật do tự nhiên mà có. Nó được hình thành trải qua cả triệu triệu năm rồi tiến hóa dần như ngày nay.",
+"Cả A, B và C"], correct:1, explain:"Trời đất muôn vật bởi Thiên Chúa dựng nên."},
+
+{lesson:"Bài 4 · Thiên Chúa dựng nên trời đất muôn vật và loài người", prompt:"Câu 9: Loài người là loài nào?", options:[
+"Loài người cũng là một loài động vật như bao loài động vật khác. Chỉ có điều, nó được dựng nên để làm bá chủ muôn loài.",
+"Loài người là loài có linh hồn và thể xác, Chúa dựng nên giống hình ảnh Người, cho làm chủ vũ trụ và hưởng hạnh phúc đời đời.",
+"Loài người cũng là một loài động vật như bao loài động vật khác. Chỉ có điều, nó được dựng nên để làm chủ muôn loài nhờ trí khôn mà Tạo Hóa ban cho.",
+"Cả A, B và C"], correct:1, explain:"Loài người có linh hồn và thể xác, được dựng nên giống hình ảnh Thiên Chúa."},
+
+{lesson:"Bài 5 · Loài người sa ngã – Tội – Lời hứa cứu độ", prompt:"Câu 10: Thiên Chúa đã ban cho nguyên tổ cuộc sống nào?", options:[
+"Thiên Chúa ban cho nguyên tổ một cuộc sống ngập tràn hạnh phúc. Điều đó được diễn tả qua hình ảnh \"Vườn địa đàng\".",
+"Thiên Chúa ban cho nguyên tổ một cuộc sống ngập tràn hạnh phúc. Điều đó được diễn tả qua hình ảnh \"Vườn địa đàng\". Các ngài được Chúa cho coi sóc và hướng dẫn muôn loài muôn vật.",
+"Thiên Chúa đã ban cho nguyên tổ cuộc sống được làm con Chúa và nhiều đặc ân khác.",
+"Cả A, B và C"], correct:2, explain:"Nguyên tổ được ban cuộc sống làm con Chúa cùng nhiều đặc ân khác."},
+
+{lesson:"Bài 5 · Loài người sa ngã – Tội – Lời hứa cứu độ", prompt:"Câu 11: Nguyên tổ có được hạnh phúc ấy mãi không?", options:[
+"Không. Vì nguyên tổ đã trái lệnh Chúa, nên mất hạnh phúc, chuốc lấy muôn vàn hậu quả tai hại cho mình và con cháu.",
+"Không. Vì các ngài đã chống đối Thiên Chúa.",
+"Không. Vì các ngài đã nghiêng về phe ma quỷ để chống đối Thiên Chúa.",
+"Cả A, B và C"], correct:0, explain:"Nguyên tổ trái lệnh Chúa nên mất hạnh phúc, gây hậu quả tai hại cho mình và con cháu."},
+
+{lesson:"Bài 5 · Loài người sa ngã – Tội – Lời hứa cứu độ", prompt:"Câu 12: Tội là gì?", options:[
+"Tội là sự lỗi luật Chúa và Hội Thánh trong tư tưởng, lời nói, việc làm và những điều thiếu sót.",
+"Tội là phạm phải những điều xấu mà lương tâm không cho phép.",
+"Tội là phạm phải những điều xấu trong tư tưởng cũng như trong hành động, mà lương tâm không cho phép.",
+"Tất cả đều đúng."], correct:0, explain:"Tội là sự lỗi luật Chúa và Hội Thánh trong tư tưởng, lời nói, việc làm và thiếu sót."},
+
+{lesson:"Bài 5 · Loài người sa ngã – Tội – Lời hứa cứu độ", prompt:"Câu 13: Thiên Chúa có thái độ nào khi nguyên tổ phạm tội?", options:[
+"Thiên Chúa tỏ ra buồn bực, vì nguyên tổ đã không nghe theo lời của Ngài.",
+"Thiên Chúa tỏ ra buồn bực, vì nguyên tổ đã không nghe theo lời của Ngài. Ngài đã quyết định cất đi khỏi họ những đặc quyền đặc lợi họ vẫn được hưởng và đuổi họ ra khỏi vườn địa đàng.",
+"Thiên Chúa đã nghiêm phạt nguyên tổ, nhưng vẫn một lòng thương xót, hứa ban ơn cứu độ.",
+"Cả A, B và C"], correct:2, explain:"Thiên Chúa nghiêm phạt nhưng vẫn thương xót và hứa ban ơn cứu độ."},
+
+{lesson:"Bài 6 · Thiên Chúa chọn các Tổ phụ và thành lập dân riêng", prompt:"Câu 14: Thiên Chúa đã bắt đầu công cuộc cứu chuộc thế nào?", options:[
+"Thiên Chúa đã lựa chọn Đa-vít làm người đứng đầu một dân tộc, dân mà sau này sẽ trở thành dân riêng của Người.",
+"Thiên Chúa đã lựa chọn Sa-lô-mon là con của Đa-vít làm vua và làm người đứng đầu một dân tộc, dân mà sau này sẽ trở thành dân riêng của Người.",
+"Thiên Chúa đã chọn Ab-ra-ham làm Tổ phụ dân riêng của Người.",
+"Cả A, B và C"], correct:2, explain:"Thiên Chúa chọn Ab-ra-ham làm Tổ phụ dân riêng để bắt đầu công cuộc cứu chuộc."},
+
+{lesson:"Bài 6 · Thiên Chúa chọn các Tổ phụ và thành lập dân riêng", prompt:"Câu 15: Thiên Chúa chọn gọi Mô-sê khi nào?", options:[
+"Khi dân Ít-ra-en làm nô lệ ở Ai-cập để giải phóng dân Người và đưa họ về đất hứa.",
+"Thiên Chúa đã gọi Mô-sê khi ông đang chăn chiên cho bố vợ tại núi Khô-rép.",
+"Thiên Chúa đã hiện ra với Mô-sê qua đám lửa cháy trong bụi gai, khi ông đang chăn chiên cho bố vợ tại núi Khô-rép.",
+"Tất cả đều đúng."], correct:0, explain:"Thiên Chúa gọi Mô-sê khi dân Ít-ra-en làm nô lệ ở Ai-cập, để giải phóng họ."},
+
+{lesson:"Bài 6 · Thiên Chúa chọn các Tổ phụ và thành lập dân riêng", prompt:"Câu 16: Khi vào đất hứa, dân Ít-ra-en được hướng dẫn thế nào?", options:[
+"Khi vào đất hứa, Thiên Chúa đã chia đất cho dân của Ngài theo từng chi tộc. Rồi Ngài cắt đặt các thẩm phán để coi sóc họ.",
+"Khi vào đất hứa, chính Thiên Chúa hướng dẫn dân Người qua các thẩm phán rồi đến các vua mà nổi bật nhất là vua Đa-vít.",
+"Khi vào đất hứa, Thiên Chúa đã chia đất cho dân của Ngài theo từng chi tộc. Rồi chính Ngài trực tiếp coi sóc và hướng dẫn họ.",
+"Cả A, B và C"], correct:2, explain:"Thiên Chúa chia đất theo chi tộc và trực tiếp coi sóc, hướng dẫn dân Người."},
+
+{lesson:"Bài 6 · Thiên Chúa chọn các Tổ phụ và thành lập dân riêng", prompt:"Câu 17: Thiên Chúa hứa với Đa-vít điều gì?", options:[
+"Thiên Chúa hứa thiết lập cho Đa-vít một triều đại vững bền và một người trong dòng dõi ông sẽ làm vua mãi mãi. Đó là Đấng Cứu Thế.",
+"Thiên Chúa hứa với vua Đa-vít rằng, Ngài sẽ ban cho ông ơn khôn ngoan, để ông có thể cai trị vương quốc của ông cho đến muôn đời.",
+"Thiên Chúa hứa với vua Đa-vít rằng, Ngài sẽ ban cho ông ơn khôn ngoan, để ông có thể cai trị vương quốc của ông, và triều đại của ông sẽ vững bền mãi mãi.",
+"Cả A, B và C"], correct:0, explain:"Thiên Chúa hứa thiết lập triều đại vững bền cho Đa-vít, dòng dõi ông sinh ra Đấng Cứu Thế."},
+
+{lesson:"Bài 7 · Thiên Chúa thiết lập Giao ước và ban Lề luật", prompt:"Câu 18: Thiên Chúa đã ký kết gì với Ít-ra-en?", options:[
+"Thiên Chúa đã ký kết với Ít-ra-en một Điều Ước tại núi Si-nai. Qua đó, Ngài nhận họ làm dân riêng của Ngài.",
+"Thiên Chúa đã ký kết với Ít-ra-en một Giao Ước tại núi Si-nai.",
+"Thiên Chúa đã ký kết với Ít-ra-en một Điều Ước tại núi Si-nai. Qua đó, Ngài nhận họ làm dân riêng của Ngài. Ngài còn hứa sẽ chăm sóc họ dân riêng của Ngài.",
+"Cả A, B và C"], correct:1, explain:"Thiên Chúa ký kết một Giao Ước với Ít-ra-en tại núi Si-nai."},
+
+{lesson:"Bài 7 · Thiên Chúa thiết lập Giao ước và ban Lề luật", prompt:"Câu 19: Thiên Chúa cam kết những gì với Ít-ra-en?", options:[
+"Thiên Chúa cam kết nhận Ít-ra-en làm dân riêng của Người, chăm sóc và hướng dẫn vận mệnh toàn dân.",
+"Thiên Chúa cam kết sẽ cùng đi với dân, sẽ bảo vệ và che chở dân, cho dù dân có sai lỗi và phản bội Ngài.",
+"Thiên Chúa cam kết sẽ cùng đi với dân, sẽ bảo vệ và che chở dân, cho dù dân có sai lỗi và phản bội Ngài. Và sau cùng, Ngài sẽ cho họ được vào Đất Hứa, hưởng hạnh phúc muôn đời.",
+"Cả A, B và C"], correct:0, explain:"Thiên Chúa cam kết nhận Ít-ra-en làm dân riêng, chăm sóc và hướng dẫn vận mệnh họ."},
+
+{lesson:"Bài 7 · Thiên Chúa thiết lập Giao ước và ban Lề luật", prompt:"Câu 20: Ít-ra-en cam kết gì với Thiên Chúa?", options:[
+"Ít-ra-en cam kết sẽ không bao giờ bỏ Chúa và sẽ nguyện làm dân của Ngài suốt đời.",
+"Ít-ra-en cam kết sẽ không bao giờ bỏ Chúa và sẽ nguyện làm dân của Ngài suốt đời. Sẽ thực thi mọi điều Chúa truyền dạy cho dù có phải đánh đổi cả mạng sống.",
+"Ít-ra-en cam kết tôn thờ Thiên Chúa là Chúa độc nhất và vâng giữ mọi luật Người truyền.",
+"Cả A, B và C"], correct:2, explain:"Ít-ra-en cam kết tôn thờ Thiên Chúa là Chúa độc nhất và vâng giữ luật Người."},
+
+{lesson:"Bài 7 · Thiên Chúa thiết lập Giao ước và ban Lề luật", prompt:"Câu 21: Luật Mô-sê được ghi chép ở đâu?", options:[
+"Luật Mô-sê được ghi chép trên 2 bia đá. Đó là những giới răn được gọi là Thập Điều hay Mười Điều Răn.",
+"Luật Mô-sê được ghi chép trên 2 bia đá mà chính Thiên Chúa đã ban cho dân Ngài.",
+"Luật Mô-sê được ghi chép trong Ngũ Thư, tức là 5 cuốn sách đầu của bộ Thánh Kinh, gồm: Khởi nguyên, Xuất hành, Dân số, Lê-vi và Thứ luật.",
+"Cả A, B và C"], correct:2, explain:"Luật Mô-sê được ghi chép trong Ngũ Thư gồm 5 cuốn sách đầu của Thánh Kinh."},
+
+{lesson:"Bài 7 · Thiên Chúa thiết lập Giao ước và ban Lề luật", prompt:"Câu 22: Luật Mô-sê gồm những gì?", options:[
+"Luật Mô-sê gồm những điều răn và giới luật, giúp cho con người thực thi những gì mà Thiên Chúa muốn họ phải làm.",
+"Luật Mô-sê gồm các giáo huấn, mệnh lệnh và ý định của Thiên Chúa, giúp dân biết cách tôn thờ Thiên Chúa, cư xử với tha nhân và chính mình.",
+"Luật Mô-sê gồm những điều răn và giới luật, giúp cho con người đi theo đường ngay lẽ phải, làm lành, lánh dữ và thực thi hết những gì mà Thiên Chúa muốn họ phải làm.",
+"Cả A, B và C"], correct:1, explain:"Luật Mô-sê gồm giáo huấn, mệnh lệnh và ý định Thiên Chúa về cách sống đạo và cư xử."},
+
+{lesson:"Bài 8 · Thiên Chúa chọn gọi các Ngôn sứ", prompt:"Câu 23: Ngôn sứ là ai?", options:[
+"Ngôn sứ là những người được Thiên Chúa chọn để sai đi loan truyền Lời Chúa cho dân Người.",
+"Ngôn sứ hay còn gọi là Tiên tri, là người biết trước mọi điều trong tương lai.",
+"Ngôn sứ hay còn gọi là Tiên tri, là người biết trước mọi điều trong tương lai. Họ thi hành nhiệm vụ theo những gì Thiên Chúa chỉ dạy.",
+"Cả A, B và C"], correct:0, explain:"Ngôn sứ là người được Thiên Chúa chọn để loan truyền Lời Chúa cho dân."},
+
+{lesson:"Bài 8 · Thiên Chúa chọn gọi các Ngôn sứ", prompt:"Câu 24: Các Ngôn sứ đã nói gì với dân Chúa?", options:[
+"Các Ngôn sứ đã nói những điều chính yếu này: Nhắc nhở cho dân nhớ các điều họ đã cam kết với Thiên Chúa trong giao ước và loan báo ơn cứu độ Thiên Chúa sẽ thực hiện qua Đấng Cứu Thế.",
+"Các Ngôn sứ đã nói những điều chính yếu này: đó là khích lệ dân sống theo đường ngay nẻo chính. Đừng lo lắng sợ hãi, nhưng cứ đường lối Chúa mà đi.",
+"Các Ngôn sứ đã nói những điều chính yếu này: đó là nói trước cho họ biết về tương lai của họ, đồng thời, khích lệ dân sống theo đường ngay nẻo chính. Đừng lo lắng sợ hãi, nhưng cứ đường lối Chúa mà đi.",
+"Cả A, B và C"], correct:0, explain:"Ngôn sứ nhắc dân về giao ước và loan báo ơn cứu độ qua Đấng Cứu Thế."},
+
+{lesson:"Bài 9 · Chúa Giê-su sinh ra", prompt:"Câu 25: Thiên Chúa sai sứ thần Gáp-ri-en đến loan tin gì cho Đức Maria?", options:[
+"Thiên Chúa sai sứ thần Gáp-ri-en đến loan tin cho Đức Maria rằng: \"Bà sẽ được gọi là Con Đấng Tối Cao\".",
+"Thiên Chúa sai sứ thần Gáp-ri-en đến làng Na-da-rét loan báo cho Đức Maria: «Này Bà sẽ thụ thai, sinh hạ một Con trai và đặt tên là Giê-su».",
+"Thiên Chúa sai sứ thần Gáp-ri-en đến loan tin cho Đức Maria rằng: «Này Bà sẽ thụ thai, sinh hạ một Con trai và đặt tên là Giê-su. Và Bà sẽ được gọi là Con Đấng Tối Cao».",
+"Cả A, B và C"], correct:1, explain:"Sứ thần Gáp-ri-en đến làng Na-da-rét loan báo Đức Maria sẽ sinh Con trai đặt tên Giê-su."},
+
+{lesson:"Bài 9 · Chúa Giê-su sinh ra", prompt:"Câu 26: Lễ Giáng sinh là lễ nào?", options:[
+"Lễ Giáng Sinh hay còn được gọi là lễ No-en, là ngày sinh nhật của Chúa Giê-su — Đấng được gọi là Em-ma-nu-en nghĩa là Thiên Chúa ở cùng chúng ta.",
+"Lễ Giáng sinh là lễ người Ki-tô hữu mừng kỷ niệm Chúa Giê-su sinh ra ở Bê-lem trong nước Do-thái.",
+"Lễ Giáng Sinh hay còn được gọi là lễ No-en, là ngày sinh nhật của Chúa Giê-su. Đây là ngày lễ trọng nhất của người Công Giáo.",
+"Cả A, B và C"], correct:1, explain:"Lễ Giáng sinh là lễ mừng kỷ niệm Chúa Giê-su sinh ra ở Bê-lem, nước Do-thái."},
+
+{lesson:"Bài 9 · Chúa Giê-su sinh ra", prompt:"Câu 27: Ta phải có tâm tình nào khi mừng lễ Giáng sinh?", options:[
+"Ta phải hân hoan vui mừng, vì đây là cơ hội để tổ chức lễ hội, là dịp quảng bá cho mọi người biết về ý nghĩa của ngày lễ.",
+"Ta phải hân hoan vui mừng, vì đây là cơ hội để tổ chức lễ hội, là dịp quảng bá cho mọi người ở khắp mọi nơi về ngày lễ. Đây còn là dịp để vui chơi, mua sắm và tặng quà nữa.",
+"Ta phải cảm mến sâu xa tình Chúa yêu ta và biết yêu thương mọi người.",
+"Cả A, B và C"], correct:2, explain:"Tâm tình đúng đắn khi mừng Giáng sinh là cảm mến tình yêu Chúa và biết yêu thương mọi người."}
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+const letters = ['A','B','C','D'];
+
+function render() {
+  const q = questions[current];
+  document.getElementById('qCounter').textContent = `Câu ${current+1} / ${questions.length}`;
+  document.getElementById('lessonTag').textContent = q.lesson;
+  document.getElementById('prompt').textContent = q.prompt;
+  document.getElementById('progressFill').style.width = `${(current/questions.length)*100}%`;
+
+  const optsDiv = document.getElementById('options');
+  optsDiv.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="letter">${letters[i]}.</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    optsDiv.appendChild(btn);
+  });
+
+  document.getElementById('feedbackBox').innerHTML = '';
+  document.getElementById('nextBtn').style.display = 'none';
+  answered = false;
+}
+
+function selectAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.disabled = true);
+
+  const isCorrect = i === q.correct;
+  if (isCorrect) score++;
+
+  opts[q.correct].classList.add('correct');
+  if (!isCorrect) opts[i].classList.add('wrong');
+
+  const fb = document.getElementById('feedbackBox');
+  fb.innerHTML = `<div class="feedback ${isCorrect ? 'correct' : 'wrong'}">
+    <span class="verdict">${isCorrect ? 'Chính xác!' : 'Chưa đúng.'}</span>
+    ${q.explain}
+  </div>`;
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.style.display = 'block';
+  nextBtn.textContent = current === questions.length - 1 ? 'Xem kết quả →' : 'Câu tiếp theo →';
+}
+
+document.getElementById('nextBtn').onclick = () => {
+  current++;
+  if (current >= questions.length) {
+    showResult();
+  } else {
+    render();
+  }
+};
+
+function showResult() {
+  document.getElementById('quizCard').style.display = 'none';
+  document.getElementById('progressFill').style.width = '100%';
+  const resultScreen = document.getElementById('resultScreen');
+  resultScreen.style.display = 'block';
+  document.getElementById('finalScore').textContent = `${score} / ${questions.length}`;
+}
+
+document.getElementById('restartBtn').onclick = () => {
+  current = 0;
+  score = 0;
+  document.getElementById('resultScreen').style.display = 'none';
+  document.getElementById('quizCard').style.display = 'block';
+  render();
+};
+
+render();
+</script>
+</body>
+</html>
