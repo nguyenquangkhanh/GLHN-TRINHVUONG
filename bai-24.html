@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc nghiệm - Bài 16: Hôn Nhân Trọn Vẹn & Hòa Hợp Vợ Chồng</title>
+<style>
+  :root{
+    --bg:#eef1f6;
+    --card:#ffffff;
+    --accent:#1b2a4a;
+    --accent2:#2f4a7a;
+    --ok:#2e7d5b;
+    --bad:#b3372c;
+    --text:#1c2333;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Segoe UI', serif;
+    background:linear-gradient(180deg,#eef1f6,#dbe2ee);
+    color:var(--text);
+    padding:24px 12px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto;}
+  header{
+    text-align:center;
+    margin-bottom:24px;
+  }
+  .logo{
+    width:52px;
+    height:52px;
+    margin-bottom:8px;
+  }
+  header h1{
+    font-size:1.5rem;
+    color:var(--accent);
+    margin:0 0 4px;
+  }
+  header p{
+    margin:0;
+    color:#4a5a7a;
+    font-size:0.95rem;
+  }
+  #progress-wrap{
+    background:#d3dced;
+    border-radius:20px;
+    height:10px;
+    overflow:hidden;
+    margin:16px 0 24px;
+  }
+  #progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--accent2),var(--accent));
+    transition:width .3s ease;
+  }
+  .question-card{
+    background:var(--card);
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    margin-bottom:18px;
+    border-left:5px solid var(--accent2);
+  }
+  .q-number{
+    font-size:0.8rem;
+    color:var(--accent2);
+    font-weight:bold;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .q-text{
+    font-size:15pt;
+    margin-bottom:14px;
+    line-height:1.5;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:10px 14px;
+    border:1.5px solid #e0d5c0;
+    border-radius:9px;
+    cursor:pointer;
+    transition:background .15s, border-color .15s;
+    font-size:15pt;
+    line-height:1.4;
+  }
+  .option:hover{background:#eef2fa;}
+  .option.selected{
+    border-color:var(--accent);
+    background:#dde6f5;
+  }
+  .option.correct{
+    border-color:var(--ok);
+    background:#e4f3e6;
+  }
+  .option.incorrect{
+    border-color:var(--bad);
+    background:#f8e3e0;
+  }
+  .option input{margin-top:3px;}
+  .letter{
+    font-weight:bold;
+    color:var(--accent2);
+    min-width:18px;
+  }
+  #nav-btn, #retry-btn{
+    display:block;
+    width:100%;
+    padding:14px;
+    font-size:15pt;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    background:var(--accent);
+    color:#fff;
+    cursor:pointer;
+    margin-top:10px;
+    transition:background .2s;
+  }
+  #nav-btn:hover, #retry-btn:hover{background:#5f2e24;}
+  #result{
+    text-align:center;
+    background:var(--card);
+    border-radius:14px;
+    padding:28px 20px;
+    box-shadow:0 3px 12px rgba(0,0,0,0.08);
+    display:none;
+  }
+  #result h2{color:var(--accent);margin-top:0;}
+  #score-num{
+    font-size:2.6rem;
+    font-weight:bold;
+    color:var(--accent);
+  }
+  .feedback{
+    margin-top:10px;
+    padding:8px 12px;
+    border-radius:8px;
+    font-weight:bold;
+    font-size:17pt;
+  }
+  .feedback-correct{
+    color:var(--ok);
+    background:#e4f3e6;
+  }
+  .feedback-incorrect{
+    color:var(--bad);
+    background:#f8e3e0;
+  }
+  .unanswered-note{
+    color:var(--bad);
+    font-size:0.9rem;
+    text-align:center;
+    margin:4px 0 14px;
+    display:none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#1b2a4a" stroke-width="3"/>
+      <path d="M50 18 L50 82 M30 38 L70 38" stroke="#1b2a4a" stroke-width="7" stroke-linecap="round"/>
+    </svg>
+    <h1>Bài 24: Cử Hành Bí Tích Hôn Phối</h1>
+    <p>Trắc nghiệm 20 câu — hãy chọn đáp án đúng nhất</p>
+  </header>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+  <p id="progress-text" style="text-align:center;color:#4a5a7a;font-size:0.9rem;margin:-16px 0 20px;"></p>
+
+  <div id="quiz-container"></div>
+
+  <div id="result">
+    <h2>Kết quả</h2>
+    <div id="score-num"></div>
+    <p id="score-text"></p>
+    <button id="retry-btn">Làm lại</button>
+  </div>
+</div>
+
+<script>
+const questions = [
+{q:"Khi cử hành Bí tích Hôn phối, điều quan trọng trước hết mà đôi bạn cần ý thức là gì?", options:["Hôn phối là một trang hoàng cần thiết cho đời sống gia đình và xã hội.","Hôn phối là một Bí tích Đức Tin, chứ không chỉ là một nghi lễ bên ngoài.","Hôn phối là một thủ tục pháp lý nhằm hoàn tất đời sống gia đình.","Hôn phối là một truyền thống gia đình được duy trì qua nhiều thế hệ."], answer:1},
+{q:"Căn tính của Bí tích Hôn phối được diễn tả qua mối liên kết sâu xa nào?", options:["Giữa hai gia đình và những truyền thống văn hóa của hai bên.","Giữa đôi bạn và những trách nhiệm xã hội trong đời sống hôn nhân.","Giữa Thiên Chúa và dân Người, giữa Đức Kitô và Hội Thánh.","Giữa cha mẹ hai bên và đôi bạn trong ngày cưới."], answer:2},
+{q:"Sự hiệp nhất trong Bí tích Hôn phối đưa đôi bạn đến điều gì?", options:["Chỉ cần kết hợp thành một thân xác trong đời sống vợ chồng.","Một sự hiệp nhất sâu xa về ngôi vị, vượt qua sự kết hợp thành một thân xác.","Một sự hiệp nhất chủ yếu dựa trên tình cảm và sự hòa hợp của hai gia đình.","Một sự hiệp nhất được bảo đảm nhờ các nghi thức và thủ tục của đám cưới."], answer:1},
+{q:"Tại sao Cha Sở nơi cử hành Bí tích phải lập hồ sơ hôn phối và điều tra, rao báo?", options:["Để biết chắc và chứng tỏ đôi bạn đang ở trong tình trạng thong dong khi kết hôn.","Để xác định đôi bạn có cùng hoàn cảnh kinh tế và xã hội trước khi kết hôn.","Để bảo đảm hai gia đình đã đồng ý và thống nhất mọi nghi thức của lễ cưới.","Để xác định đôi bạn có thể tổ chức lễ cưới theo đúng truyền thống của người Việt."], answer:0},
+{q:"Hồ sơ hôn phối cần được chuẩn bị trước ít nhất bao lâu?", options:["Ít nhất một tuần trước ngày cử hành hôn phối.","Ít nhất hai tuần trước ngày cử hành hôn phối.","Ít nhất một tháng trước ngày cử hành hôn phối.","Ít nhất ba tháng trước ngày cử hành hôn phối."], answer:2},
+{q:"Theo thể thức của Hội Thánh, vị chứng hôn có thẩm quyền có thể là ai?", options:["Chỉ có linh mục quản nhiệm giáo xứ nơi đôi bạn cư trú.","Đấng Bản quyền địa phương, cha sở hoặc người được ủy quyền hợp pháp.","Bất cứ người Công giáo trưởng thành nào được hai gia đình tín nhiệm.","Chỉ có vị linh mục đã trực tiếp chuẩn bị hồ sơ hôn phối cho đôi bạn."], answer:1},
+{q:"Việc cử hành hôn phối thông thường phải diễn ra trước mặt những ai?", options:["Trước vị chứng hôn có thẩm quyền và trước mặt hai nhân chứng.","Trước cha mẹ hai bên và trước mặt hai người thân trong gia đình.","Trước cộng đoàn giáo xứ và tất cả những người tham dự lễ cưới.","Trước vị chứng hôn và đại diện của hai gia đình đôi bạn."], answer:0},
+{q:"Nếu đôi bạn muốn cử hành hôn phối tại một nơi khác với nơi được quy định, điều kiện nào được nêu trong bài học?", options:["Chỉ cần có sự đồng ý của cha mẹ và hai gia đình là có thể cử hành.","Chỉ cần báo trước cho giáo xứ nơi tổ chức lễ cưới là được phép cử hành.","Phải có phép của Đấng Bản quyền sở tại hoặc cha xứ theo quy định.","Phải được tất cả các nhân chứng và cộng đoàn nơi cử hành đồng ý."], answer:2},
+{q:"Hội Thánh quy định hình thức cử hành hôn phối thông thường nhằm mục đích chính nào?", options:["Để lễ cưới được tổ chức trang trọng và có nhiều người tham dự hơn.","Để chắc chắn hơn về thành sự tính và sự xác thực của hôn nhân, loại trừ hoài nghi.","Để bảo đảm đôi bạn thực hiện đầy đủ các truyền thống cưới hỏi của người Việt.","Để giúp hai gia đình có thể công khai những cam kết trước toàn thể cộng đoàn."], answer:1},
+{q:"Hình thức cử hành hôn phối đặc biệt được áp dụng trong hoàn cảnh nào?", options:["Khi đôi bạn muốn tổ chức lễ cưới đơn giản và không muốn có nhiều người tham dự.","Khi gia đình đôi bạn không thống nhất được về nơi tổ chức lễ cưới.","Khi những nơi thiếu linh mục hay phó tế, giáo dân có thể được ủy quyền để chứng hôn.","Khi đôi bạn muốn cử hành hôn phối ngoài nhà thờ và không muốn làm hồ sơ."], answer:2},
+{q:"Để giáo dân có thể thay thế linh mục hoặc phó tế trong việc chứng hôn, cần điều kiện nào?", options:["Chỉ cần giáo dân đó có đời sống đạo tốt và được cộng đoàn tín nhiệm.","Phải được Đức Giám mục địa phận, sau khi có ý kiến thuận của Hội đồng Giám mục và phép của Tòa Thánh, ủy quyền.","Chỉ cần được cha sở nơi đôi bạn cư trú giới thiệu và cha sở nơi cử hành chấp thuận.","Chỉ cần được đôi bạn và hai gia đình lựa chọn làm người chứng hôn."], answer:1},
+{q:"Hình thức cử hành hôn phối ngoại thường có thể được áp dụng khi nào?", options:["Khi đôi bạn không muốn có linh mục hoặc phó tế hiện diện trong lễ cưới.","Khi không có chứng hôn có thẩm quyền cách dễ dàng và gặp bất tiện nặng.","Khi đôi bạn muốn giữ bí mật hoàn toàn về việc kết hôn với cộng đoàn.","Khi gia đình hai bên không thể tham dự lễ cưới vì lý do công việc."], answer:1},
+{q:"Hình thức ngoại thường được phép cử hành trước hai nhân chứng trong những trường hợp nào?", options:["Khi đôi bạn nghèo hoặc không có điều kiện tổ chức lễ cưới tại nhà thờ.","Khi gặp nguy tử hoặc ngoài nguy tử nhưng tình trạng thiếu người chứng hôn sẽ kéo dài hàng tháng.","Khi đôi bạn muốn tổ chức lễ cưới nhanh chóng và không muốn làm hồ sơ.","Khi một trong hai người không thuộc giáo xứ nơi dự định cử hành hôn phối."], answer:1},
+{q:"Trong Thánh lễ Hôn phối, ba bước chính của nghi lễ hôn phối là gì?", options:["Thẩm vấn về tự do, trao đổi lời thề hứa, làm phép và trao nhẫn cưới.","Rao hôn phối, đọc bài Tin Mừng, ký sổ và chúc lành cho đôi bạn.","Đón chào đôi bạn, đọc các bài đọc, trao nhẫn và tiễn đôi bạn ra về.","Thẩm vấn đôi bạn, đọc kinh cầu nguyện, ký sổ và chúc lành cho gia đình."], answer:0},
+{q:"Trong phần thẩm vấn hôn phối, Hội Thánh hỏi đôi bạn về điều gì liên quan đến sự tự do?", options:["Các con có được cha mẹ hai bên hoàn toàn đồng ý cho kết hôn không?","Các con có bị ép buộc không, và có hoàn toàn tự ý, tự do hay không?","Các con có đủ khả năng tổ chức một lễ cưới trang trọng và đầy đủ không?","Các con có được cộng đoàn giáo xứ chấp nhận và đồng ý cho kết hôn không?"], answer:1},
+{q:"Trong phần thẩm vấn hôn phối, Hội Thánh hỏi đôi bạn có sẵn sàng làm gì khi chọn đời sống hôn nhân?", options:["Sẵn sàng yêu thương và tôn trọng nhau suốt đời.","Sẵn sàng tổ chức đời sống gia đình theo truyền thống của hai bên.","Sẵn sàng giữ mọi phong tục và nghi lễ cưới hỏi của người Việt.","Sẵn sàng bảo đảm đời sống vật chất ổn định cho gia đình trong tương lai."], answer:0},
+{q:"Sự ưng thuận kết hôn là một hành vi nhân linh, nghĩa là gì?", options:["Là hành vi của con người có ý thức và tự do.","Là hành vi được quyết định bởi gia đình và những người thân.","Là hành vi được quyết định chủ yếu bởi luật pháp và xã hội.","Là hành vi chỉ cần có sự đồng ý của người chứng hôn là đủ."], answer:0},
+{q:"Trường hợp nào sau đây là một yếu tố có thể ảnh hưởng đến sự ưng thuận?", options:["Đôi bạn có hoàn cảnh kinh tế khác nhau trước khi kết hôn.","Một người giả vờ ưng thuận nhưng thực sự không muốn kết hôn.","Hai gia đình không có cùng truyền thống văn hóa và phong tục cưới hỏi.","Đôi bạn tổ chức lễ cưới với số lượng khách tham dự khác nhau."], answer:1},
+{q:"Theo nghi thức trao nhẫn trong Thánh lễ Hôn phối, chiếc nhẫn được trao cho người phối ngẫu làm dấu chỉ của điều gì?", options:["Dấu chỉ của địa vị và trách nhiệm mới trong đời sống gia đình.","Dấu chỉ của tình yêu và lòng chung thủy của người trao nhẫn.","Dấu chỉ của sự đồng ý giữa hai gia đình trong ngày cưới.","Dấu chỉ của sự trưởng thành và trách nhiệm xã hội của đôi bạn."], answer:1},
+{q:"Theo lời cầu nguyện cho đôi tân hôn trong Thánh Lễ, Hội Thánh xin Chúa ban cho đôi vợ chồng điều gì?", options:["Được giàu có, thành công và có một cuộc sống gia đình không gặp khó khăn.","Được kiên trì giữ vững đức tin, yêu mến luật Chúa và trọn tình chung thủy với nhau.","Được mọi người trong cộng đoàn yêu quý và luôn có một đời sống thuận lợi.","Được tổ chức đời sống gia đình theo những truyền thống tốt đẹp của xã hội."], answer:1},
+];
+
+const letters = ["A","B","C","D"];
+const container = document.getElementById('quiz-container');
+const answers = new Array(questions.length).fill(null);
+let current = 0;
+
+function renderQuestion(qi){
+  container.innerHTML = '';
+  const item = questions[qi];
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.innerHTML = `<div class="q-number">Câu ${qi+1} / ${questions.length}</div>
+    <div class="q-text">${item.q}</div>
+    <div class="options" id="opts-${qi}"></div>
+    <div class="feedback" id="feedback-${qi}" style="display:none;"></div>`;
+  container.appendChild(card);
+  const optsDiv = card.querySelector(`#opts-${qi}`);
+  item.options.forEach((opt, oi) => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${qi}-${oi}`;
+    label.innerHTML = `<span class="letter">${letters[oi]}.</span><span>${opt}</span>`;
+    label.addEventListener('click', () => selectOption(qi, oi));
+    optsDiv.appendChild(label);
+  });
+
+  const navBtn = document.createElement('button');
+  navBtn.id = 'nav-btn';
+  navBtn.textContent = qi === questions.length - 1 ? 'Nộp bài' : 'Câu tiếp theo →';
+  navBtn.style.display = 'none';
+  navBtn.addEventListener('click', () => {
+    if(qi === questions.length - 1){
+      showResult();
+    } else {
+      current = qi + 1;
+      renderQuestion(current);
+    }
+  });
+  container.appendChild(navBtn);
+
+  updateProgress();
+}
+
+function selectOption(qi, oi){
+  if(answers[qi] !== null) return; // đã chọn và khóa câu này rồi
+  answers[qi] = oi;
+  const item = questions[qi];
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(i === item.answer){
+      el.classList.add('correct');
+    } else if(i === oi){
+      el.classList.add('incorrect');
+    }
+  }
+  const feedback = document.getElementById(`feedback-${qi}`);
+  if(oi === item.answer){
+    feedback.textContent = '✔ Chính xác!';
+    feedback.className = 'feedback feedback-correct';
+  } else {
+    feedback.textContent = '✘ Chưa đúng. Đáp án đúng là ' + letters[item.answer] + '.';
+    feedback.className = 'feedback feedback-incorrect';
+  }
+  feedback.style.display = 'block';
+  document.getElementById('nav-btn').style.display = 'block';
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = answers.filter(a => a !== null).length;
+  const pct = Math.round((answered/questions.length)*100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = `Đã trả lời ${answered}/${questions.length} câu`;
+}
+
+function showResult(){
+  container.innerHTML = '';
+  let score = 0;
+  questions.forEach((item, qi) => { if(answers[qi] === item.answer) score++; });
+  document.getElementById('result').style.display = 'block';
+  document.getElementById('score-num').textContent = score + ' / ' + questions.length;
+  const pct = Math.round((score/questions.length)*100);
+  let msg = '';
+  if(pct === 100) msg = 'Xuất sắc! Bạn đã nắm vững toàn bộ bài học. 🎉';
+  else if(pct >= 80) msg = 'Rất tốt! Bạn hiểu bài khá vững.';
+  else if(pct >= 60) msg = 'Khá ổn, nhưng nên xem lại một số điểm.';
+  else msg = 'Hãy ôn lại bài học và thử lại nhé.';
+  document.getElementById('score-text').textContent = msg + ' (' + pct + '%)';
+  document.getElementById('result').scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  current = 0;
+  document.getElementById('result').style.display = 'none';
+  renderQuestion(current);
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+renderQuestion(current);
+
+</script>
+</body>
+</html>
