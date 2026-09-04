@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thi Online - Giáo Lý Hôn Nhân</title>
+<style>
+  :root{
+    --bg:#f6f3ee; --card:#ffffff; --ink:#2b2620; --muted:#7a7266;
+    --accent:#8a3b2f; --accent-light:#f1e2dc; --good:#3f7a4d; --bad:#b23b32;
+    --border:#e5ddd2;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Georgia","Times New Roman",serif;line-height:1.55;}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 16px 80px;}
+  h1{font-size:1.5rem;margin:0 0 4px;color:var(--accent);}
+  .sub{color:var(--muted);margin-bottom:24px;font-size:.95rem;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  label{display:block;font-weight:bold;margin-bottom:6px;font-size:.95rem;}
+  input[type=text],input[type=date],textarea{
+    width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;
+    font-family:inherit;font-size:1rem;background:#fdfcfa;color:var(--ink);
+  }
+  textarea{resize:vertical;min-height:70px;}
+  .field{margin-bottom:16px;}
+  button{
+    background:var(--accent);color:#fff;border:none;border-radius:8px;
+    padding:12px 22px;font-size:1rem;font-weight:bold;cursor:pointer;font-family:inherit;
+  }
+  button:disabled{opacity:.5;cursor:not-allowed;}
+  button.secondary{background:transparent;color:var(--accent);border:1px solid var(--accent);}
+  .timer{
+    position:sticky;top:0;z-index:10;background:var(--accent);color:#fff;
+    text-align:center;padding:10px;font-size:1.2rem;font-weight:bold;letter-spacing:1px;
+    border-radius:0 0 10px 10px;margin-bottom:20px;
+  }
+  .timer.warn{background:var(--bad);}
+  .q-num{color:var(--accent);font-weight:bold;margin-bottom:6px;font-size:.85rem;text-transform:uppercase;letter-spacing:.5px;}
+  .q-text{font-weight:bold;margin-bottom:12px;font-size:1.05rem;}
+  .opt{display:block;padding:9px 12px;border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;background:#fdfcfa;}
+  .opt:hover{background:var(--accent-light);}
+  .opt input{margin-right:8px;}
+  .opt.selected{background:var(--accent-light);border-color:var(--accent);}
+  .section-title{font-size:1.15rem;color:var(--accent);border-bottom:2px solid var(--accent-light);padding-bottom:6px;margin:28px 0 16px;}
+  .progress{color:var(--muted);font-size:.85rem;margin-bottom:6px;}
+  .error{color:var(--bad);font-size:.9rem;margin-top:6px;}
+  .hidden{display:none !important;}
+  .result-box{text-align:center;}
+  .result-score{font-size:3rem;color:var(--accent);font-weight:bold;margin:10px 0;}
+  .result-detail{color:var(--muted);font-size:.95rem;}
+  .footer-note{font-size:.8rem;color:var(--muted);text-align:center;margin-top:30px;}
+  .grade-tag{display:inline-block;font-size:.75rem;padding:2px 8px;border-radius:10px;margin-left:8px;}
+  .grade-correct{background:#e4f2e6;color:var(--good);}
+  .grade-wrong{background:#f6e3e1;color:var(--bad);}
+  .grade-manual{background:#f1e9d8;color:#8a6d1f;}
+  .nav-btns{display:flex;justify-content:space-between;margin-top:24px;}
+  .admin-link{position:fixed;bottom:14px;right:14px;font-size:.8rem;color:#fff;background:var(--accent);
+    padding:8px 14px;border-radius:20px;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:50;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ================= DỮ LIỆU ĐỀ THI ================= */
+const MC_QUESTIONS = [
+["Hôn nhân là gì ?",["Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.","Hôn nhân là một giao ước giữa hai người, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.","Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng.","Cả A, B và C"],0],
+["Hôn nhân Công giáo là gì ?",["Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo.","Hôn nhân Công giáo là Hôn nhân được Chúa Giê-su nâng lên hàng Bí tích.","Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo, hoặc giữa một người theo Đạo Công Giáo và một người không theo.","Cả A, B và C"],1],
+["Tình yêu giữa Chúa Ki-tô và Hội Thánh có những đặc điểm nào ?",["Là sự kết hợp phong phú giữa Chúa Ki-tô và Hội Thánh.","Là sự hiến thân trọn vẹn của Chúa Ki-tô cho Hội Thánh.","Là sự trung tín tuyệt đối của Chúa Ki-tô đối với Hội Thánh.","Cả A, B và C"],3],
+["Hôn nhân Công giáo có mấy đặc tính chính yếu?",["Đơn hôn và Tôn trọng nhau suốt đời.","Đơn hôn và Yêu thương cùng tôn trọng nhau suốt đời.","Đơn hôn (một vợ một chồng) và Bất khả phân ly (không được ly hôn).","Cả A, B và C"],2],
+["Mục đích của Hôn nhân Công giáo là gì ?",["Vợ chồng trọn đời yêu thương nhau, sinh sản và giáo dục con cái và cùng giúp nhau nên thánh.","Vợ chồng trọn đời yêu thương nhau và cùng giúp nhau nên thánh.","Vợ chồng trọn đời yêu thương nhau và giúp con cái cùng nên thánh.","Cả A, B và C"],0],
+["Làm thế nào để đôi bạn sống trọn đời yêu thương nhau ?",["Sống đạo tốt, tôn trọng phẩm giá và quyền lợi chính đáng của bạn đời.","Lưu ý nhu cầu, sở thích của bạn đời; luôn làm mới bản thân về tâm hồn và thể xác.","Lưu ý những khác biệt tâm sinh lý trong đời sống vợ chồng.","Cả A và C"],3],
+["Việc sinh sản con cái có những ý nghĩa nào ?",["Cộng tác với Thiên Chúa trong việc tạo dựng; con cái là hoa quả tốt đẹp của tình yêu vợ chồng.","Cộng tác với Thiên Chúa trong việc tạo dựng; con cái là hoa quả tình yêu vợ chồng; góp phần phát triển cộng đoàn nhân loại và Hội Thánh.","Cộng tác với Thiên Chúa trong việc tạo dựng; nuôi dạy, chăm sóc con cái xứng với quà tặng Thiên Chúa ban.","Cả A, B và C"],1],
+["Bí tích Hôn nhân giúp đôi bạn nên thánh cách nào ?",["Nên thánh trong niềm vui đón nhận nhau, sinh sản và giáo dục con cái.","Nên thánh trong niềm vui đón nhận nhau, hy sinh cho nhau và cùng đi đến cuối con đường.","Nên thánh nhờ sự hy sinh, hiến thân cho nhau, cùng đi đến cuối con đường.","Cả A, B và C"],0],
+["Muốn giáo dục thành công, cha mẹ phải thế nào ?",["Thăng tiến và thánh hóa bản thân.","Nhất trí với nhau trong đường hướng và cách thức giáo dục.","Tạo bầu khí gia đình hòa thuận, thánh thiện và tín nhiệm nhau.","Cả A, B và C"],3],
+["Luân lý tính dục trong đời sống Hôn nhân là gì ?",["Là lời dạy dỗ, giáo huấn của Giáo Hội giúp vợ chồng sống xứng với ơn gọi trong giao ước hôn nhân.","Là tính cách hợp pháp do chính Thiên Chúa thiết lập cho đời sống vợ chồng.","Là những điều răn, giới luật giúp vợ chồng sống đúng giáo huấn của Giáo Hội.","Cả A, B và C"],1],
+["Để có quyết định đúng đắn về việc điều hòa sinh sản, đôi bạn phải có những yếu tố nào ?",["Lương tâm ngay thẳng và tinh thần trách nhiệm cao.","Lương tâm ngay thẳng, chân chính; tinh thần trách nhiệm cao; tuân giữ giáo huấn Hội Thánh về điều hòa sinh sản.","Tinh thần trách nhiệm cao; tuân giữ giáo huấn Hội Thánh về điều hòa sinh sản.","Cả A, B và C"],1],
+["Các Bí tích giúp gì cho đời sống đôi bạn ?",["Thánh hóa loài người; riêng đôi bạn, Bí tích Giải tội và Thánh Thể thánh hóa tình yêu vợ chồng, giúp chu toàn trách nhiệm.","Thánh hóa loài người, xây dựng nhiệm thể Chúa Ki-tô, thờ phượng Thiên Chúa; riêng đôi bạn, Giải tội và Thánh Thể thánh hóa tình yêu, ban ơn sủng, giúp chu toàn trách nhiệm.","Thánh hóa loài người; riêng đôi bạn, các Bí tích thánh hóa tình yêu vợ chồng, ban ơn sủng, giúp chu toàn trách nhiệm.","Cả A, B và C"],1],
+["Hôn nhân liên hệ với Bí tích Rửa tội thế nào?",["Rửa tội là cửa ngõ vào Nước Trời, cha mẹ phải lo con cái được rửa tội theo quy định Hội Thánh.","Chỉ những ai đã rửa tội mới cử hành được Bí tích Hôn nhân; Rửa tội là cửa ngõ vào Nước Trời.","Chỉ người đã rửa tội mới cử hành được Hôn nhân; Rửa tội là cửa ngõ Nước Trời; cha mẹ có trách nhiệm lo con cái rửa tội.","Cả A, B và C"],2],
+["Cha mẹ phải lo liệu việc Rửa tội cho con cái thế nào?",["Lúc bình thường: sau khi sinh khoảng 1 tháng, đem con đến nhà thờ để linh mục rửa tội.","Khi nguy tử: cha mẹ hoặc người khác rửa tội cho con.","Trường hợp sẩy thai bất cứ giai đoạn nào cũng phải rửa tội.","Cả A, B và C"],3],
+["Đọc Lời Chúa trong gia đình thì được những ích lợi gì ?",["Mọi người được hướng dẫn bởi cùng một giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.","Cùng được nghe, cùng hướng dẫn bởi một giáo huấn; Lời Chúa hướng dẫn từng thành viên biến đổi bản thân, dễ giúp nhau thực hành.","Được thánh hóa, nuôi dưỡng, hướng dẫn bởi cùng giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.","Cả A, B và C"],2],
+["Kinh nguyện trong gia đình có cần thiết không ?",["Rất cần thiết: giờ kinh gia đình giúp các thành viên ngồi lại bên nhau, nhờ Lời Chúa sống tốt ơn gọi Ki-tô hữu và dạy con cầu nguyện.","Rất cần thiết: Kinh nguyện chung giúp gia đình sống tốt đẹp ơn gọi Ki-tô hữu và dạy con cái biết cầu nguyện.","Rất cần thiết: giờ kinh giúp các thành viên ngồi lại bên nhau, sống tốt ơn gọi của mỗi người.","Cả A, B và C"],1],
+["Hội Thánh liên hệ thế nào với gia đình ?",["Hội Thánh sinh ra, dưỡng dục và xây dựng gia đình Công Giáo.","Hội Thánh sinh ra gia đình; gia đình là con cái, một thành phần của Hội Thánh, có quan hệ hỗ tương với nhau.","Gia đình là thành phần của Hội Thánh, có quan hệ hỗ tương, cả hai phụ thuộc lẫn nhau.","Cả A, B và C"],0],
+["Gia đình liên hệ thế nào với Hội Thánh ?",["Gia đình là thành phần của Hội Thánh, dự phần vào sứ mệnh cứu rỗi theo cách riêng của mình.","Gia đình là thành phần của Hội Thánh, có quan hệ hỗ tương, cả hai phụ thuộc lẫn nhau.","Gia đình dự phần vào sứ mệnh cứu rỗi của Hội Thánh theo cách thức riêng của mình.","Cả A, B và C"],2],
+["Gia đình có nghĩa vụ gì đối với Hội Thánh ?",["Hiệp thông với Hội Thánh, tuân giữ các giáo huấn của Hội Thánh.","Hiệp thông với Hội Thánh; tuân giữ giáo huấn; thi hành 3 chức năng Tư tế, Ngôn sứ, Vương giả theo cách riêng.","Hiệp thông, tuân giữ và thi hành 3 chức năng Tư tế, Ngôn sứ, Vương giả theo cách riêng.","Cả A, B và C"],1],
+["Gia đình và xã hội có liên hệ gì với nhau ?",["Gia đình là khung cảnh đầu tiên thể hiện tính xã hội và tập dấn thân hoạt động xã hội của con người.","Gia đình và xã hội là hai thực thể riêng biệt, độc lập với nhau.","Gia đình là nền tảng của xã hội.","Cả A và C"],3],
+["Sinh sản có trách nhiệm nghĩa là gì?",["Chỉ cần sinh con theo mong muốn.","Khi sinh con, cha mẹ phải lo nuôi dưỡng và giáo dục con nên người.","Sinh càng nhiều con càng tốt.","Không cần quan tâm đến việc giáo dục con."],1],
+["Vì sao vợ chồng cần sinh sản có trách nhiệm?",["Để có nhiều con hơn.","Để tránh mọi khó khăn trong gia đình.","Để thi hành đúng ý định của Thiên Chúa và đáp ứng tình yêu vợ chồng.","Để gia đình được giàu có."],2],
+["Một trong những thái độ cần có của vợ chồng Kitô hữu khi sinh sản có trách nhiệm là gì?",["Làm chủ bản năng tính dục.","Luôn sinh thật nhiều con.","Chỉ quyết định một mình.","Không cần quan tâm hoàn cảnh gia đình."],0],
+["Khi quyết định sinh con hay tạm ngừng, vợ chồng cần làm gì?",["Người chồng tự quyết định.","Người vợ tự quyết định.","Cùng nhau xem xét hoàn cảnh cụ thể và quyết định.","Nhờ người khác quyết định thay."],2],
+["Cách thức ngừa thai tự nhiên là gì?",["Dùng thuốc tránh thai.","Dùng bao cao su.","Tiết dục định kỳ, kiêng cữ trong thời kỳ người vợ dễ thụ thai.","Thắt ống dẫn tinh."],2],
+["Phương pháp Ogino dựa vào yếu tố nào để xác định ngày trứng rụng?",["Chu kỳ kinh nguyệt.","Chất nhờn.","Nhiệt độ cơ thể.","Nhịp tim."],0],
+["Phương pháp Billings dựa vào hiện tượng nào?",["Chu kỳ kinh nguyệt.","Chất nhờn.","Nhiệt độ cơ thể.","Huyết áp."],1],
+["Người Công giáo được sử dụng cách thức nào để ngừa thai?",["Ngừa thai nhân tạo.","Ngừa thai bằng thuốc.","Cách thức ngừa thai tự nhiên khi có lý do chính đáng.","Bất kỳ phương pháp nào."],2],
+["Phương pháp nào sau đây là cách thức ngừa thai nhân tạo?",["Tiết dục định kỳ.","Phương pháp Ogino.","Phương pháp Billings.","Dùng bao cao su."],3],
+["Phá thai được nhìn nhận như thế nào?",["Là việc không có vấn đề về luân lý.","Là tội nhẹ.","Là tội rất nặng vì đây là tội giết người.","Chỉ là vấn đề cá nhân."],2],
+];
+
+const BLANK_QUESTIONS = [
+["Anh (chị) hãy điền vào chỗ trống hoàn tất câu Kinh Thánh sau: \"Lạy Cha, xin cho họ được hoàn toàn ...; như vậy, thế gian sẽ nhận biết là chính Cha đã sai Con và đã yêu thương họ như đã yêu thương Con.\" (Ga 17, 23)", ["nên một"]],
+["Anh (chị) hãy hoàn tất câu Kinh Thánh sau: \"Anh em là giống nòi được tuyển chọn, là hoàng tộc chuyên lo tế tự, là dân thánh, dân riêng của Thiên Chúa, để ... những công trình vĩ đại của Người...\" (1Pr 2, 9)", ["loan truyền"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Đức Chúa Thánh Thần: «Chúng con lạy ơn Đức Chúa Thánh Thần... sáng láng vô cùng»", ["thiêng liêng"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Lạy Cha: \"Xin chớ để chúng con ... cám dỗ nhưng cứu chúng con cho khỏi sự dữ\"", ["sa chước"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Tin: \"Bấy nhiêu điều ấy, cùng các điều Hội Thánh dạy, thì con ...\"", ["tin vững vàng"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Ăn năn tội: \"Lạy Chúa, Chúa là Đấng trọn tốt trọn lành vô cùng, Chúa đã dựng nên con, mà cho Con Chúa ...\"", ["ra đời"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Mười Điều răn: \"Thứ bảy: ... của người\"", ["chớ lấy"]],
+["Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Tám mối Phúc thật: «Thứ tư: Ai khao khát nhân đức trọn lành, ấy là phúc thật, vì chưng sẽ được... »", ["no đủ vậy","no đủ"]],
+];
+
+const MULTI_QUESTIONS = [
+["Mục đích chính yếu của Hôn nhân công giáo là gì?", ["yêu thương bổ túc cho nhau","sinh sản giáo dục con cái"]],
+["Đặc tính chính yếu của Hôn nhân công giáo là gì?", ["đơn hôn","một vợ một chồng","vĩnh hôn","bất khả phân ly"]],
+["Sáu chữ T trong Hôn nhân công giáo là gì?", ["tự do","trọn vẹn","trung tín","trổ sinh","thánh giá","tha thứ"]],
+];
+// lưu ý: câu 41 có 6 ý nhưng chỉ cần nêu đúng 6 chữ T (mỗi từ khóa được kiểm 1 ý), câu 40 chấp nhận 2/4 từ khóa tương ứng 2 ý
+
+const ESSAY_QUESTION = "Hãy viết một đoạn văn khoảng 200 từ nói về ý nghĩa của việc học Giáo lý hôn nhân?";
+
+const TOTAL_SECONDS = 60 * 60;
+const GAS_URL = "https://script.google.com/macros/s/AKfycbzehNSbVBGZINxst_DZwxSAvgMb6gtj0lg7LEY6I1fvA0c-2LTyGnUcLg2PqnwJpT0w/exec"; // <-- BẮT BUỘC: dán link Web App (Google Apps Script) vào đây trước khi dùng
+
+/* ================= TIỆN ÍCH ================= */
+function removeTones(s){
+  s = s.toLowerCase().trim().replace(/\s+/g," ");
+  s = s.replace(/[àáạảãâầấậẩẫăằắặẳẵ]/g,"a");
+  s = s.replace(/[èéẹẻẽêềếệểễ]/g,"e");
+  s = s.replace(/[ìíịỉĩ]/g,"i");
+  s = s.replace(/[òóọỏõôồốộổỗơờớợởỡ]/g,"o");
+  s = s.replace(/[ùúụủũưừứựửữ]/g,"u");
+  s = s.replace(/[ỳýỵỷỹ]/g,"y");
+  s = s.replace(/đ/g,"d");
+  s = s.replace(/[^a-z0-9 ]/g,"");
+  return s;
+}
+function normKey(name, dob){ return removeTones(name) + "_" + dob; }
+function fmtTime(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+/* ================= STATE ================= */
+let state = {
+  stage: "register", // register | exam | result
+  info: {hoten:"", ngaysinh:"", giaoxu:""},
+  mc: new Array(MC_QUESTIONS.length).fill(null),
+  blank: new Array(BLANK_QUESTIONS.length).fill(""),
+  multi: new Array(MULTI_QUESTIONS.length).fill(""),
+  essay: "",
+  timeLeft: TOTAL_SECONDS,
+  timerHandle: null,
+  submitting: false,
+  result: null,
+};
+
+const app = document.getElementById("app");
+
+/* ================= RENDER: REGISTER ================= */
+function renderRegister(err){
+  app.innerHTML = `
+    <h1>Kiểm Tra Ôn Tập — Giáo Lý Hôn Nhân</h1>
+    <div class="sub">Vui lòng nhập đầy đủ thông tin trước khi bắt đầu làm bài. Mỗi thí sinh chỉ được làm bài <b>một lần duy nhất</b>. Thời gian làm bài: <b>60 phút</b>.</div>
+    <div class="card">
+      <div class="field">
+        <label>Họ và tên</label>
+        <input type="text" id="in-hoten" value="${state.info.hoten}" placeholder="Nguyễn Văn A">
+      </div>
+      <div class="field">
+        <label>Ngày tháng năm sinh</label>
+        <input type="date" id="in-ngaysinh" value="${state.info.ngaysinh}">
+      </div>
+      <div class="field">
+        <label>Giáo xứ</label>
+        <input type="text" id="in-giaoxu" value="${state.info.giaoxu}" placeholder="Giáo xứ ...">
+      </div>
+      ${err ? `<div class="error">${err}</div>` : ""}
+      <button id="btn-start">Bắt đầu làm bài</button>
+    </div>
+    <div class="footer-note">Bài thi gồm 30 câu trắc nghiệm, 11 câu điền khuyết và 1 câu tự luận.</div>
+  `;
+  document.getElementById("btn-start").onclick = onStartClick;
+}
+
+async function onStartClick(){
+  const hoten = document.getElementById("in-hoten").value.trim();
+  const ngaysinh = document.getElementById("in-ngaysinh").value;
+  const giaoxu = document.getElementById("in-giaoxu").value.trim();
+  if(!hoten || !ngaysinh || !giaoxu){
+    renderRegister("Vui lòng điền đầy đủ Họ tên, Ngày sinh và Giáo xứ.");
+    return;
+  }
+  if(!GAS_URL || GAS_URL.indexOf("PASTE_") !== -1){
+    renderRegister("Hệ thống chưa được cấu hình (thiếu đường dẫn Google Apps Script). Vui lòng báo cho quản trị viên.");
+    return;
+  }
+
+  const key = normKey(hoten, ngaysinh);
+  const btn = document.getElementById("btn-start");
+  btn.disabled = true;
+  btn.textContent = "Đang kiểm tra...";
+
+  try{
+    const res = await fetch(GAS_URL + "?action=check&key=" + encodeURIComponent(key));
+    const json = await res.json();
+    if(json.exists){
+      renderRegister("Bạn (theo họ tên và ngày sinh này) đã làm bài trước đó. Mỗi thí sinh chỉ được làm bài một lần.");
+      return;
+    }
+  }catch(e){
+    console.error("Lỗi kiểm tra trùng lặp:", e);
+    renderRegister("Không kiểm tra được tình trạng làm bài (lỗi kết nối tới hệ thống). Vui lòng thử lại sau ít phút.");
+    return;
+  }
+
+  state.info = {hoten, ngaysinh, giaoxu, key};
+  state.stage = "exam";
+  startTimer();
+  renderExam();
+}
+
+/* ================= TIMER ================= */
+function startTimer(){
+  state.timerHandle = setInterval(()=>{
+    state.timeLeft--;
+    updateTimerDisplay();
+    if(state.timeLeft <= 0){
+      clearInterval(state.timerHandle);
+      submitExam(true);
+    }
+  }, 1000);
+}
+function updateTimerDisplay(){
+  const el = document.getElementById("timer-box");
+  if(!el) return;
+  el.textContent = "⏱ Thời gian còn lại: " + fmtTime(state.timeLeft);
+  el.classList.toggle("warn", state.timeLeft <= 300);
+}
+
+/* ================= RENDER: EXAM ================= */
+function renderExam(){
+  let html = `<div class="timer" id="timer-box">⏱ Thời gian còn lại: ${fmtTime(state.timeLeft)}</div>`;
+  html += `<h1>Bài Thi</h1><div class="sub">Thí sinh: <b>${state.info.hoten}</b> — Giáo xứ: <b>${state.info.giaoxu}</b></div>`;
+
+  html += `<div class="section-title">Phần I — Trắc nghiệm</div>`;
+  MC_QUESTIONS.forEach((q, i)=>{
+    html += `<div class="card"><div class="q-num">Câu ${i+1}</div><div class="q-text">${q[0]}</div>`;
+    q[1].forEach((opt, oi)=>{
+      const sel = state.mc[i] === oi ? "selected" : "";
+      html += `<label class="opt ${sel}">
+        <input type="radio" name="mc${i}" value="${oi}" ${state.mc[i]===oi?"checked":""} onchange="setMC(${i},${oi})">
+        ${String.fromCharCode(65+oi)}. ${opt}
+      </label>`;
+    });
+    html += `</div>`;
+  });
+
+  html += `<div class="section-title">Phần II — Điền khuyết: Sống Lời Chúa</div>`;
+  BLANK_QUESTIONS.forEach((q,i)=>{
+    html += `<div class="card"><div class="q-num">Câu ${31+i}</div><div class="q-text">${q[0]}</div>
+      <input type="text" placeholder="Điền câu trả lời..." value="${state.blank[i]}" oninput="setBlank(${i}, this.value)">
+    </div>`;
+  });
+
+  html += `<div class="section-title">Phần III — Điền khuyết: Sống Hôn Nhân</div>`;
+  const multiNums = [39,40,41];
+  MULTI_QUESTIONS.forEach((q,i)=>{
+    html += `<div class="card"><div class="q-num">Câu ${multiNums[i]}</div><div class="q-text">${q[0]}</div>
+      <textarea placeholder="Nêu đầy đủ các ý..." oninput="setMulti(${i}, this.value)">${state.multi[i]}</textarea>
+    </div>`;
+  });
+
+  html += `<div class="card"><div class="q-num">Câu 42 — Tự luận</div><div class="q-text">${ESSAY_QUESTION}</div>
+    <textarea style="min-height:160px" placeholder="Viết đoạn văn khoảng 200 từ..." oninput="setEssay(this.value)">${state.essay}</textarea>
+  </div>`;
+
+  html += `<div class="nav-btns"><button id="btn-submit">Nộp bài</button></div>`;
+  app.innerHTML = html;
+  document.getElementById("btn-submit").onclick = ()=>{
+    if(confirm("Bạn có chắc chắn muốn nộp bài? Sau khi nộp sẽ không thể sửa lại.")) submitExam(false);
+  };
+}
+
+window.setMC = (i, v)=>{ state.mc[i] = v; renderExam(); };
+window.setBlank = (i, v)=>{ state.blank[i] = v; };
+window.setMulti = (i, v)=>{ state.multi[i] = v; };
+window.setEssay = (v)=>{ state.essay = v; };
+
+/* ================= CHẤM ĐIỂM ================= */
+function gradeExam(){
+  let mcScore = 0;
+  const mcDetail = MC_QUESTIONS.map((q,i)=>{
+    const correct = state.mc[i] === q[2];
+    if(correct) mcScore++;
+    return {q: i+1, correct};
+  });
+
+  let blankScore = 0;
+  const blankDetail = BLANK_QUESTIONS.map((q,i)=>{
+    const ans = removeTones(state.blank[i]||"");
+    const correct = q[1].some(a=>removeTones(a)===ans);
+    if(correct) blankScore++;
+    return {q: 31+i, correct, given: state.blank[i]};
+  });
+
+  let multiScore = 0, multiMax = 0;
+  const multiDetail = MULTI_QUESTIONS.map((q,i)=>{
+    const ans = removeTones(state.multi[i]||"");
+    let hit = 0;
+    q[1].forEach(keyword=>{ if(ans.includes(removeTones(keyword))) hit++; });
+    multiScore += hit;
+    multiMax += q[1].length;
+    return {q: [39,40,41][i], hit, max: q[1].length, given: state.multi[i]};
+  });
+
+  const autoTotal = mcScore + blankScore + multiScore;
+  const autoMax = MC_QUESTIONS.length + BLANK_QUESTIONS.length + multiMax;
+
+  return {
+    mcScore, mcMax: MC_QUESTIONS.length, mcDetail,
+    blankScore, blankMax: BLANK_QUESTIONS.length, blankDetail,
+    multiScore, multiMax, multiDetail,
+    autoTotal, autoMax,
+    essay: state.essay,
+  };
+}
+
+/* ================= NỘP BÀI ================= */
+async function submitExam(auto){
+  if(state.submitting) return;
+  state.submitting = true;
+  if(state.timerHandle) clearInterval(state.timerHandle);
+
+  const result = gradeExam();
+  state.result = result;
+
+  const record = {
+    key: state.info.key,
+    hoten: state.info.hoten,
+    ngaysinh: state.info.ngaysinh,
+    giaoxu: state.info.giaoxu,
+    thoigian: new Date().toISOString(),
+    diemTracNghiem: result.mcScore + "/" + result.mcMax,
+    diemDienKhuyet: (result.blankScore) + "/" + result.blankMax + " + " + result.multiScore + "/" + result.multiMax,
+    diemTuDong: result.autoTotal + "/" + result.autoMax,
+    tuLuan: result.essay,
+    hetGio: auto,
+  };
+
+  let sendStatus = "unknown";
+  try{
+    const res = await fetch(GAS_URL, {
+      method: "POST",
+      headers: {"Content-Type":"text/plain;charset=utf-8"}, // tránh preflight CORS
+      body: JSON.stringify(record),
+    });
+    const json = await res.json();
+    sendStatus = json.status || "unknown";
+  }catch(e){
+    console.error("Lỗi gửi Google Sheet:", e);
+    sendStatus = "network_error";
+  }
+
+  state.stage = "result";
+  renderResult(auto, sendStatus);
+}
+
+/* ================= RENDER: RESULT ================= */
+function renderResult(auto, sendStatus){
+  const r = state.result;
+  let statusNote = "";
+  if(sendStatus === "ok"){
+    statusNote = `<div class="result-detail" style="color:var(--good);margin-top:10px;">✓ Kết quả đã được ghi nhận thành công.</div>`;
+  } else if(sendStatus === "duplicate"){
+    statusNote = `<div class="error">Lưu ý: hệ thống ghi nhận bạn đã có một bài nộp trước đó với cùng họ tên và ngày sinh. Vui lòng liên hệ Ban Giám khảo nếu có nhầm lẫn.</div>`;
+  } else {
+    statusNote = `<div class="error">Không thể xác nhận việc gửi kết quả (lỗi kết nối). Vui lòng chụp lại màn hình này và báo cho Ban Giám khảo để được ghi nhận thủ công.</div>`;
+  }
+  app.innerHTML = `
+    <h1>Đã nộp bài</h1>
+    <div class="card result-box">
+      ${auto ? `<div class="error">Đã hết giờ — bài làm được tự động nộp.</div>` : ""}
+      <div class="result-detail">Thí sinh: <b>${state.info.hoten}</b> — Giáo xứ: ${state.info.giaoxu}</div>
+      <div class="result-score">${r.autoTotal} / ${r.autoMax}</div>
+      <div class="result-detail">Điểm tự động (Trắc nghiệm + Điền khuyết)</div>
+      <div class="result-detail" style="margin-top:14px;">
+        • Trắc nghiệm: ${r.mcScore}/${r.mcMax}<br>
+        • Điền khuyết (câu 31–38): ${r.blankScore}/${r.blankMax}<br>
+        • Điền khuyết nhiều ý (câu 39–41): ${r.multiScore}/${r.multiMax}<br>
+        • Câu tự luận (câu 42): sẽ được Ban Giám khảo chấm riêng
+      </div>
+      ${statusNote}
+    </div>
+    <div class="footer-note">Cảm ơn bạn đã hoàn thành bài kiểm tra.</div>
+  `;
+}
+
+/* ================= KHỞI ĐỘNG ================= */
+renderRegister();
+</script>
+</body>
+</html>
