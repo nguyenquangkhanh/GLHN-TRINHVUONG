@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Trắc Nghiệm Bài 10-14</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-light:#1b3a6b;
+    --navy-accent:#274a7a;
+    --gold:#c9a227;
+    --green:#1f7a3d;
+    --red:#b3261e;
+    --bg:#eef2f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    font-size:18px;
+    background:var(--bg);
+    color:var(--navy);
+    margin:0;
+    padding:20px;
+  }
+  .container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:20px 24px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header .titles h1{
+    margin:0 0 4px 0;
+    font-size:22px;
+  }
+  header .titles p{
+    margin:0;
+    color:#cdd9ee;
+    font-size:16px;
+  }
+  #score-badge{
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    padding:8px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  #progress-bar-wrap{
+    background:#d7e0f0;
+    border-radius:20px;
+    height:14px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  #progress-bar{
+    background:var(--gold);
+    height:100%;
+    width:0%;
+    transition:width .3s ease;
+  }
+  #progress-label{
+    text-align:right;
+    color:var(--navy-light);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin:0 0 14px 0;
+    font-size:19px;
+    font-weight:700;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--navy-accent);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    min-height:320px;
+  }
+  .q-title{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+    font-size:19px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border:2px solid #c7d3e8;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f6f8fc;
+    transition:.15s;
+  }
+  .option:hover{
+    border-color:var(--navy-light);
+    background:#e9eef8;
+  }
+  .option input{
+    margin-top:4px;
+    transform:scale(1.2);
+    accent-color:var(--navy);
+  }
+  .option.correct{
+    background:#e3f4e8;
+    border-color:var(--green);
+    color:var(--green);
+    font-weight:700;
+  }
+  .option.incorrect{
+    background:#fbe6e5;
+    border-color:var(--red);
+    color:var(--red);
+    font-weight:700;
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  #feedback{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:19px;
+    display:none;
+  }
+  #feedback.correct-fb{
+    background:#e3f4e8;
+    color:var(--green);
+    display:block;
+  }
+  #feedback.incorrect-fb{
+    background:#fbe6e5;
+    color:var(--red);
+    display:block;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  #next-btn{
+    padding:14px 28px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:none;
+  }
+  #next-btn:hover{
+    background:var(--navy-light);
+  }
+  #result{
+    display:none;
+    background:var(--navy);
+    color:#fff;
+    padding:28px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:24px;
+  }
+  #result h2{
+    margin-top:0;
+    font-size:28px;
+    color:var(--gold);
+  }
+  #result p{
+    font-size:20px;
+  }
+  #restart-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  #restart-btn:hover{
+    background:var(--navy-light);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="titles">
+      <h1>TRẮC NGHIỆM</h1>
+      <p>BÀI 10 - BÀI 14</p>
+    </div>
+    <div id="score-badge">Đúng: 0</div>
+  </header>
+
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+
+  <div id="result">
+    <h2 id="score-text"></h2>
+    <p id="score-detail"></p>
+    <button id="restart-btn" type="button">LÀM LẠI</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="section-title" id="section-title" style="display:none;"></div>
+    <div class="card">
+      <div class="q-title" id="q-title"></div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button id="next-btn" type="button">CÂU TIẾP THEO →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+ {section:"BÀI 10: CHÚA THÁNH THẦN", q:"Câu 1: Chúa Thánh Thần là Ngôi thứ mấy trong Ba Ngôi Thiên Chúa?", options:{A:"Ngôi thứ Nhất",B:"Ngôi thứ Hai",C:"Ngôi thứ Ba",D:"Không thuộc Ba Ngôi"}, answer:"C"},
+ {q:"Câu 2: Chúa Thánh Thần hiện xuống trên các Tông đồ trong ngày lễ nào?", options:{A:"Lễ Giáng Sinh",B:"Lễ Phục Sinh",C:"Lễ Ngũ Tuần",D:"Lễ Chúa Thăng Thiên"}, answer:"C"},
+ {q:"Câu 3: Những dấu chỉ nào được các Tông đồ nhận thấy khi Chúa Thánh Thần hiện xuống?", options:{A:"Mưa và sấm chớp",B:"Tiếng gió mạnh và những hình lưỡi lửa đậu trên đầu các ông",C:"Một đám mây và ánh sáng",D:"Tiếng kèn và những vì sao"}, answer:"B"},
+ {q:"Câu 4: Chúa Thánh Thần đã biến đổi các Tông đồ như thế nào sau ngày lễ Ngũ Tuần?", options:{A:"Từ những người nhát đảm, sợ hãi trở nên can đảm phi thường rao giảng Tin Mừng",B:"Từ những người ít học trở nên giàu có",C:"Từ những người đau yếu trở nên khỏe mạnh",D:"Từ những người nghèo trở nên quyền thế"}, answer:"A"},
+ {q:"Câu 5: Người tín hữu cần tôn trọng thân xác mình và người khác vì lý do nào?", options:{A:"Vì thân xác là tài sản quý giá nhất",B:"Vì thân xác là Đền thờ của Chúa Thánh Thần",C:"Vì thân xác không bao giờ hư nát",D:"Vì thân xác quyết định sự sống đời đời"}, answer:"B"},
+
+ {section:"BÀI 11: HỘI THÁNH CHÚA KITÔ", q:"Câu 6: Chúa Giêsu đã làm gì để khởi đầu việc thiết lập Hội Thánh?", options:{A:"Chọn riêng 12 Tông đồ và đặt Phêrô làm đầu Hội Thánh",B:"Chỉ chọn một số người giàu có và có khả năng",C:"Trao quyền cho các vua chúa trần gian",D:"Sai các môn đệ đi khắp nơi mà không huấn luyện"}, answer:"A"},
+ {q:"Câu 7: Chúa Giêsu thiết lập Hội Thánh nhằm mục đích nào?", options:{A:"Xây dựng một tổ chức chính trị",B:"Tiếp tục công cuộc cứu rỗi nơi trần gian",C:"Tạo dựng một quốc gia mới",D:"Đem lại sự giàu có cho các tín hữu"}, answer:"B"},
+ {q:"Câu 8: Ba nhiệm vụ hay ba quyền Chúa Giêsu trao cho Hội Thánh là gì?", options:{A:"Quyền cai trị, quyền xét xử và quyền thưởng phạt",B:"Quyền giảng dạy, quyền thánh hóa và quyền lãnh đạo",C:"Quyền giáo dục, quyền kinh tế và quyền chính trị",D:"Quyền truyền thông, quyền quản lý và quyền bảo vệ"}, answer:"B"},
+ {q:"Câu 9: Hội Thánh thực hiện quyền thánh hóa cách đặc biệt qua việc nào?", options:{A:"Tổ chức các hoạt động xã hội",B:"Cử hành các Bí tích",C:"Xây dựng các công trình",D:"Tổ chức các cuộc hội họp"}, answer:"B"},
+ {q:"Câu 10: Theo gương Chúa Giêsu, các vị lãnh đạo Hội Thánh phải sử dụng quyền hành như thế nào?", options:{A:"Để phục vụ mọi người",B:"Để tìm kiếm lợi ích cá nhân",C:"Để được mọi người kính sợ",D:"Để có địa vị cao trong xã hội"}, answer:"A"},
+
+ {section:"BÀI 12: TỔ CHỨC HỘI THÁNH CÔNG GIÁO", q:"Câu 11: Hội Thánh Công giáo gồm những ai?", options:{A:"Chỉ gồm Đức Giáo Hoàng và các Giám mục",B:"Chỉ gồm các linh mục và tu sĩ",C:"Các tín hữu đã lãnh nhận Bí tích Rửa Tội và hiệp nhất với đức Giáo Hoàng",D:"Chỉ gồm những người đang hoạt động trong giáo xứ"}, answer:"C"},
+ {q:"Câu 12: Hội Thánh được diễn tả bằng những hình ảnh nào sau đây?", options:{A:"Dân Thiên Chúa, Thân Thể Chúa Kitô và Đền thờ Chúa Thánh Thần",B:"Một quốc gia, một dân tộc và một tổ chức chính trị",C:"Một gia đình, một trường học và một xã hội",D:"Một đoàn thể, một hội nhóm và một tổ chức từ thiện"}, answer:"A"},
+ {q:"Câu 13: Bốn đặc tính của Hội Thánh đích thực của Chúa Kitô là gì?", options:{A:"Duy nhất, quyền lực, giàu có, phổ quát",B:"Thánh thiện, bác ái, phục vụ, truyền giáo",C:"Duy nhất, Thánh thiện, Công giáo, Tông truyền",D:"Công bằng, bác ái, hiệp nhất, phục vụ"}, answer:"C"},
+ {q:"Câu 14: Hội Thánh hiệp nhất và thông công gồm những thành phần nào?", options:{A:"Các thánh trên trời, các tín hữu còn sống và các đẳng linh hồn",B:"Chỉ các tín hữu đang sống trên trần gian",C:"Chỉ các thánh trên trời và các linh mục",D:"Chỉ những người đã chịu phép Rửa tội"}, answer:"A"},
+ {q:"Câu 15: Người tín hữu được mời gọi làm gì đối với các phẩm trật trong Hội Thánh?", options:{A:"Kính trọng, vâng phục và cộng tác với các ngài để xây dựng Nước Chúa",B:"Chỉ kính trọng nhưng không cần cộng tác",C:"Chỉ cộng tác khi có lợi cho bản thân",D:"Tự mình quyết định mọi việc, không cần sự hướng dẫn"}, answer:"A"},
+
+ {section:"BÀI 13: TÔN KÍNH ĐỨC MẸ MARIA", q:"Câu 16: Vì sao người Công giáo sùng kính Đức Maria?", options:{A:"Vì Mẹ là một nhân vật nổi tiếng trong lịch sử",B:"Vì Mẹ là Mẹ Chúa Giêsu, Mẹ Hội Thánh và là Mẹ của mỗi người chúng ta",C:"Vì Mẹ là một trong các Tông đồ",D:"Vì Mẹ có quyền ngang hàng với Thiên Chúa"}, answer:"B"},
+ {q:"Câu 17: Đức Maria được Thiên Chúa ban cho những đặc ân nào?", options:{A:"Khôn ngoan, quyền lực và giàu sang",B:"Vô Nhiễm Nguyên Tội, Mẹ Thiên Chúa, Đồng Trinh Trọn Đời và Lên Trời cả hồn lẫn xác",C:"Tử đạo, truyền giáo và giảng dạy",D:"Khiêm nhường, bác ái và phục vụ"}, answer:"B"},
+ {q:"Câu 18: Tại sao Đức Maria được gọi là Mẹ Hội Thánh?", options:{A:"Vì Mẹ đã sinh ra các Tông đồ",B:"Vì Mẹ là người đứng đầu Hội Thánh",C:"Vì Mẹ đã sinh ra Chúa Giêsu là Đầu, nên cũng được gọi là Mẹ của Thân thể Người là Hội Thánh",D:"Vì Mẹ đã sống khiêm nhường, bác ái"}, answer:"C"},
+ {q:"Câu 19: Ba mệnh lệnh Đức Mẹ muốn con cái (các Kitô hữu) thực hiện là gì?", options:{A:"Ăn chay, làm việc bác ái và đi hành hương",B:"Ăn năn sám hối, siêng năng lần chuỗi và tôn sùng Trái Tim Mẹ",C:"Học giáo lý, tham dự sinh hoạt và làm việc xã hội",D:"Đọc Kinh Thánh, ăn chay và làm việc thiện"}, answer:"B"},
+ {q:"Câu 20: Người tín hữu được mời gọi bắt chước những nhân đức nào của Đức Maria?", options:{A:"Khiêm nhường, vâng phục và bác ái",B:"Quyền lực, khôn ngoan và giàu sang",C:"Can đảm, tranh đấu và chiến thắng",D:"Thành công, nổi tiếng và được kính trọng"}, answer:"A"},
+
+ {section:"BÀI 14: TỨ CHUNG", q:"Câu 21: Theo giáo lý Công giáo, \"Tứ chung\" là bốn điều sau cùng của đời người. Đó là những điều nào?", options:{A:"Sinh ra, lớn lên, lập gia đình và qua đời",B:"Chết, Phán xét, Thiên đàng - Hỏa ngục và Sống lại",C:"Đức tin, Đức cậy, Đức mến và Bí tích",D:"Sám hối, cầu nguyện, bác ái và truyền giáo"}, answer:"B"},
+ {q:"Câu 22: Theo đức tin Công giáo, điều gì xảy ra ngay sau khi một người qua đời?", options:{A:"Linh hồn chấm dứt hoàn toàn sự hiện hữu",B:"Linh hồn trở về trần gian để sống một đời khác",C:"Linh hồn gặp Chúa để chịu phán xét riêng, tùy theo những việc lành dữ đã làm",D:"Linh hồn lập tức được vào Thiên đàng trong mọi trường hợp"}, answer:"C"},
+ {q:"Câu 23: Luyện ngục được hiểu là gì?", options:{A:"Nơi những người không tin vào Thiên Chúa phải chịu phạt đời đời",B:"Tình trạng thanh luyện những người chết trong ơn nghĩa Chúa nhưng chưa được thanh luyện trọn vẹn",C:"Nơi các linh hồn chờ đợi ngày Chúa Giêsu giáng sinh",D:"Một cuộc sống khác trên trần gian để đền bù tội lỗi"}, answer:"B"},
+ {q:"Câu 24: Hỏa ngục là tình trạng của những người như thế nào?", options:{A:"Những người chết trong ơn nghĩa Chúa nhưng còn phải thanh luyện",B:"Những người chưa được chịu phép Rửa tội",C:"Những người chết trong tình trạng tội trọng, không ăn năn hối cải và cố chấp",D:"Những người chưa kịp làm nhiều việc bác ái khi còn sống"}, answer:"C"},
+ {q:"Câu 25: Theo đức tin Kitô giáo, sự sống lại vào ngày tận thế sẽ diễn ra như thế nào?", options:{A:"Chỉ những người tốt mới được sống lại",B:"Mọi người chết sẽ sống lại với thân xác của mình, nhưng thân xác được biến đổi thành \"xác có thần khí\" không hư nát",C:"Chỉ những người đã chết vì đạo mới được sống lại",D:"Con người sẽ sống lại với chính thân xác đã hư nát như trước khi chết"}, answer:"B"}
+];
+let current = 0;
+let score = 0;
+let answered = false;
+
+const qTitle = document.getElementById('q-title');
+const optionsDiv = document.getElementById('options');
+const sectionTitle = document.getElementById('section-title');
+const feedback = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const scoreBadge = document.getElementById('score-badge');
+const progressBar = document.getElementById('progress-bar');
+const progressLabel = document.getElementById('progress-label');
+const quizArea = document.getElementById('quiz-area');
+const resultDiv = document.getElementById('result');
+
+function renderQuestion(idx){
+  answered = false;
+  const item = quizData[idx];
+
+  if(item.section){
+    sectionTitle.textContent = item.section;
+    sectionTitle.style.display = 'block';
+  } else {
+    sectionTitle.style.display = 'none';
+  }
+
+  qTitle.textContent = item.q;
+  optionsDiv.innerHTML = '';
+  feedback.style.display = 'none';
+  feedback.className = '';
+  nextBtn.style.display = 'none';
+
+  Object.keys(item.options).forEach(key => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${key}`;
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'currentQ';
+    input.value = key;
+    const span = document.createElement('span');
+    span.textContent = `${key}. ${item.options[key]}`;
+    label.appendChild(input);
+    label.appendChild(span);
+    label.addEventListener('click', () => selectAnswer(key));
+    optionsDiv.appendChild(label);
+  });
+
+  progressBar.style.width = ((idx) / quizData.length * 100) + '%';
+  progressLabel.textContent = `Câu ${idx + 1} / ${quizData.length}`;
+}
+
+function selectAnswer(key){
+  if(answered) return;
+  answered = true;
+  const item = quizData[current];
+  const correct = item.answer;
+  const isCorrect = key === correct;
+
+  if(isCorrect) score++;
+  scoreBadge.textContent = `Đúng: ${score}`;
+
+  Object.keys(item.options).forEach(k => {
+    const label = document.getElementById(`opt-${k}`);
+    label.classList.add('disabled');
+    if(k === correct) label.classList.add('correct');
+    else if(k === key) label.classList.add('incorrect');
+  });
+
+  feedback.textContent = isCorrect ? '✔ Chính xác!' : `✘ Sai rồi! Đáp án đúng là: ${correct}`;
+  feedback.className = isCorrect ? 'correct-fb' : 'incorrect-fb';
+  feedback.style.display = 'block';
+
+  progressBar.style.width = ((current + 1) / quizData.length * 100) + '%';
+
+  if(current < quizData.length - 1){
+    nextBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'none';
+    setTimeout(showResult, 600);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  renderQuestion(current);
+});
+
+function showResult(){
+  quizArea.style.display = 'none';
+  const pct = Math.round(score / quizData.length * 100);
+  document.getElementById('score-text').textContent = `Điểm số: ${score} / ${quizData.length}`;
+  document.getElementById('score-detail').textContent = `Tỷ lệ đúng: ${pct}%`;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+renderQuestion(current);
+</script>
+</body>
+</html>
