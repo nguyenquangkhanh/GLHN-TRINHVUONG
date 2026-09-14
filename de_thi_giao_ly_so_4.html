@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đề Thi Giáo Lý Thêm Sức Số IV</title>
+<style>
+:root {
+  --navy:#16295C;
+  --navy2:#0d1c43;
+  --gold:#DFB968;
+  --bg:#f3f5f9;
+  --text:#172033;
+  --green:#177245;
+  --red:#a52626;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; min-height:100vh; background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  color:var(--text); font-size:18pt; line-height:1.55;
+}
+header {
+  background:linear-gradient(135deg,var(--navy2),var(--navy));
+  color:white; padding:28px 20px 24px; text-align:center;
+  box-shadow:0 3px 14px rgba(0,0,0,.18);
+}
+.cross { font-size:38pt; color:var(--gold); line-height:1; margin-bottom:8px; }
+h1 { font-size:25pt; margin:0 0 4px; }
+.subtitle { font-size:15pt; opacity:.9; }
+.container { max-width:950px; margin:30px auto; padding:0 18px; }
+.card {
+  background:white; border-radius:18px; padding:30px;
+  box-shadow:0 6px 24px rgba(13,28,67,.10);
+}
+.progress-wrap { margin-bottom:22px; }
+.progress-top { display:flex; justify-content:space-between; font-size:15pt; color:#536078; margin-bottom:8px; }
+.progress { height:10px; background:#e2e6ee; border-radius:10px; overflow:hidden; }
+.progress-bar { height:100%; width:0; background:var(--navy); transition:width .25s; }
+.question { font-weight:700; color:var(--navy); margin:8px 0 24px; }
+.option {
+  display:block; width:100%; text-align:left; padding:17px 18px;
+  margin:12px 0; border:2px solid #d7dce6; border-radius:12px;
+  background:white; color:var(--text); cursor:pointer; font:inherit;
+  transition:.18s;
+}
+.option:hover:not(:disabled) { border-color:var(--navy); background:#f4f6fb; }
+.option:disabled { cursor:default; }
+.option.correct { border-color:var(--green); background:#eaf7f0; }
+.option.wrong { border-color:var(--red); background:#fdecec; }
+.feedback {
+  display:none; margin-top:20px; padding:18px 20px;
+  border-radius:12px; font-size:17pt;
+}
+.feedback.correct { display:block; background:#eaf7f0; border-left:6px solid var(--green); }
+.feedback.wrong { display:block; background:#fdecec; border-left:6px solid var(--red); }
+.feedback-title { font-weight:800; margin-bottom:6px; }
+.actions { display:flex; justify-content:flex-end; gap:12px; margin-top:25px; }
+button.next, button.restart {
+  border:0; border-radius:11px; padding:13px 24px; font:inherit;
+  font-size:17pt; font-weight:700; cursor:pointer;
+}
+button.next { background:var(--navy); color:white; }
+button.next:hover { background:var(--navy2); }
+button.next:disabled { opacity:.45; cursor:not-allowed; }
+.result { display:none; text-align:center; }
+.result h2 { color:var(--navy); font-size:26pt; }
+.score { font-size:32pt; font-weight:800; color:var(--navy); margin:20px 0; }
+button.restart { background:var(--gold); color:var(--navy2); }
+footer { text-align:center; color:#69738a; font-size:13pt; padding:10px 20px 30px; }
+@media(max-width:650px) {
+  body { font-size:16pt; }
+  .card { padding:20px; }
+  h1 { font-size:21pt; }
+  .option { padding:14px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="cross">✝</div>
+  <h1>ĐỀ THI GIÁO LÝ THÊM SỨC SỐ IV</h1>
+  <div class="subtitle">Trắc nghiệm Giáo lý – Kinh Thánh – Kinh nguyện</div>
+</header>
+
+<div class="container">
+  <div class="card" id="quizCard">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span id="counter">Câu 1 / 23</span>
+        <span id="scoreMini">Đúng: 0</span>
+      </div>
+      <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    </div>
+
+    <div id="quizArea"></div>
+  </div>
+
+  <div class="card result" id="resultArea">
+    <div class="cross">✝</div>
+    <h2>Hoàn thành bài Quiz</h2>
+    <div class="score" id="finalScore"></div>
+    <p id="finalMessage"></p>
+    <button class="restart" onclick="restartQuiz()">Làm lại</button>
+  </div>
+</div>
+<footer>Đề thi được trình bày theo nội dung tài liệu “ĐỀ THI GIÁO LÝ THÊM SỨC SỐ IV”.</footer>
+
+<script>
+const questions = [{"n": 1, "q": "Phụng vụ có vị trí nào trong Hội Thánh?", "opts": {"A": "Phụng vụ là chóp đỉnh và là nguồn mạch các hoạt động của Hội Thánh, qua đó, Hội Thánh tiếp tục cộng trình cứu độ của Ngài.", "B": "Phụng vụ là chóp đỉnh và là nguồn mạch các hoạt động của Hội Thánh, qua đó, Đức Ki-tô tiếp tục cộng trình cứu độ của Ngài.", "C": "Phụng vụ là chóp đỉnh và là nguồn mạch các hoạt động của Hội Thánh, nhờ và qua các sinh hoạt của phụng vụ, Đức Ki-tô tiếp tục cộng trình cứu độ của Ngài trong Hội Thánh.", "D": "Cả A, B và C"}, "answer": "B", "explanation": "Đáp án B: Phụng vụ là chóp đỉnh và là nguồn mạch các hoạt động của Hội Thánh; qua đó Đức Ki-tô tiếp tục công trình cứu độ của Ngài."}, {"n": 2, "q": "Năm Phụng vụ là gì?", "opts": {"A": "Là thời gian Hội Thánh cử hành các mầu nhiệm Đức Ki-tô, để giúp chúng ta sống những mầu nhiệm ấy, hầu chuẩn bị đón Ngài lại đến trong vinh quang.", "B": "Là thời gian Hội Thánh cử hành các mầu nhiệm của Đức Ki-tô, từ khi Ngài hạ sinh tới khi Ngài chịu chết và sống lại.", "C": "Là thời gian Hội Thánh cử hành các mầu nhiệm chính yếu trong cuộc đời Đức Ki-tô, từ khi Ngài hạ sinh tới khi Ngài chịu chết và sống lại.", "D": "Cả A, B và C"}, "answer": "A", "explanation": "Đáp án A: Năm Phụng vụ là thời gian Hội Thánh cử hành các mầu nhiệm Đức Ki-tô, giúp chúng ta sống các mầu nhiệm ấy và chuẩn bị đón Ngài lại đến trong vinh quang."}, {"n": 3, "q": "Bí tích là gì?", "opts": {"A": "Bí tích là dấu chỉ bên ngoài Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, hầu mang lại sự sống thần linh.", "B": "Bí tích là dấu chỉ Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, hầu mang lại sự sống thần linh.", "C": "Bí tích là dấu chỉ bên ngoài Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, để diễn tả và thông ban cho chúng ta ân sủng bên trong là sự sống thần linh.", "D": "Cả A, B và C"}, "answer": "C", "explanation": "Đáp án C: Bí tích là dấu chỉ bên ngoài do Chúa Giê-su thiết lập và trao cho Hội Thánh cử hành, để diễn tả và thông ban ân sủng bên trong là sự sống thần linh."}, {"n": 4, "q": "Vì sao các Bí tích cần thiết cho ơn cứu độ?", "opts": {"A": "Vì các bí tích trao ban ân sủng của Chúa Thánh Thần, nên những người không lãnh bí tích, thì không thể vào Nước Thiên Chúa được.", "B": "Vì các bí tích trao ban ân sủng của Chúa Thánh Thần, cùng các ơn riêng tùy theo từng người; nên những người không lãnh bí tích, thì không thể vào Nước Thiên Chúa được.", "C": "Vì các bí tích trao ban ân sủng của Chúa Thánh Thần, để Ngài chữa lành và biến đổi chúng ta.", "D": "Cả A, B và C"}, "answer": "C", "explanation": "Đáp án C: Các bí tích trao ban ân sủng của Chúa Thánh Thần để Ngài chữa lành và biến đổi chúng ta."}, {"n": 5, "q": "Bí tích Xức Dầu bệnh nhân là gì?", "opts": {"A": "Là bí tích Chúa Giê-su đã lập, để ban ơn nâng đỡ bệnh nhân và người già yếu, về phần hồn cũng như phần xác.", "B": "Là bí tích Chúa Giê-su đã lập, để ban ơn nâng đỡ và chữa lành các bệnh tật cho bệnh nhân và người già yếu, về phần hồn cũng như phần xác.", "C": "Là bí tích Chúa Giê-su đã lập, để nâng đỡ và chữa lành các bệnh tật cho bệnh nhân, cùng ban ơn phần hồn cũng như phần xác.", "D": "Cả A, B và C"}, "answer": "A", "explanation": "Đáp án A: Bí tích Xức Dầu là bí tích Chúa Giê-su đã lập để ban ơn nâng đỡ bệnh nhân và người già yếu về phần hồn cũng như phần xác."}, {"n": 6, "q": "Bí tích Xức Dầu có những hiệu quả nào?", "opts": {"A": "Bí tích Xức Dầu kết hợp bệnh nhân với cuộc khổ nạn của Chúa Ki-tô, để sinh ích cho họ và cho Hội Thánh;", "B": "Bí tích Xức Dầu Mang lại cho họ niềm an ủi và lòng can đảm, để chịu đựng những đau đớn của bệnh tật hoặc tuổi già;", "C": "Bí tích Xức Dầu thứ tha các tội lỗi đã phạm nếu chưa xưng được; Chữa lành thân xác nếu phù hợp với ý Chúa, đồng thời, chuẩn bị cho “cuộc vượt qua” sang cõi sống đời đời.", "D": "Cả A, B và C"}, "answer": "D", "explanation": "Đáp án D: Cả ba hiệu quả được nêu đều thuộc nội dung của Bí tích Xức Dầu trong đề."}, {"n": 7, "q": "Ơn gọi sống đời thánh hiến là gì?", "opts": {"A": "Ơn gọi đời sống thánh hiến là lời Thiên Chúa ngỏ với một số người, để mời gọi họ dâng mình cho Chúa trong bậc tu trì.", "B": "Ơn gọi đời sống thánh hiến là lời Thiên Chúa ngỏ với một số người, để mời gọi họ sống đời tận hiến trong bậc tu trì hay giáo sĩ.", "C": "Ơn gọi đời sống thánh hiến là lời Thiên Chúa ngỏ với một số người, để mời gọi họ dâng mình cho Chúa trong bậc tu trì để phụng sự Chúa và phục vụ anh chị em mình.", "D": "Cả A, B và C"}, "answer": "B", "explanation": "Đáp án B: Ơn gọi đời sống thánh hiến là lời Thiên Chúa ngỏ với một số người, mời gọi họ sống đời tận hiến trong bậc tu trì hay giáo sĩ."}, {"n": 8, "q": "Những dấu nào cho biết mình có ơn gọi sống đời thánh hiến?", "opts": {"A": "Có ba dấu này: một là có ý ngay lành và ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ sức khỏe cũng như trình độ mà Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.", "B": "Có ba dấu này: một là có lòng ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ trình độ như Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.", "C": "Có ba dấu này: một là có ý ngay lành và ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ điều kiện Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.", "D": "Tất cả đều sai"}, "answer": "C", "explanation": "Đáp án C: Ba dấu được nêu là ý ngay lành và ước muốn phục vụ Chúa và tha nhân; đủ điều kiện Hội Thánh quy định; và được những người có trách nhiệm tuyển chọn."}, {"n": 9, "q": "Bí tích Truyền Chức Thánh gồm những cấp bậc nào?", "opts": {"A": "Gồm ba cấp bậc là Giám mục, linh mục và phó tế.", "B": "Gồm ba cấp bậc là Giám mục, linh mục và tu sĩ.", "C": "Gồm ba cấp bậc là Linh mục, tu sĩ và giáo dân.", "D": "Cả B và C"}, "answer": "A", "explanation": "Đáp án A: Bí tích Truyền Chức Thánh gồm ba cấp bậc: Giám mục, linh mục và phó tế."}, {"n": 10, "q": "Người tín hữu có bổn phận nào đối với các vị chủ chăn của mình?", "opts": {"A": "Người tín hữu có bổn phận cầu nguyện và cộng tác với các vị chủ chăn của mình trong việc xây dựng Hội Thánh, đồng thời giúp đỡ các ngài cả về tinh thần lẫn vật chất.", "B": "Người tín hữu có bổn phận cầu nguyện, tôn trọng, vâng lời và cộng tác với các vị chủ chăn của mình trong việc xây dựng Hội Thánh, đồng thời giúp đỡ các ngài cả về tinh thần lẫn vật chất.", "C": "Người tín hữu có bổn phận cầu nguyện, tôn trọng, vâng lời và cộng tác với các vị chủ chăn của mình trong việc xây dựng Hội Thánh.", "D": "Tất cả đều đúng"}, "answer": "B", "explanation": "Đáp án B: Người tín hữu có bổn phận cầu nguyện, tôn trọng, vâng lời, cộng tác xây dựng Hội Thánh và giúp đỡ các vị chủ chăn cả về tinh thần lẫn vật chất."}, {"n": 11, "q": "Bí tích Hôn Phối là gì?", "opts": {"A": "Là Bí tích Chúa Giê-su đã lập, để kết hợp hai người tín hữu thành vợ chồng trước mặt Thiên Chúa và Hội Thánh, cùng ban ân sủng để họ có thể yêu thương nhau như Ngài đã yêu thương Hội Thánh.", "B": "Là Bí tích Chúa Giê-su đã lập, để kết hợp hai người tín hữu thành vợ chồng trước mặt Thiên Chúa và Hội Thánh, cùng ban ân sủng để họ có thể yêu thương nhau trọn đời.", "C": "Là bí tích Chúa Giê-su đã lập, để kết hợp hai người tín hữu một nam một nữ thành vợ chồng trước mặt Thiên Chúa và Hội Thánh, cùng ban ân sủng để họ có thể yêu thương nhau như Ngài đã yêu thương Hội Thánh.", "D": "Tất cả đều đúng"}, "answer": "C", "explanation": "Đáp án C: Bí tích Hôn Phối kết hợp hai người tín hữu, một nam một nữ, thành vợ chồng trước mặt Thiên Chúa và Hội Thánh, đồng thời ban ân sủng để họ yêu thương nhau như Đức Ki-tô yêu thương Hội Thánh."}, {"n": 12, "q": "Vì sao gia đình Công giáo được gọi là “Hội Thánh tại gia”?", "opts": {"A": "Gia đình Công giáo được gọi là “Hội Thánh tại gia” vì gia đình Công Giáo biểu lộ bản chất của Hội Thánh là gia đình của Thiên Chúa.", "B": "Vì gia đình Công giáo vừa là cộng đoàn ân sủng và cầu nguyện, trường dạy các đức tính nhân bản và Ki-tô giáo, vừa là nơi đầu tiên đức tin được loan truyền cho con cái.", "C": "Vì gia đình Công giáo bao gồm những phần tử đã được thánh hiến qua Bí tích Rửa Tội, nhờ đó, họ được trở nên thánh thiện.", "D": "Cả A và B"}, "answer": "D", "explanation": "Đáp án D: Cả A và B đều diễn tả lý do gia đình Công giáo được gọi là “Hội Thánh tại gia”."}, {"n": 13, "q": "Hiệu quả của Bí tích Thêm Sức là gì?", "opts": {"A": "Là việc đổ tràn ơn sức mạnh của Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.", "B": "Là việc đổ tràn Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.", "C": "Là việc đổ tràn ơn khôn ngoan của Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.", "D": "Tất cả đều đúng"}, "answer": "B", "explanation": "Đáp án B: Bí tích Thêm Sức đổ tràn Chúa Thánh Thần, ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội."}, {"n": 14, "q": "Những ai được lãnh Bí tích Thêm Sức?", "opts": {"A": "Những người đã được rửa tội và đến tuổi khôn, sạch tội trọng, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu.", "B": "Những người đã được rửa tội và đến tuổi khôn, sạch tội trọng, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu. Ngoài ra cần có người đỡ đầu.", "C": "Những người đã được rửa tội và đến tuổi khôn, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu. Ngoài ra cần có người đỡ đầu.", "D": "Tất cả đều đúng"}, "answer": "B", "explanation": "Đáp án B: Người lãnh Bí tích Thêm Sức cần đã được rửa tội, đến tuổi khôn, sạch tội trọng, học giáo lý đầy đủ, quyết sống đúng bổn phận Ki-tô hữu và có người đỡ đầu."}, {"n": 15, "q": "Người Ki-tô hữu có bổn phận nào đối với xã hội?", "opts": {"A": "Người Ki-tô hữu cần tích cực hoán cải nội tâm và cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.", "B": "Người Ki-tô hữu cần tích cực cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.", "C": "Người Ki-tô hữu cần tích cực sống chứng tá bằng việc hoán cải nội tâm, cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.", "D": "Cả A, B và C"}, "answer": "A", "explanation": "Đáp án A: Người Ki-tô hữu được mời gọi hoán cải nội tâm, cổ võ công bằng và bác ái, góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng."}, {"n": 16, "q": "Chúng ta phải tham gia xây dựng công ích bằng cách nào?", "opts": {"A": "Chúng ta phải tham gia bằng cách: Tôn trọng các luật công bằng; Sống bác ái yêu thương; Chu toàn các trách nhiệm cá nhân trong xã hội và tham gia vào đời sống cộng đồng.", "B": "Chúng ta phải tham gia bằng cách: Tôn trọng các luật công bằng; Sống bác ái yêu thương và tham gia vào đời sống cộng đồng.", "C": "Chúng ta phải tham gia bằng cách: Tôn trọng các luật công bằng; Chu toàn các trách nhiệm cá nhân trong xã hội và tham gia vào đời sống cộng đồng.", "D": "Cả A, B và C"}, "answer": "C", "explanation": "Đáp án C: Xây dựng công ích bằng cách tôn trọng các luật công bằng, chu toàn trách nhiệm cá nhân trong xã hội và tham gia đời sống cộng đồng."}, {"n": 17, "q": "Ta có nhiệm vụ hoạt động tông đồ không?", "opts": {"A": "Có. Tất cả mọi người Ki-tô hữu đều có nhiệm vụ mở rộng Nước Chúa, tham gia các hoạt động tông đồ, truyền giáo.", "B": "Có. Công việc này, trước tiên thuộc về hàng giáo sĩ và tu sĩ. Tuy nhiên, tất cả mọi người Ki-tô hữu đều có nhiệm vụ mở rộng Nước Chúa, tham gia các hoạt động tông đồ, truyền giáo.", "C": "Có. Công việc này, trước tiên thuộc về hàng giáo sĩ và tu sĩ. Tuy nhiên, là người giáo dân, chúng ta cũng có nhiệm vụ mở rộng Nước Chúa, tham gia các hoạt động tông đồ, truyền giáo.", "D": "Cả A, B và C"}, "answer": "A", "explanation": "Đáp án A: Tất cả mọi người Ki-tô hữu đều có nhiệm vụ mở rộng Nước Chúa, tham gia các hoạt động tông đồ và truyền giáo."}, {"n": 18, "q": "Ta hoạt động tông đồ như thế nào?", "opts": {"A": "Ta có thể tham gia vào nhiều lãnh vực hoạt động tông đồ như: thăm viếng, dạy giáo lý và các sinh hoạt tông đồ của Hội Thánh.", "B": "Ta có thể hoạt động tông đồ theo hình thức cá nhân hay tập thể như thăm viếng, dạy giáo lý và các sinh hoạt tông đồ của Hội Thánh.", "C": "Ta có thể tham gia vào nhiều lãnh vực hoạt động tông đồ như: thăm viếng, tặng quà, giúp đỡ những người có hoàn cảnh khó khăn, dạy giáo lý và các sinh hoạt tông đồ của Hội Thánh.", "D": "Cả A, B và C"}, "answer": "B", "explanation": "Đáp án B: Có thể hoạt động tông đồ theo hình thức cá nhân hoặc tập thể, như thăm viếng, dạy giáo lý và tham gia các sinh hoạt tông đồ của Hội Thánh."}, {"n": 19, "q": "Có mấy loại Á Bí tích?", "opts": {"A": "Có 4 loại Á Bí tích, gồm: Việc chúc lành; Thánh hiến những con người; Dâng hiến những đồ vật và Việc trừ tà.", "B": "Có 4 loại Á Bí tích, gồm: Việc chúc lành; Thánh hiến những con người; Dâng hiến những đồ vật được dùng vào việc thờ phượng và Việc trừ tà.", "C": "Có 4 loại Á Bí tích, gồm: Việc chúc lành; Thánh hiến những con người; Thánh hiến những nơi chốn, đồ vật và Việc trừ tà.", "D": "Cả A, B và C"}, "answer": "B", "explanation": "Đáp án B: Đề nêu bốn loại Á Bí tích: việc chúc lành; thánh hiến những con người; dâng hiến những đồ vật được dùng vào việc thờ phượng; và việc trừ tà."}, {"n": 20, "q": "Vì sao chúng ta có thể tôn kính ảnh tượng?", "opts": {"A": "Vì Con Thiên Chúa đã xuống thế, trở nên con người thật như chúng ta, nên chúng ta có thể dùng ảnh tượng để dễ hướng tâm hồn lên cùng Thiên Chúa, Đức Mẹ và các Thánh mà noi gương các Ngài.", "B": "Vì Con Thiên Chúa đã làm người, nên chúng ta có thể dùng ảnh tượng để dễ hướng tâm hồn lên cùng Thiên Chúa, Đức Mẹ và các Thánh mà noi gương các Ngài.", "C": "Vì Con Thiên Chúa đã xuống thế, trở nên con người thật như chúng ta, có thân xác như chúng ta, nên chúng ta có thể dùng ảnh tượng để dễ hướng tâm hồn lên cùng Thiên Chúa.", "D": "Cả A, B và C PHẦN II – KINH THÁNH (1 điểm)"}, "answer": "B", "explanation": "Đáp án B: Vì Con Thiên Chúa đã làm người, chúng ta có thể dùng ảnh tượng để hướng tâm hồn lên cùng Thiên Chúa, Đức Mẹ và các Thánh mà noi gương các Ngài."}, {"n": 21, "q": "Em hãy hoàn tất câu Kinh Thánh sau: “Bấy giờ, Người nói với môn đệ rằng: Lúa chín đầy đồng, mà … lại ít. Vậy anh em hãy xin chủ mùa gặt sai thợ ra gặt lúa về.\" (Mt 9,37-38)", "opts": {"A": "Người làm", "B": "Linh mục", "C": "Thợ gặt", "D": "Tất cả đều sai"}, "answer": "C", "explanation": "Đáp án C: Câu Kinh Thánh hoàn chỉnh là “Lúa chín đầy đồng, mà thợ gặt lại ít.”"}, {"n": 22, "q": "Em hãy hoàn tất câu Kinh Thánh sau: “Thượng tế nào cũng là người được chọn trong số…, và được đặt lên làm đại diện cho loài người, trong các mối tương quan với Thiên Chúa, để dâng lễ phẩm cũng như tế vật đền tội.\" (Dt 5,1)", "opts": {"A": "Người phàm", "B": "Những người thân thuộc", "C": "Những người tu hành", "D": "Tất cả đều đúng PHẦN III – KINH NGUYỆN (1 điểm)"}, "answer": "A", "explanation": "Đáp án A: Câu Dt 5,1 trong đề viết: “Thượng tế nào cũng là người được chọn trong số người phàm...”"}, {"n": 23, "q": "Em hãy hoàn tất lời kinh Năm sự Mừng (2): «Thứ hai thì ngắm: Đức Chúa Giê-su lên trời. Ta hãy xin cho được …»", "opts": {"A": "Cùng về trời với Chúa", "B": "Cùng Chúa lên trời", "C": "Ái mộ những sự trên trời", "D": "Tất cả đều sai ĐÁP ÁN"}, "answer": "C", "explanation": "Đáp án C: Lời kinh là: “Thứ hai thì ngắm: Đức Chúa Giê-su lên trời. Ta hãy xin cho được ái mộ những sự trên trời.”"}];
+let current = 0;
+let score = 0;
+let answered = false;
+
+function renderQuestion() {
+  const q = questions[current];
+  answered = false;
+  document.getElementById("counter").textContent = `Câu ${q.n} / ${questions.length}`;
+  document.getElementById("scoreMini").textContent = `Đúng: ${score}`;
+  document.getElementById("progressBar").style.width = `${(current / questions.length) * 100}%`;
+
+  let html = `<div class="question">${q.q}</div>`;
+  for (const letter of ["A","B","C","D"]) {
+    html += `<button class="option" data-letter="${letter}" onclick="chooseAnswer('${letter}')">
+      <strong>${letter}.</strong> ${q.opts[letter]}
+    </button>`;
+  }
+  html += `<div id="feedback" class="feedback"></div>
+    <div class="actions"><button id="nextBtn" class="next" onclick="nextQuestion()" disabled>
+      ${current === questions.length - 1 ? "Xem kết quả" : "Câu tiếp theo →"}
+    </button></div>`;
+  document.getElementById("quizArea").innerHTML = html;
+}
+
+function chooseAnswer(letter) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const buttons = document.querySelectorAll(".option");
+  buttons.forEach(btn => {
+    btn.disabled = true;
+    if (btn.dataset.letter === q.answer) btn.classList.add("correct");
+    if (btn.dataset.letter === letter && letter !== q.answer) btn.classList.add("wrong");
+  });
+
+  const feedback = document.getElementById("feedback");
+  if (letter === q.answer) {
+    score++;
+    feedback.className = "feedback correct";
+    feedback.innerHTML = `<div class="feedback-title">✓ Chính xác!</div>${q.explanation}`;
+  } else {
+    feedback.className = "feedback wrong";
+    feedback.innerHTML = `<div class="feedback-title">✗ Chưa đúng.</div>${q.explanation}`;
+  }
+  document.getElementById("scoreMini").textContent = `Đúng: ${score}`;
+  document.getElementById("nextBtn").disabled = false;
+}
+
+function nextQuestion() {
+  if (!answered) return;
+  if (current < questions.length - 1) {
+    current++;
+    renderQuestion();
+    window.scrollTo({top:0, behavior:"smooth"});
+  } else {
+    document.getElementById("quizCard").style.display = "none";
+    document.getElementById("resultArea").style.display = "block";
+    document.getElementById("finalScore").textContent = `${score} / ${questions.length} câu đúng`;
+    const pct = Math.round(score / questions.length * 100);
+    document.getElementById("finalMessage").textContent =
+      pct >= 80 ? "Rất tốt! Xin Chúa chúc lành cho việc học hỏi giáo lý của bạn."
+      : pct >= 60 ? "Khá tốt! Hãy ôn lại những câu còn sai để củng cố kiến thức."
+      : "Hãy tiếp tục ôn tập giáo lý và thử lại nhé!";
+    document.getElementById("progressBar").style.width = "100%";
+  }
+}
+
+function restartQuiz() {
+  current = 0; score = 0;
+  document.getElementById("resultArea").style.display = "none";
+  document.getElementById("quizCard").style.display = "block";
+  renderQuestion();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
