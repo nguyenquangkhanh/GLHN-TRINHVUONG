@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Đề Thi Giáo Lý Thêm Sức - Số II</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-light:#1b3a6b;
+    --navy-accent:#274a7a;
+    --gold:#c9a227;
+    --green:#1f7a3d;
+    --red:#b3261e;
+    --bg:#eef2f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    font-size:18px;
+    background:var(--bg);
+    color:var(--navy);
+    margin:0;
+    padding:20px;
+  }
+  .container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:20px 24px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header .titles h1{
+    margin:0 0 4px 0;
+    font-size:22px;
+  }
+  header .titles p{
+    margin:0;
+    color:#cdd9ee;
+    font-size:16px;
+  }
+  #score-badge{
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    padding:8px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  #progress-bar-wrap{
+    background:#d7e0f0;
+    border-radius:20px;
+    height:14px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  #progress-bar{
+    background:var(--gold);
+    height:100%;
+    width:0%;
+    transition:width .3s ease;
+  }
+  #progress-label{
+    text-align:right;
+    color:var(--navy-light);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin:0 0 14px 0;
+    font-size:19px;
+    font-weight:700;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--navy-accent);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    min-height:320px;
+  }
+  .q-title{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+    font-size:19px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border:2px solid #c7d3e8;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f6f8fc;
+    transition:.15s;
+  }
+  .option:hover{
+    border-color:var(--navy-light);
+    background:#e9eef8;
+  }
+  .option input{
+    margin-top:4px;
+    transform:scale(1.2);
+    accent-color:var(--navy);
+  }
+  .option.correct{
+    background:#e3f4e8;
+    border-color:var(--green);
+    color:var(--green);
+    font-weight:700;
+  }
+  .option.incorrect{
+    background:#fbe6e5;
+    border-color:var(--red);
+    color:var(--red);
+    font-weight:700;
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  #feedback{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:19px;
+    display:none;
+  }
+  #feedback.correct-fb{
+    background:#e3f4e8;
+    color:var(--green);
+    display:block;
+  }
+  #feedback.incorrect-fb{
+    background:#fbe6e5;
+    color:var(--red);
+    display:block;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  #next-btn{
+    padding:14px 28px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:none;
+  }
+  #next-btn:hover{
+    background:var(--navy-light);
+  }
+  #result{
+    display:none;
+    background:var(--navy);
+    color:#fff;
+    padding:28px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:24px;
+  }
+  #result h2{
+    margin-top:0;
+    font-size:28px;
+    color:var(--gold);
+  }
+  #result p{
+    font-size:20px;
+  }
+  #restart-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  #restart-btn:hover{
+    background:var(--navy-light);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="titles">
+      <h1>TRẮC NGHIỆM</h1>
+      <p>ĐỀ THI SỐ II</p>
+    </div>
+    <div id="score-badge">Đúng: 0</div>
+  </header>
+
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+
+  <div id="result">
+    <h2 id="score-text"></h2>
+    <p id="score-detail"></p>
+    <button id="restart-btn" type="button">LÀM LẠI</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="section-title" id="section-title" style="display:none;"></div>
+    <div class="card">
+      <div class="q-title" id="q-title"></div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button id="next-btn" type="button">CÂU TIẾP THEO →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+ {section:"PHẦN I - GIÁO LÝ (5 điểm)", q:"Câu 1: Thiên Chúa tạo dựng những gì?", options:{A:"Thiên Chúa tạo dựng trời và đất",B:"Thiên Chúa tạo dựng muôn vật hữu hình và vô hình",C:"Thiên Chúa chỉ dựng nên con người mà thôi",D:"Cả A và B"}, answer:"D"},
+ {q:"Câu 2: Sự quan phòng của Thiên Chúa là gì?", options:{A:"Là việc Thiên Chúa tiếp tục chăm sóc và hướng dẫn muôn loài muôn vật tiến dần đến mức hoàn hảo như Ngài muốn.",B:"Là việc Thiên Chúa tiếp tục chăm sóc và hướng dẫn muôn loài muôn vật tiến dần đến mức hoàn hảo như Ngài muốn. Để họ khỏi sa vào những chước cám dỗ của quỷ ma.",C:"Là việc Thiên Chúa tiếp tục chăm sóc và hướng dẫn muôn loài tiến dần đến mức hoàn hảo như Ngài muốn.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 3: Thuở ban đầu, Thiên Chúa đã ban cho con người có những đặc ân nào?", options:{A:"Thiên Chúa ban cho con người được sống thân tình với Ngài, không phải đau khổ và không phải chết.",B:"Thiên Chúa ban cho con người được sống thân tình với Ngài, sống hòa hợp với bản thân, với mọi người mọi vật, không phải đau khổ và không phải chết.",C:"Thiên Chúa ban cho con người được sống hòa hợp với bản thân, với mọi người mọi vật, không phải đau khổ và không phải chết.",D:"Cả A và C"}, answer:"B"},
+ {q:"Câu 4: Tội tổ tông gây nên những hậu quả nào?", options:{A:"Tội tổ tông làm cho loài người mất sự hòa hợp với bản thân, với mọi người mọi vật, hướng chiều về tội lỗi, phải đau khổ và phải chết.",B:"Tội tổ tông làm cho loài người mất hết ơn nghĩa với Thiên Chúa, hướng chiều về tội lỗi, phải đau khổ và phải chết.",C:"Tội tổ tông làm cho loài người mất hết ơn nghĩa với Thiên Chúa, mất sự hòa hợp với bản thân, với mọi người mọi vật, hướng chiều về tội lỗi, phải đau khổ và phải chết.",D:"Cả A và B"}, answer:"C"},
+ {q:"Câu 5: Ngôi Hai Thiên Chúa xuống thế làm người để làm gì?", options:{A:"Ngôi Hai Thiên Chúa xuống thế làm người để cứu chuộc chúng ta khỏi tội lỗi.",B:"Để tỏ cho chúng ta biết tình yêu của Thiên Chúa.",C:"Để làm mẫu mực cho chúng ta sống thánh thiện; và để chúng ta được kết hợp với Ngài mà trở nên con cái Thiên Chúa.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 6: Đời sống ẩn dật của Chúa Giê-su dạy chúng ta điều gì?", options:{A:"Dạy chúng ta sống thánh thiện trong đời sống thường ngày qua cầu nguyện, lao động và yêu thương.",B:"Dạy chúng ta sống thánh thiện trong đời sống thường ngày qua cầu nguyện, lao động và yêu thương. Đồng thời, còn dạy chúng ta sống hiếu thảo với cha mẹ.",C:"Dạy chúng ta sống thánh thiện trong đời sống thường ngày qua cầu nguyện, lao động và yêu thương. Đồng thời, còn dạy chúng ta sống hiếu thảo với cha mẹ qua việc vâng lời các ngài và trợ giúp các ngài trong khả năng của mình.",D:"Tất cả đều sai"}, answer:"B"},
+ {q:"Câu 7: Chúng ta phải làm gì để được vào Nước Thiên Chúa?", options:{A:"Chúng ta phải hết lòng trông cậy vào lòng từ bi nhân hậu của Thiên Chúa, cùng sám hối và tin vào Tin Mừng.",B:"Chúng ta phải hết lòng trông cậy vào lòng từ bi nhân hậu của Thiên Chúa, cùng sám hối, tin vào Tin Mừng và khiêm tốn đón nhận lòng thương xót vô biên của Thiên Chúa.",C:"Chúng ta phải sám hối, tin vào Tin Mừng và khiêm tốn đón nhận lòng thương xót vô biên của Thiên Chúa.",D:"Tất cả đều sai"}, answer:"C"},
+ {q:"Câu 8: Chúa Thánh Thần là Đấng nào?", options:{A:"Chúa Thánh Thần là Ngôi Ba Thiên Chúa",B:"Ngài bởi Đức Chúa Cha và Đức Chúa Con mà ra",C:"Ngài được phụng thờ và tôn vinh cùng với Đức Chúa Cha và Đức Chúa Con.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 9: Ta phải sống với Chúa Thánh Thần như thế nào?", options:{A:"Ta phải tin kính, thờ phượng Chúa Thánh Thần.",B:"Ta phải không ngừng cầu xin Chúa Thánh Thần và vâng theo ơn Người soi sáng.",C:"Ta phải tôn trọng hồn xác ta là đền thờ của Người.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 10: Có mấy ơn Chúa Thánh Thần?", options:{A:"Có bảy ơn Chúa Thánh Thần. Đó là: Ơn khôn ngoan, Ơn hiểu biết, Ơn thông minh, Ơn biết lo liệu, Ơn sức mạnh, Ơn đạo đức và Ơn biết kính sợ Thiên Chúa.",B:"Có bảy ơn Chúa Thánh Thần. Đó là: Ơn khôn ngoan, Ơn hiểu biết, Ơn thông minh, Ơn biết lo liệu, Ơn mạnh mẽ, Ơn sốt sắng và Ơn biết kính sợ Thiên Chúa.",C:"Có bảy ơn Chúa Thánh Thần. Đó là: Ơn khôn ngoan, Ơn hiểu biết, Ơn thông minh, Ơn biết chu toàn mọi sự, Ơn khỏe mạnh, Ơn đạo đức và Ơn biết kính sợ Thiên Chúa.",D:"Tất cả đều đúng"}, answer:"A"},
+ {q:"Câu 11: Hoa trái của Chúa Thánh Thần là gì?", options:{A:"Là những điều tốt lành mà chúng ta có được nhờ ơn Chúa Thánh Thần.",B:"Là những điều tốt lành và sự hiểu biết mà chúng ta có được nhờ ơn Chúa Thánh Thần.",C:"Là những điều tốt lành, sự hiểu biết cùng ơn khôn ngoan mà chúng ta có được nhờ ơn Chúa Thánh Thần.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 12: Có bao nhiêu hoa trái của Chúa Thánh Thần?", options:{A:"Theo truyền thống của Hội Thánh, có mười hoa trái của Chúa Thánh Thần là: Bác ái, vui vẻ và bình an, kiên nhẫn, hiền hòa và nhẫn nại, từ tâm, khoan dung và trung tín; khiêm nhu, tiết độ và khiết tịnh.",B:"Theo truyền thống của Hội Thánh, có mười hai hoa trái của Chúa Thánh Thần là: Bác ái, hoan lạc và bình an, kiên nhẫn, quảng đại và nhân từ, từ tâm, khoan dung và trung tín; khiêm nhu, tiết độ và khiết tịnh.",C:"Theo truyền thống của Hội Thánh, có mười hoa trái của Chúa Thánh Thần là: Bác ái, hoan lạc và bình an, kiên nhẫn, hiền hòa và nhẫn nại, từ tâm, khoan dung và trung tín; khiêm nhu, tiết độ và khiết tịnh.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 13: Nhờ đâu chúng ta biết được mầu nhiệm Thiên Chúa Ba Ngôi?", options:{A:"Nhờ Chúa Giê-su mặc khải",B:"Nhờ Chúa Thánh Thần soi sáng",C:"Nhờ Giáo Hội hướng dẫn",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 14: Giáo sĩ gồm những ai?", options:{A:"Gồm những người đã lãnh nhận Bí tích Truyền Chức Thánh là Giám mục, linh mục và phó tế.",B:"Gồm những người đã lãnh nhận Bí tích Rửa Tội là Giám mục, linh mục và phó tế.",C:"Gồm những người đã lãnh nhận Bí tích Thêm Sức là Giám mục, linh mục và phó tế.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 15: Bí tích Thêm Sức là gì?", options:{A:"Là Bí tích Chúa Giê-su đã lập, để ban tràn đầy Chúa Thánh Thần, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",B:"Là Bí tích Chúa Giê-su đã lập, trước khi Ngài về trời, để ban tràn đầy Chúa Thánh Thần, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",C:"Là Bí tích Chúa Giê-su đã lập, trước khi Ngài về trời, để ban tràn đầy Chúa Thánh Thần và những cần thiết khác, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 16: Nghi thức chính yếu của Bí tích Thêm Sức là gì?", options:{A:"Là việc xức dầu dự tòng trên trán người đã lãnh Bí tích Rửa Tội, cùng với việc đặt tay trên đầu người ấy và đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",B:"Là việc xức dầu thánh trên trán người đã lãnh Bí tích Rửa Tội, cùng với lời đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",C:"Là việc xức dầu thánh trên trán người đã lãnh Bí tích Rửa Tội, cùng với việc đặt tay trên đầu người ấy và đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",D:"Tất cả đều đúng"}, answer:"C"},
+ {q:"Câu 17: Hiệu quả của Bí tích Thêm Sức là gì?", options:{A:"Là việc đổ tràn ơn sức mạnh của Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.",B:"Là việc đổ tràn Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.",C:"Là việc đổ tràn ơn khôn ngoan của Chúa Thánh Thần trên người lãnh Bí tích, nhờ đó họ được ghi ấn tín không thể tẩy xóa và gia tăng ân sủng Bí tích Rửa Tội.",D:"Tất cả đều đúng"}, answer:"B"},
+ {q:"Câu 18: Việc gia tăng ân sủng Bí tích Rửa Tội nghĩa là gì?", options:{A:"Nghĩa là giúp chúng ta tiến sâu hơn vào ơn làm con cái Thiên Chúa, được kết hợp mật thiết hơn với Đức Ki-tô và Hội Thánh; được thêm các ơn Chúa Thánh Thần; được thêm sức mạnh để làm chứng và bảo vệ đức tin.",B:"Nghĩa là giúp chúng ta được kết hợp mật thiết hơn với Đức Ki-tô và Hội Thánh; được thêm các ơn Chúa Thánh Thần; được thêm sức mạnh để làm chứng và bảo vệ đức tin.",C:"Nghĩa là giúp chúng ta được thêm các ơn Chúa Thánh Thần; được thêm sức mạnh để làm chứng và bảo vệ đức tin.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 19: Những ai được lãnh Bí tích Thêm Sức?", options:{A:"Những người đã được rửa tội và đến tuổi khôn, sạch tội trọng, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu.",B:"Những người đã được rửa tội và đến tuổi khôn, sạch tội trọng, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu. Ngoài ra cần có người đỡ đầu.",C:"Những người đã được rửa tội và đến tuổi khôn, học giáo lý đầy đủ và quyết sống đúng bổn phận Ki-tô hữu. Ngoài ra cần có người đỡ đầu.",D:"Tất cả đều đúng"}, answer:"B"},
+ {q:"Câu 20: Những ai là thừa tác viên của Bí tích Thêm Sức?", options:{A:"Thừa tác viên thông thường là Giám mục và những linh mục được chỉ định; nhưng trong trường hợp khẩn cấp thì bất cứ ai cũng đều có nhiệm vụ ban bí tích này.",B:"Thừa tác viên thông thường là Giám mục và những linh mục được chỉ định; nhưng trong trường hợp khẩn cấp thì bất cứ linh mục nào cũng đều có nhiệm vụ ban bí tích này.",C:"Thừa tác viên thông thường là Giám mục, nhưng trong trường hợp khẩn cấp thì bất cứ linh mục nào cũng đều có nhiệm vụ ban bí tích này.",D:"Tất cả đều đúng"}, answer:"B"},
+
+ {section:"PHẦN II - KINH THÁNH (1 điểm)", q:"Câu 21: Em hãy hoàn tất câu Kinh Thánh sau: \"Thiên Chúa đã ban cho tôi làm người ... Đức Giê-su Ki-tô giữa các dân ngoại, lo việc tế tự là rao giảng Tin Mừng của Thiên Chúa, để các dân ngoại được Thánh Thần thánh hoá mà trở nên một lễ phẩm đẹp lòng Thiên Chúa.\" (Rm 15,15b-16)", options:{A:"Phục vụ",B:"Tông đồ của",C:"Môn đệ của",D:"Chứng nhân của"}, answer:"A"},
+ {q:"Câu 22: Em hãy hoàn tất câu Kinh Thánh sau: \"Nhưng một người lính lấy giáo đâm vào ... Tức thì, máu cùng nước chảy ra.\" (Ga 19,34)", options:{A:"Cạnh sườn Người",B:"Ngực của Người",C:"Thân thể Người",D:"Tất cả đều sai"}, answer:"A"},
+
+ {section:"PHẦN III - KINH NGUYỆN (1 điểm)", q:"Câu 23: Em hãy hoàn tất lời Kinh Sấp mình sau: «Lạy Chúa, con sấp mình xuống trước mặt Chúa, con tin thật Chúa ở khắp mọi nơi,... mọi sự, hằng xem thấy con, hằng nghe lời con cầu nguyện»", options:{A:"Hay biết",B:"Thông biết",C:"Thông suốt",D:"Không biết"}, answer:"B"},
+ {q:"Câu 24: Em hãy hoàn tất lời Kinh Dấu Thánh Giá (kép) sau: «Lạy Chúa chúng con, vì dấu Thánh giá, ... chúng con cho khỏi kẻ thù. Nhân danh Cha và Con và Thánh Thần. Amen».", options:{A:"Xin cứu",B:"Xin giúp",C:"Xin chữa",D:"Cả A, B và C"}, answer:"C"}
+];
+let current = 0;
+let score = 0;
+let answered = false;
+
+const qTitle = document.getElementById('q-title');
+const optionsDiv = document.getElementById('options');
+const sectionTitle = document.getElementById('section-title');
+const feedback = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const scoreBadge = document.getElementById('score-badge');
+const progressBar = document.getElementById('progress-bar');
+const progressLabel = document.getElementById('progress-label');
+const quizArea = document.getElementById('quiz-area');
+const resultDiv = document.getElementById('result');
+
+function renderQuestion(idx){
+  answered = false;
+  const item = quizData[idx];
+
+  if(item.section){
+    sectionTitle.textContent = item.section;
+    sectionTitle.style.display = 'block';
+  } else {
+    sectionTitle.style.display = 'none';
+  }
+
+  qTitle.textContent = item.q;
+  optionsDiv.innerHTML = '';
+  feedback.style.display = 'none';
+  feedback.className = '';
+  nextBtn.style.display = 'none';
+
+  Object.keys(item.options).forEach(key => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${key}`;
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'currentQ';
+    input.value = key;
+    const span = document.createElement('span');
+    span.textContent = `${key}. ${item.options[key]}`;
+    label.appendChild(input);
+    label.appendChild(span);
+    label.addEventListener('click', () => selectAnswer(key));
+    optionsDiv.appendChild(label);
+  });
+
+  progressBar.style.width = ((idx) / quizData.length * 100) + '%';
+  progressLabel.textContent = `Câu ${idx + 1} / ${quizData.length}`;
+}
+
+function selectAnswer(key){
+  if(answered) return;
+  answered = true;
+  const item = quizData[current];
+  const correct = item.answer;
+  const isCorrect = key === correct;
+
+  if(isCorrect) score++;
+  scoreBadge.textContent = `Đúng: ${score}`;
+
+  Object.keys(item.options).forEach(k => {
+    const label = document.getElementById(`opt-${k}`);
+    label.classList.add('disabled');
+    if(k === correct) label.classList.add('correct');
+    else if(k === key) label.classList.add('incorrect');
+  });
+
+  feedback.textContent = isCorrect ? '✔ Chính xác!' : `✘ Sai rồi! Đáp án đúng là: ${correct}`;
+  feedback.className = isCorrect ? 'correct-fb' : 'incorrect-fb';
+  feedback.style.display = 'block';
+
+  progressBar.style.width = ((current + 1) / quizData.length * 100) + '%';
+
+  if(current < quizData.length - 1){
+    nextBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'none';
+    setTimeout(showResult, 600);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  renderQuestion(current);
+});
+
+function showResult(){
+  quizArea.style.display = 'none';
+  const pct = Math.round(score / quizData.length * 100);
+  document.getElementById('score-text').textContent = `Điểm số: ${score} / ${quizData.length}`;
+  document.getElementById('score-detail').textContent = `Tỷ lệ đúng: ${pct}%`;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+renderQuestion(current);
+</script>
+</body>
+</html>
