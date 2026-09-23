@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Đề Thi Giáo Lý Thêm Sức - Số V</title>
+<style>
+  :root{
+    --navy:#0a1f44;
+    --navy-light:#1b3a6b;
+    --navy-accent:#274a7a;
+    --gold:#c9a227;
+    --green:#1f7a3d;
+    --red:#b3261e;
+    --bg:#eef2f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Segoe UI', Arial, sans-serif;
+    font-size:18px;
+    background:var(--bg);
+    color:var(--navy);
+    margin:0;
+    padding:20px;
+  }
+  .container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:20px 24px;
+    border-radius:10px;
+    margin-bottom:18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header .titles h1{
+    margin:0 0 4px 0;
+    font-size:22px;
+  }
+  header .titles p{
+    margin:0;
+    color:#cdd9ee;
+    font-size:16px;
+  }
+  #score-badge{
+    background:var(--gold);
+    color:var(--navy);
+    font-weight:800;
+    font-size:18px;
+    padding:8px 16px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  #progress-bar-wrap{
+    background:#d7e0f0;
+    border-radius:20px;
+    height:14px;
+    margin-bottom:8px;
+    overflow:hidden;
+  }
+  #progress-bar{
+    background:var(--gold);
+    height:100%;
+    width:0%;
+    transition:width .3s ease;
+  }
+  #progress-label{
+    text-align:right;
+    color:var(--navy-light);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+  .section-title{
+    color:var(--navy);
+    border-left:6px solid var(--gold);
+    padding-left:12px;
+    margin:0 0 14px 0;
+    font-size:19px;
+    font-weight:700;
+  }
+  .card{
+    background:#fff;
+    border:2px solid var(--navy-accent);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    min-height:320px;
+  }
+  .q-title{
+    font-weight:700;
+    color:var(--navy);
+    margin-bottom:16px;
+    font-size:19px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .option{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:12px 14px;
+    border:2px solid #c7d3e8;
+    border-radius:8px;
+    cursor:pointer;
+    background:#f6f8fc;
+    transition:.15s;
+  }
+  .option:hover{
+    border-color:var(--navy-light);
+    background:#e9eef8;
+  }
+  .option input{
+    margin-top:4px;
+    transform:scale(1.2);
+    accent-color:var(--navy);
+  }
+  .option.correct{
+    background:#e3f4e8;
+    border-color:var(--green);
+    color:var(--green);
+    font-weight:700;
+  }
+  .option.incorrect{
+    background:#fbe6e5;
+    border-color:var(--red);
+    color:var(--red);
+    font-weight:700;
+  }
+  .option.disabled{
+    pointer-events:none;
+  }
+  #feedback{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:19px;
+    display:none;
+  }
+  #feedback.correct-fb{
+    background:#e3f4e8;
+    color:var(--green);
+    display:block;
+  }
+  #feedback.incorrect-fb{
+    background:#fbe6e5;
+    color:var(--red);
+    display:block;
+  }
+  .nav-row{
+    display:flex;
+    justify-content:flex-end;
+  }
+  #next-btn{
+    padding:14px 28px;
+    font-size:19px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    display:none;
+  }
+  #next-btn:hover{
+    background:var(--navy-light);
+  }
+  #result{
+    display:none;
+    background:var(--navy);
+    color:#fff;
+    padding:28px;
+    border-radius:10px;
+    text-align:center;
+    margin-bottom:24px;
+  }
+  #result h2{
+    margin-top:0;
+    font-size:28px;
+    color:var(--gold);
+  }
+  #result p{
+    font-size:20px;
+  }
+  #restart-btn{
+    display:block;
+    width:100%;
+    padding:16px;
+    font-size:20px;
+    font-weight:700;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  #restart-btn:hover{
+    background:var(--navy-light);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="titles">
+      <h1>TRẮC NGHIỆM</h1>
+      <p>ĐỀ THI SỐ V</p>
+    </div>
+    <div id="score-badge">Đúng: 0</div>
+  </header>
+
+  <div id="progress-bar-wrap"><div id="progress-bar"></div></div>
+  <div id="progress-label"></div>
+
+  <div id="result">
+    <h2 id="score-text"></h2>
+    <p id="score-detail"></p>
+    <button id="restart-btn" type="button">LÀM LẠI</button>
+  </div>
+
+  <div id="quiz-area">
+    <div class="section-title" id="section-title" style="display:none;"></div>
+    <div class="card">
+      <div class="q-title" id="q-title"></div>
+      <div class="options" id="options"></div>
+      <div id="feedback"></div>
+    </div>
+    <div class="nav-row">
+      <button id="next-btn" type="button">CÂU TIẾP THEO →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const quizData = [
+ {section:"PHẦN I - GIÁO LÝ (5 điểm)", q:"Câu 1: Phụng vụ là gì?", options:{A:"Phụng vụ là việc Hội Thánh chính thức cử hành mầu nhiệm Đức Ki-tô, để thờ phượng Thiên Chúa và thánh hóa con người.",B:"Phụng vụ là việc Hội Thánh chính thức cử hành, để thờ phượng Thiên Chúa và thánh hóa con người.",C:"Phụng vụ là những cử hành, để thờ phượng Thiên Chúa và thánh hóa con người.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 2: Ngày Chúa Nhật quan trọng thế nào trong năm Phụng vụ?", options:{A:"Ngày Chúa Nhật rất quan trọng vì là \"Ngày của Chúa\", ngày Chúa Phục sinh. Vì thế, người tín hữu cần tham dự thánh lễ cách đầy đủ, ngoài ra còn phải tham dự các lễ nghi phụng vụ trong ngày quan trọng này.",B:"Ngày Chúa Nhật rất quan trọng vì là \"Ngày của Chúa\". Vì thế, người tín hữu cần tham dự thánh lễ cách đầy đủ, ngoài ra còn phải tham dự các lễ nghi phụng vụ trong ngày quan trọng này.",C:"Ngày Chúa Nhật rất quan trọng vì là \"Ngày của Chúa\", ngày Chúa Phục sinh. Vì thế, ngày Chúa nhật là nền tảng và trung tâm của cả năm Phụng vụ.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 3: Bí tích là gì?", options:{A:"Bí tích là dấu chỉ bên ngoài Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, hầu mang lại sự sống thần linh.",B:"Bí tích là dấu chỉ Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, hầu mang lại sự sống thần linh.",C:"Bí tích là dấu chỉ bên ngoài Chúa Giê-su đã lập và truyền lại cho Hội Thánh cử hành, để diễn tả và thông ban cho chúng ta ân sủng bên trong là sự sống thần linh.",D:"Cả A, B và C"}, answer:"C"},
+ {q:"Câu 4: Cần có những điều kiện nào để lãnh nhận các Bí tích?", options:{A:"Cần có những điều kiện này là: Phải đón nhận và học hiểu Lời Chúa trong một thời gian; Thêm vào đó, phải có đức tin chân thật cùng lòng ước muốn lãnh nhận.",B:"Cần có những điều kiện này là: Phải đón nhận và học hiểu Lời Chúa; Thêm vào đó, phải có đức tin và thật lòng ước muốn.",C:"Cần có những điều kiện này là: Phải học hiểu Lời Chúa trong một thời gian; Thêm vào đó, phải có đức tin chân thật cùng lòng ước muốn lãnh nhận.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 5: Ai có thể lãnh Bí tích Xức Dầu?", options:{A:"Mọi tín hữu khi lâm bệnh nặng, hoặc bị yếu liệt vì tuổi già, đều có thể lãnh Bí tích Xức Dầu.",B:"Mọi tín hữu khi lâm bệnh nặng, khi gặp cảnh nguy tử hoặc bị yếu liệt vì tuổi già, đều có thể lãnh Bí tích Xức Dầu.",C:"Mọi tín hữu khi lâm bệnh nặng, khi gặp cảnh nguy tử đều có thể lãnh Bí tích Xức Dầu.",D:"Tất cả đều đúng"}, answer:"B"},
+ {q:"Câu 6: Bí tích Xức Dầu có những hiệu quả nào?", options:{A:"Bí tích Xức Dầu kết hợp bệnh nhân với cuộc khổ nạn của Chúa Ki-tô, để sinh ích cho họ và cho Hội Thánh;",B:"Bí tích Xức Dầu Mang lại cho họ niềm an ủi và lòng can đảm, để chịu đựng những đau đớn của bệnh tật hoặc tuổi già;",C:"Bí tích Xức Dầu thứ tha các tội lỗi đã phạm nếu chưa xưng được; Chữa lành thân xác nếu phù hợp với ý Chúa, đồng thời, chuẩn bị cho \"cuộc vượt qua\" sang cõi sống đời đời.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 7: Những dấu nào cho biết mình có ơn gọi sống đời thánh hiến?", options:{A:"Có ba dấu này: một là có ý ngay lành và ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ sức khỏe cũng như trình độ mà Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.",B:"Có ba dấu này: một là có lòng ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ trình độ như Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.",C:"Có ba dấu này: một là có ý ngay lành và ước muốn dấn thân phục vụ Chúa và tha nhân; hai là có đủ điều kiện Hội Thánh quy định và ba là được những người có trách nhiệm tuyển chọn.",D:"Tất cả đều sai"}, answer:"C"},
+ {q:"Câu 8: Người muốn sống đời thánh hiến phải làm gì?", options:{A:"Phải cầu nguyện, suy nghĩ, xin người khôn ngoan chỉ dẫn và sẵn sàng đáp lại tiếng Chúa.",B:"Phải sống một đời sống tốt lành, đồng thời, cần xin ơn Chúa soi sáng để có thể đáp lại lời mời gọi của Ngài.",C:"Phải sống một đời sống tốt lành, siêng năng cầu nguyện, đồng thời, cần xin ơn Chúa soi sáng để có thể đáp lại lời mời gọi của Ngài.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 9: Bí tích Truyền Chức Thánh là gì?", options:{A:"Là Bí tích Chúa Giê-su đã lập, để trao ban cho những người Ngài chọn, để họ tiếp tục thực thi trong Hội Thánh cho đến ngày tận thế.",B:"Là Bí tích Chúa Giê-su đã lập, để ủy thác sứ vụ của Ngài cho các Tông đồ, nhờ đó, sứ vụ này tiếp tục thực thi trong Hội Thánh cho đến ngày tận thế.",C:"Là Bí tích Chúa Giê-su đã lập, để trao ban cho những người Ngài chọn, để họ trở nên những chứng nhân của Chúa và Hội Thánh cho đến ngày tận thế.",D:"Tất cả đều đúng"}, answer:"B"},
+ {q:"Câu 10: Chúa Giê-su lập Bí tích Truyền Chức Thánh khi nào?", options:{A:"Chúa Giê-su đã lập Bí tích Truyền Chức trong Bữa Tiệc Ly, trước khi Ngài đi chịu chết.",B:"Chúa Giê-su đã lập Bí tích Truyền Chức trong Bữa Tiệc Ly, trước khi Ngài đi chịu chết. Để qua tác vụ họ lãnh nhận, Thiên Chúa có thể tiếp tục thông ban những ơn lành của Ngài cho con người mọi ngày cho đến tận thế.",C:"Chúa Giê-su đã lập Bí tích Truyền Chức trong Bữa Tiệc Ly, khi Ngài nói với các Tông đồ rằng: \"Anh em hãy làm việc này mà tưởng nhớ đến Thầy\".",D:"Cả A và B"}, answer:"C"},
+ {q:"Câu 11: Gia đình là gì trong kế hoạch của Thiên Chúa?", options:{A:"Gia đình vừa là cộng đoàn yêu thương mà Thiên Chúa đã thiết lập, mọi người chung sống hạnh phúc.",B:"Gia đình vừa là cộng đoàn yêu thương mà Thiên Chúa đã thiết lập, để cha mẹ và con cái chung sống hạnh phúc, vừa là Hội Thánh tại gia vì là cộng đoàn đức tin, đức cậy và đức mến.",C:"Gia đình vừa là cộng đoàn yêu thương mà Thiên Chúa đã thiết lập, mọi người chung sống hạnh phúc. Nhờ đó, họ trở nên chứng tá cho Chúa trong ơn gọi hôn nhân gia đình.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 12: Gia đình có vai trò nào trong xã hội?", options:{A:"Gia đình là tế bào đầu tiên và là nền móng để xây dựng một xã hội vững bền.",B:"Gia đình là nền móng đầu tiên để xây dựng một xã hội vững bền. Nếu một gia đình hạnh phúc và hiệp thông, xã hội sẽ bình an và thịnh vượng và ngược lại, nếu gia đình bất hòa chia rẽ, xã hội sẽ khó lòng phát triển.",C:"Gia đình là nền móng đầu tiên để xây dựng một xã hội vững bền. Vì là nền móng, nên gia đình có vị trí vô cùng quan trọng trong xã hội.",D:"Tất cả đều đúng"}, answer:"A"},
+ {q:"Câu 13: Bí tích Thêm Sức là gì?", options:{A:"Là Bí tích Chúa Giê-su đã lập, để ban tràn đầy Chúa Thánh Thần, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",B:"Là Bí tích Chúa Giê-su đã lập, trước khi Ngài về trời, để ban tràn đầy Chúa Thánh Thần, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",C:"Là Bí tích Chúa Giê-su đã lập, trước khi Ngài về trời, để ban tràn đầy Chúa Thánh Thần và những cần thiết khác, hầu giúp chúng ta sống ơn Bí tích Rửa Tội cách mạnh mẽ và tốt đẹp hơn.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 14: Nghi thức chính yếu của Bí tích Thêm Sức là gì?", options:{A:"Là việc xức dầu dự tòng trên trán người đã lãnh Bí tích Rửa Tội, cùng với việc đặt tay trên đầu người ấy và đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",B:"Là việc xức dầu thánh trên trán người đã lãnh Bí tích Rửa Tội, cùng với lời đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",C:"Là việc xức dầu thánh trên trán người đã lãnh Bí tích Rửa Tội, cùng với việc đặt tay trên đầu người ấy và đọc rằng: \"Hãy lãnh nhận ấn tín ơn Chúa Thánh Thần\".",D:"Tất cả đều đúng"}, answer:"C"},
+ {q:"Câu 15: Người lãnh Bí tích Thêm Sức có những bổn phận nào?", options:{A:"Có bổn phận nỗ lực thi hành Lời Chúa trong đời sống thường ngày.",B:"Có bổn phận góp phần xây dựng xã hội theo tinh thần Tin Mừng.",C:"Có bổn phận tích cực giới thiệu Chúa cho mọi người.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 16: Người Ki-tô hữu có bổn phận nào đối với xã hội?", options:{A:"Người Ki-tô hữu cần tích cực hoán cải nội tâm và cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.",B:"Người Ki-tô hữu cần tích cực cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.",C:"Người Ki-tô hữu cần tích cực sống chứng tá bằng việc hoán cải nội tâm, cổ võ công bằng bác ái, đồng thời góp phần đổi mới các định chế và điều kiện sống trong xã hội dưới ánh sáng Tin Mừng.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 17: Hoạt động tông đồ nghĩa là gì?", options:{A:"Hoạt động tông đồ là dấn thân vào mọi hoạt động trong đời sống xã hội, với mục đích giúp cho người khác biết và tin theo Chúa Giê-su.",B:"Hoạt động tông đồ là làm việc có mục đích giúp cho người khác biết và tin theo Chúa Giê-su.",C:"Hoạt động tông đồ là dấn thân vào mọi hoạt động trong đời sống Giáo Hội cũng như xã hội, với mục đích giúp cho người khác biết và tin theo Chúa Giê-su.",D:"Cả A, B và C"}, answer:"B"},
+ {q:"Câu 18: Vì sao Hội Thánh có sứ mạng truyền giáo?", options:{A:"Vì Thiên Chúa muốn cho mọi người được ơn cứu độ.",B:"Vì Hội Thánh có bổn phận đem chân lý được Thiên Chúa trao phó đến cho mọi người.",C:"Vì chính Chúa Ki-tô, trước khi về trời đã sai các Tông đồ đi rao giảng Tin Mừng cho muôn dân.",D:"Cả A, B và C"}, answer:"D"},
+ {q:"Câu 19: Á Bí tích là gì?", options:{A:"Á Bí tích là những dấu hiệu thánh thiêng do Hội Thánh thiết lập, để giúp các tín hữu thánh hóa một số hoàn cảnh trong cuộc sống.",B:"Á Bí tích là những dấu hiệu thánh thiêng do Chúa Giê-su thiết lập, để giúp các tín hữu thánh hóa một số hoàn cảnh trong cuộc sống.",C:"Á Bí tích là những dấu hiệu thánh thiêng do Hội Thánh thiết lập, để giúp các tín hữu thánh hóa bản thân mình, cùng một số hoàn cảnh trong cuộc sống.",D:"Cả A, B và C"}, answer:"A"},
+ {q:"Câu 20: Hội Thánh có thái độ nào đối với những việc đạo đức bình dân?", options:{A:"Hội Thánh cổ võ những việc đạo đức bình dân phù hợp với Tin Mừng và sự khôn ngoan của con người, đồng thời góp phần làm cho đời sống Ki-tô hữu được phong phú.",B:"Hội Thánh cổ võ những việc đạo đức bình dân phù hợp với Tin Mừng và góp phần làm cho đời sống Ki-tô hữu được phong phú.",C:"Hội Thánh chỉ cổ võ những việc đạo đức bình dân phù hợp với Tin Mừng và giáo huấn của Hội Thánh mà thôi.",D:"Cả A, B và C"}, answer:"A"},
+
+ {section:"PHẦN II - KINH THÁNH (1 điểm)", q:"Câu 21: Em hãy hoàn tất câu Kinh Thánh sau: \"Thiên Chúa đã ban cho tôi làm người ... Đức Giê-su Ki-tô giữa các dân ngoại, lo việc tế tự là rao giảng Tin Mừng của Thiên Chúa, để các dân ngoại được Thánh Thần thánh hoá mà trở nên một lễ phẩm đẹp lòng Thiên Chúa.\" (Rm 15,15b-16)", options:{A:"Phục vụ",B:"Tông đồ của",C:"Môn đệ của",D:"Chứng nhân của"}, answer:"A"},
+ {q:"Câu 22: Em hãy hoàn tất câu Kinh Thánh sau: \"Ai trong anh em đau yếu ư? Người ấy hãy mời các kỳ mục của Hội Thánh đến; họ sẽ ... cho người ấy, sau khi xức dầu nhân danh Chúa.\" (Gc 5,14)", options:{A:"Đặt tay",B:"Cầu nguyện",C:"Giải tội",D:"Ban bình an"}, answer:"B"},
+
+ {section:"PHẦN III - KINH NGUYỆN (1 điểm)", q:"Câu 23: Em hãy hoàn tất lời kinh Năm sự Thương (1): «Thứ nhất thì ngắm: Đức Chúa Giê-su lo buồn đổ mồ hôi máu. Ta hãy xin cho được ...»", options:{A:"Lòng lo buồn sầu não",B:"Lo buồn vì lội lỗi mình",C:"Ăn năn tội nên",D:"Tất cả đều đúng"}, answer:"C"},
+ {q:"Câu 24: Em hãy hoàn tất lời kinh Năm sự Mừng (1): «Thứ nhất thì ngắm: Đức Chúa Giê-su sống lại. Ta hãy xin cho được ...»", options:{A:"Sống lại thật về phần linh hồn",B:"Sống lại trong ngày sau hết",C:"Sống lại vui mừng trong Chúa",D:"Tất cả đều đúng"}, answer:"A"}
+];
+let current = 0;
+let score = 0;
+let answered = false;
+
+const qTitle = document.getElementById('q-title');
+const optionsDiv = document.getElementById('options');
+const sectionTitle = document.getElementById('section-title');
+const feedback = document.getElementById('feedback');
+const nextBtn = document.getElementById('next-btn');
+const scoreBadge = document.getElementById('score-badge');
+const progressBar = document.getElementById('progress-bar');
+const progressLabel = document.getElementById('progress-label');
+const quizArea = document.getElementById('quiz-area');
+const resultDiv = document.getElementById('result');
+
+function renderQuestion(idx){
+  answered = false;
+  const item = quizData[idx];
+
+  if(item.section){
+    sectionTitle.textContent = item.section;
+    sectionTitle.style.display = 'block';
+  } else {
+    sectionTitle.style.display = 'none';
+  }
+
+  qTitle.textContent = item.q;
+  optionsDiv.innerHTML = '';
+  feedback.style.display = 'none';
+  feedback.className = '';
+  nextBtn.style.display = 'none';
+
+  Object.keys(item.options).forEach(key => {
+    const label = document.createElement('label');
+    label.className = 'option';
+    label.id = `opt-${key}`;
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'currentQ';
+    input.value = key;
+    const span = document.createElement('span');
+    span.textContent = `${key}. ${item.options[key]}`;
+    label.appendChild(input);
+    label.appendChild(span);
+    label.addEventListener('click', () => selectAnswer(key));
+    optionsDiv.appendChild(label);
+  });
+
+  progressBar.style.width = ((idx) / quizData.length * 100) + '%';
+  progressLabel.textContent = `Câu ${idx + 1} / ${quizData.length}`;
+}
+
+function selectAnswer(key){
+  if(answered) return;
+  answered = true;
+  const item = quizData[current];
+  const correct = item.answer;
+  const isCorrect = key === correct;
+
+  if(isCorrect) score++;
+  scoreBadge.textContent = `Đúng: ${score}`;
+
+  Object.keys(item.options).forEach(k => {
+    const label = document.getElementById(`opt-${k}`);
+    label.classList.add('disabled');
+    if(k === correct) label.classList.add('correct');
+    else if(k === key) label.classList.add('incorrect');
+  });
+
+  feedback.textContent = isCorrect ? '✔ Chính xác!' : `✘ Sai rồi! Đáp án đúng là: ${correct}`;
+  feedback.className = isCorrect ? 'correct-fb' : 'incorrect-fb';
+  feedback.style.display = 'block';
+
+  progressBar.style.width = ((current + 1) / quizData.length * 100) + '%';
+
+  if(current < quizData.length - 1){
+    nextBtn.style.display = 'block';
+  } else {
+    nextBtn.style.display = 'none';
+    setTimeout(showResult, 600);
+  }
+}
+
+nextBtn.addEventListener('click', () => {
+  current++;
+  renderQuestion(current);
+});
+
+function showResult(){
+  quizArea.style.display = 'none';
+  const pct = Math.round(score / quizData.length * 100);
+  document.getElementById('score-text').textContent = `Điểm số: ${score} / ${quizData.length}`;
+  document.getElementById('score-detail').textContent = `Tỷ lệ đúng: ${pct}%`;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('restart-btn').addEventListener('click', () => {
+  location.reload();
+});
+
+renderQuestion(current);
+</script>
+</body>
+</html>
