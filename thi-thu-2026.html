@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thi Giáo Lý Hôn Nhân - Trinh Vương 2026</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        h1, h2, h3 { text-align: center; color: #2c3e50; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input[type="text"], .form-group input[type="date"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; resize: vertical; min-height: 80px; }
+        .btn { display: block; width: 100%; padding: 12px; background: #3498db; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .btn:hover { background: #2980b9; }
+        .btn:disabled { background: #95a5a6; cursor: not-allowed; }
+        #quiz-section, #result-section, #already-taken { display: none; }
+        .question-block { background: #f9f9f9; padding: 15px; margin-bottom: 20px; border-left: 4px solid #3498db; border-radius: 4px; }
+        .question-title { font-weight: bold; margin-bottom: 10px; }
+        .options label { display: block; margin-bottom: 8px; cursor: pointer; }
+        .timer-bar { position: sticky; top: 0; background: #e74c3c; color: #fff; padding: 10px; text-align: center; font-size: 18px; font-weight: bold; border-radius: 4px; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .notice { font-size: 14px; color: #7f8c8d; text-align: center; font-style: italic; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <h1>GIÁO PHẬN THÁI BÌNH<br>GIÁO XỨ TRINH VƯƠNG</h1>
+    <h2>ĐỀ THI GIÁO LÝ HÔN NHÂN – 2026</h2>
+    <p class="notice">Lưu ý: Thời gian làm bài 90 phút. Chỉ được nộp bài sau 45 phút. Mỗi thí sinh chỉ được thi 1 lần duy nhất.</p>
+
+    <!-- THÔNG BÁO ĐÃ THI -->
+    <div id="already-taken">
+        <h3 style="color: #e74c3c;">Bạn đã hoàn thành bài thi này!</h3>
+        <p style="text-align: center;">Mỗi thí sinh chỉ được phép làm bài một lần duy nhất. Kết quả của bạn đã được ghi nhận hệ thống.</p>
+    </div>
+
+    <!-- FORM NHẬP THÔNG TIN -->
+    <div id="intro-section">
+        <h3>Thông tin Thí sinh</h3>
+        <div class="form-group">
+            <label>Họ và Tên:</label>
+            <input type="text" id="hoTen" required placeholder="Nhập đầy đủ họ tên">
+        </div>
+        <div class="form-group">
+            <label>Ngày tháng năm sinh:</label>
+            <input type="date" id="ngaySinh" required>
+        </div>
+        <div class="form-group">
+            <label>Giáo xứ:</label>
+            <input type="text" id="giaoXu" required placeholder="Nhập tên Giáo xứ">
+        </div>
+        <button class="btn" onclick="startQuiz()">Bắt đầu làm bài</button>
+    </div>
+
+    <!-- PHẦN BÀI THI -->
+    <div id="quiz-section">
+        <div class="timer-bar" id="timer-display">Thời gian còn lại: 90:00</div>
+        
+        <form id="quiz-form">
+            <!-- PHẦN I: TRẮC NGHIỆM GIÁO LÝ HÔN NHÂN -->
+            <h3>PHẦN I - TRẮC NGHIỆM GIÁO LÝ HÔN NHÂN (30 điểm)</h3>
+            
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 1: Hôn nhân là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q1" value="A"> A. Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.</label>
+                    <label><input type="radio" name="p1_q1" value="B"> B. Hôn nhân là một giao ước giữa hai người, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng, sinh sản và giáo dục con cái.</label>
+                    <label><input type="radio" name="p1_q1" value="C"> C. Hôn nhân là một giao ước giữa một người nam và một người nữ, có mục đích yêu thương nâng đỡ nhau trong tình vợ chồng.</label>
+                    <label><input type="radio" name="p1_q1" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+
+            <!-- BẠN SAO CHÉP MẪU DƯỚI ĐÂY ĐỂ THÊM TỪ CÂU 2 ĐẾN CÂU 30 CỦA PHẦN 1 -->
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 2: Hôn nhân Công giáo là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q2" value="A"> A. Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo.</label>
+                    <label><input type="radio" name="p1_q2" value="B"> B. Hôn nhân Công giáo là Hôn nhân được Chúa Giê-su nâng lên hàng Bí tích.</label>
+                    <label><input type="radio" name="p1_q2" value="C"> C. Hôn nhân Công giáo là Hôn nhân giữa hai người cùng theo Đạo Công giáo, hoặc giữa một người theo Đạo Công Giáo và một người không theo.</label>
+                    <label><input type="radio" name="p1_q2" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+
+            <!-- PHẦN II: TRẮC NGHIỆM GIÁO LÝ CĂN BẢN -->
+            <h3>PHẦN II. TRẮC NGHIỆM GIÁO LÝ CĂN BẢN (30 điểm)</h3>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 1: Thiên Chúa là Đấng nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q1" value="A"> A. Thiên Chúa là Ông Trời, Ngài là Đấng dựng nên trời đất muôn vật, là Đấng ban hạnh phúc chân thật cho con người.</label>
+                    <label><input type="radio" name="p2_q1" value="B"> B. Thiên Chúa là Đấng dựng nên trời đất muôn vật, Đấng làm chủ muôn loài, là Đấng ban hạnh phúc chân thật cho con người.</label>
+                    <label><input type="radio" name="p2_q1" value="C"> C. Thiên Chúa là Đấng dựng nên trời đất muôn vật, trong đó, con người là đỉnh cao của tạo dựng.</label>
+                    <label><input type="radio" name="p2_q1" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <!-- BẠN THÊM CÁC CÂU CÒN LẠI CỦA PHẦN II Ở ĐÂY -->
+
+            <!-- PHẦN III: TRẮC NGHIỆM KINH BỔN -->
+            <h3>PHẦN III. TRẮC NGHIỆM KINH BỔN (12 điểm - Mỗi câu 2đ)</h3>
+            <div class="question-block mcq" data-answer="A" data-points="2">
+                <div class="question-title">Câu 1: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Đức Chúa Thánh Thần : «Chúng con lạy ơn Đức Chúa Thánh Thần… sáng láng vô cùng»</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q1" value="A"> A. Thiêng liêng</label>
+                    <label><input type="radio" name="p3_q1" value="B"> B. Thông minh</label>
+                    <label><input type="radio" name="p3_q1" value="C"> C. Khôn ngoan</label>
+                    <label><input type="radio" name="p3_q1" value="D"> D. Tất cả đều đúng</label>
+                </div>
+            </div>
+            <!-- BẠN THÊM CÁC CÂU CÒN LẠI CỦA PHẦN III Ở ĐÂY -->
+
+            <!-- PHẦN IV: TỰ LUẬN -->
+            <h3>PHẦN IV – TỰ LUẬN (8 điểm)</h3>
+            <div class="question-block">
+                <label class="question-title">Câu 1: Anh (chị) hãy điền vào chỗ trống hoàn tất câu Kinh Thánh sau: "Lạy Cha, xin cho họ được hoàn toàn ...; như vậy, thế gian sẽ nhận biết là chính Cha đã sai Con và đã yêu thương họ như đã yêu thương Con." (Ga 17, 23)</label>
+                <textarea id="tl_p4_1" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 2: Anh (chị) hãy hoàn tất câu Kinh Thánh sau: “Anh em là giống nòi được tuyển chọn, là hoàng tộc chuyên lo tế tự, là dân thánh” dân riêng của Thiên Chúa, để … những công trình vĩ đại của Người, Đấng đã gọi anh em ra khỏi miền u tối, vào nơi đầy ánh sáng diệu huyền." (1Pr 2, 9)</label>
+                <textarea id="tl_p4_2" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 3: Anh (chị) hãy hoàn tất câu Kinh Thánh sau: “Đức mến thì nhẫn nhục, hiền hậu, không nóng giận, không nuôi hận thù. Đức mến … tất cả, … tất cả, … tất cả” (1Cr 13, 4-7)</label>
+                <textarea id="tl_p4_3" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 4: Anh (chị) hãy hoàn tất câu Kinh Thánh sau: “Lạy Thầy, khi anh em xúc phạm đến con, con phải tha thứ cho họ mấy lần. Có phải đến bảy lần không?” Chúa Giêsu đáp: “Thầy không bảo con phải tha đến bảy lần, nhưng đến ....”</label>
+                <textarea id="tl_p4_4" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+
+            <!-- PHẦN V: TỰ LUẬN - SỐNG HÔN NHÂN -->
+            <h3>PHẦN V – TỰ LUẬN - SỐNG HÔN NHÂN (20 điểm)</h3>
+            <div class="question-block">
+                <label class="question-title">Câu 1: Mục đích chính yếu của Hôn nhân công giáo là gì? (2 điểm)</label>
+                <textarea id="tl_p5_1" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 2: Đặc tính chính yếu của Hôn nhân công giáo là gì? (2 điểm)</label>
+                <textarea id="tl_p5_2" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 3: Sáu chữ T trong Hôn nhân công giáo là gì? (2 điểm)</label>
+                <textarea id="tl_p5_3" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+            <div class="question-block">
+                <label class="question-title">Câu 4: Người đời thường cho rằng: nếu đã hết yêu thương nhau thì chia tay, đường ai nấy đi, giải thoát cho nhau, hơn là sống với nhau mà như hoả ngục. Bạn nghĩ gì về quan điểm này? (viết khoảng 150-200 từ - 14 điểm)</label>
+                <textarea id="tl_p5_4" rows="6" placeholder="Nhập câu trả lời của bạn..."></textarea>
+            </div>
+
+            <button type="button" class="btn" id="btnSubmit" onclick="submitQuiz()" disabled>Chưa thể nộp bài (Cần làm ít nhất 45 phút)</button>
+        </form>
+    </div>
+
+    <!-- KẾT QUẢ SAU KHI NỘP -->
+    <div id="result-section">
+        <h3>Nộp bài thành công!</h3>
+        <p>Cảm ơn bạn: <strong id="res-name"></strong></p>
+        <p>Điểm Trắc Nghiệm của bạn là: <strong id="res-score" style="color: #e74c3c; font-size: 24px;"></strong> / 72 điểm</p>
+        <p><em>(Phần tự luận sẽ được quý thầy chấm điểm và cộng vào sau).</em></p>
+    </div>
+</div>
+
+<script>
+    // BẠN HÃY DÁN URL ỨNG DỤNG WEB (APP SCRIPT) VÀO ĐÂY:
+    const GOOGLE_SCRIPT_URL = 'DÁN_LINK_WEB_APP_CỦA_BẠN_VÀO_ĐÂY';
+
+    const TOTAL_TIME = 90 * 60; // 90 phút (tính bằng giây)
+    const MINIMUM_TIME = 45 * 60; // 45 phút (tính bằng giây)
+    let timeRemaining = TOTAL_TIME;
+    let timeElapsed = 0;
+    let timerInterval;
+
+    // Kiểm tra xem đã làm bài chưa bằng localStorage
+    window.onload = function() {
+        if (localStorage.getItem('quiz_completed_TrinhVuong_2026') === 'true') {
+            document.getElementById('intro-section').style.display = 'none';
+            document.getElementById('already-taken').style.display = 'block';
+        }
+    }
+
+    function startQuiz() {
+        const hoTen = document.getElementById('hoTen').value.trim();
+        const ngaySinh = document.getElementById('ngaySinh').value;
+        const giaoXu = document.getElementById('giaoXu').value.trim();
+
+        if(!hoTen || !ngaySinh || !giaoXu) {
+            alert("Vui lòng điền đầy đủ Họ tên, Ngày sinh và Giáo xứ trước khi làm bài!");
+            return;
+        }
+
+        document.getElementById('intro-section').style.display = 'none';
+        document.getElementById('quiz-section').style.display = 'block';
+
+        // Bắt đầu đếm giờ
+        timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+        timeRemaining--;
+        timeElapsed++;
+
+        let mins = Math.floor(timeRemaining / 60);
+        let secs = timeRemaining % 60;
+        document.getElementById('timer-display').innerText = `Thời gian còn lại: ${mins < 10 ? '0':''}${mins}:${secs < 10 ? '0':''}${secs}`;
+
+        // Kiểm tra nút nộp bài (Sau 45 phút mới được mở)
+        const btnSubmit = document.getElementById('btnSubmit');
+        if (timeElapsed >= MINIMUM_TIME) {
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Nộp bài ngay";
+        } else {
+            let waitMins = Math.floor((MINIMUM_TIME - timeElapsed) / 60);
+            let waitSecs = (MINIMUM_TIME - timeElapsed) % 60;
+            btnSubmit.innerText = `Có thể nộp bài sau: ${waitMins < 10 ? '0':''}${waitMins}:${waitSecs < 10 ? '0':''}${waitSecs}`;
+        }
+
+        // Tự động nộp bài khi hết 90 phút
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            alert("Đã hết thời gian 90 phút. Hệ thống sẽ tự động nộp bài!");
+            submitQuiz(true); // Tham số true để bỏ qua việc kiểm tra 45 phút nếu có trục trặc
+        }
+    }
+
+    function submitQuiz(autoSubmit = false) {
+        if (!autoSubmit && timeElapsed < MINIMUM_TIME) {
+            alert("Bạn chưa làm đủ 45 phút, không thể nộp bài.");
+            return;
+        }
+
+        document.getElementById('btnSubmit').innerText = "Đang lưu kết quả...";
+        document.getElementById('btnSubmit').disabled = true;
+        clearInterval(timerInterval);
+
+        // CHẤM ĐIỂM TRẮC NGHIỆM TỰ ĐỘNG
+        let score = 0;
+        const mcqBlocks = document.querySelectorAll('.mcq');
+        mcqBlocks.forEach(block => {
+            const correctAnswer = block.getAttribute('data-answer');
+            const points = parseInt(block.getAttribute('data-points'));
+            // Tìm thẻ input được check trong block này
+            const checkedOption = block.querySelector('input[type="radio"]:checked');
+            
+            if (checkedOption && checkedOption.value === correctAnswer) {
+                score += points;
+            }
+        });
+
+        // THU THẬP DỮ LIỆU
+        const payload = {
+            hoTen: document.getElementById('hoTen').value,
+            ngaySinh: document.getElementById('ngaySinh').value,
+            giaoXu: document.getElementById('giaoXu').value,
+            diemTracNghiem: score,
+            tl_p4_1: document.getElementById('tl_p4_1') ? document.getElementById('tl_p4_1').value : "",
+            tl_p4_2: document.getElementById('tl_p4_2') ? document.getElementById('tl_p4_2').value : "",
+            tl_p4_3: document.getElementById('tl_p4_3') ? document.getElementById('tl_p4_3').value : "",
+            tl_p4_4: document.getElementById('tl_p4_4') ? document.getElementById('tl_p4_4').value : "",
+            tl_p5_1: document.getElementById('tl_p5_1') ? document.getElementById('tl_p5_1').value : "",
+            tl_p5_2: document.getElementById('tl_p5_2') ? document.getElementById('tl_p5_2').value : "",
+            tl_p5_3: document.getElementById('tl_p5_3') ? document.getElementById('tl_p5_3').value : "",
+            tl_p5_4: document.getElementById('tl_p5_4') ? document.getElementById('tl_p5_4').value : ""
+        };
+
+        // GỬI LÊN GOOGLE SHEETS
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Đánh dấu đã thi trong trình duyệt
+            localStorage.setItem('quiz_completed_TrinhVuong_2026', 'true');
+            
+            // Ẩn đề thi, hiện kết quả
+            document.getElementById('quiz-section').style.display = 'none';
+            document.getElementById('result-section').style.display = 'block';
+            
+            document.getElementById('res-name').innerText = payload.hoTen;
+            document.getElementById('res-score').innerText = score;
+        })
+        .catch(error => {
+            console.error('Error!', error.message);
+            alert("Có lỗi xảy ra khi lưu kết quả. Vui lòng kiểm tra lại kết nối mạng!");
+            document.getElementById('btnSubmit').innerText = "Thử nộp lại";
+            document.getElementById('btnSubmit').disabled = false;
+        });
+    }
+</script>
+</body>
+</html>
