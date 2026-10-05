@@ -21,6 +21,7 @@
         .options label { display: block; margin-bottom: 8px; cursor: pointer; }
         .timer-bar { position: sticky; top: 0; background: #e74c3c; color: #fff; padding: 10px; text-align: center; font-size: 18px; font-weight: bold; border-radius: 4px; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .notice { font-size: 14px; color: #7f8c8d; text-align: center; font-style: italic; }
+        .score-info { text-align: center; font-weight: bold; margin-bottom: 20px; color: #d35400; }
     </style>
 </head>
 <body>
@@ -28,12 +29,12 @@
 <div class="container" id="main-container">
     <h1>GIÁO PHẬN THÁI BÌNH<br>GIÁO XỨ TRINH VƯƠNG</h1>
     <h2>ĐỀ THI GIÁO LÝ HÔN NHÂN – 2026</h2>
-    <p class="notice">Lưu ý: Thời gian làm bài 90 phút. Chỉ được nộp bài sau 45 phút. Mỗi thí sinh chỉ được thi 1 lần duy nhất.</p>
+    <p class="notice">Thời gian làm bài 90 phút. Chỉ được nộp bài sau 45 phút.<br>Lưu ý: Không gian lận, mỗi thí sinh chỉ được thi 1 lần duy nhất.<br>Thang điểm 100 (Đạt tối thiểu 60 điểm).</p>
 
     <!-- THÔNG BÁO ĐÃ THI -->
     <div id="already-taken">
         <h3 style="color: #e74c3c;">Bạn đã hoàn thành bài thi này!</h3>
-        <p style="text-align: center;">Mỗi thí sinh chỉ được phép làm bài một lần duy nhất. Kết quả của bạn đã được ghi nhận hệ thống.</p>
+        <p style="text-align: center;">Mỗi thí sinh chỉ được phép làm bài một lần duy nhất. Kết quả của bạn đã được ghi nhận vào hệ thống.</p>
     </div>
 
     <!-- FORM NHẬP THÔNG TIN -->
@@ -59,8 +60,9 @@
         <div class="timer-bar" id="timer-display">Thời gian còn lại: 90:00</div>
         
         <form id="quiz-form">
+            
             <!-- PHẦN I: TRẮC NGHIỆM GIÁO LÝ HÔN NHÂN -->
-            <h3>PHẦN I - TRẮC NGHIỆM GIÁO LÝ HÔN NHÂN (30 điểm)</h3>
+            <h3>PHẦN I - TRẮC NGHIỆM GIÁO LÝ HÔN NHÂN<br><span style="font-size:14px; font-weight:normal">(30 câu – 30 điểm - Mỗi câu 1đ)</span></h3>
             
             <div class="question-block mcq" data-answer="A" data-points="1">
                 <div class="question-title">Câu 1: Hôn nhân là gì ?</div>
@@ -71,8 +73,6 @@
                     <label><input type="radio" name="p1_q1" value="D"> D. Cả A, B và C</label>
                 </div>
             </div>
-
-            <!-- BẠN SAO CHÉP MẪU DƯỚI ĐÂY ĐỂ THÊM TỪ CÂU 2 ĐẾN CÂU 30 CỦA PHẦN 1 -->
             <div class="question-block mcq" data-answer="B" data-points="1">
                 <div class="question-title">Câu 2: Hôn nhân Công giáo là gì ?</div>
                 <div class="options">
@@ -82,9 +82,262 @@
                     <label><input type="radio" name="p1_q2" value="D"> D. Cả A, B và C</label>
                 </div>
             </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 3: Tình yêu giữa Chúa Ki-tô và Hội Thánh có những đặc điểm nào ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q3" value="A"> A. Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự kết hợp phong phú giữa Chúa Ki-tô và Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q3" value="B"> B. Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự hiến thân trọn vẹn của Chúa Ki-tô cho Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q3" value="C"> C. Tình yêu giữa Chúa Ki-tô và Hội Thánh là sự trung tín tuyệt đối của Chúa Ki-tô đối với Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q3" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 4: Hôn nhân Công giáo có mấy đặc tính chính yếu?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q4" value="A"> A. Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Tôn trọng nhau suốt đời.</label>
+                    <label><input type="radio" name="p1_q4" value="B"> B. Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Yêu thương cùng tôn trọng nhau suốt đời.</label>
+                    <label><input type="radio" name="p1_q4" value="C"> C. Hôn nhân Công giáo có hai đặc tính là: Đơn hôn (một vợ một chồng) và Bất khả phân ly (không được ly hôn).</label>
+                    <label><input type="radio" name="p1_q4" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 5: Mục đích của Hôn nhân Công giáo là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q5" value="A"> A. Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau, sinh sản và giáo dục con cái và cùng giúp nhau nên thánh.</label>
+                    <label><input type="radio" name="p1_q5" value="B"> B. Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và cùng giúp nhau nên thánh.</label>
+                    <label><input type="radio" name="p1_q5" value="C"> C. Mục đích Hôn nhân Công giáo là vợ chồng trọn đời yêu thương nhau và giúp con cái cùng nên thánh.</label>
+                    <label><input type="radio" name="p1_q5" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 6: Làm thế nào để đôi bạn sống trọn đời yêu thương nhau ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q6" value="A"> A. Để sống trọn đời yêu thương nhau, đôi bạn phải sống đạo tốt, đồng thời, phải tôn trọng phẩm giá và quyền lợi chính đáng của bạn đời của mình.</label>
+                    <label><input type="radio" name="p1_q6" value="B"> B. Để sống trọn đời yêu thương nhau, đôi bạn phải lưu ý đến nhu cầu cũng như sở thích của người bạn đời. Đồng thời, phải biết luôn làm mới bản thân mình về tâm hồn cũng như thể xác.</label>
+                    <label><input type="radio" name="p1_q6" value="C"> C. Để sống trọn đời yêu thương nhau, đôi bạn phải lưu ý đến những khác biệt về tâm sinh lý trong đời sống vợ chồng.</label>
+                    <label><input type="radio" name="p1_q6" value="D"> D. Cả A và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 7: Việc sinh sản con cái có những ý nghĩa nào ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q7" value="A"> A. Thiên Chúa cho loài người được vinh dự cộng tác với Người trong việc tạo dựng; Con cái là hoa quả tốt đẹp của tình yêu vợ chồng.</label>
+                    <label><input type="radio" name="p1_q7" value="B"> B. Thiên Chúa cho loài người được vinh dự cộng tác với Người trong việc tạo dựng; Con cái là hoa quả tốt đẹp của tình yêu vợ chồng; Góp phần tăng thêm cộng đoàn nhân loại và phát triển Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q7" value="C"> C. Thiên Chúa cho loài người được vinh dự cộng tác với Người trong việc tạo dựng; Con cái là hoa quả tốt đẹp của tình yêu vợ chồng, nên phải nuôi dạy và chăm sóc con cái.</label>
+                    <label><input type="radio" name="p1_q7" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 8: Bí tích Hôn nhân giúp đôi bạn nên thánh cách nào ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q8" value="A"> A. Nhờ ơn thiêng của Bí tích Hôn nhân, đôi bạn nên thánh trong niềm vui đón nhận nhau, sinh sản và giáo dục con cái.</label>
+                    <label><input type="radio" name="p1_q8" value="B"> B. Bí tích Hôn nhân giúp đôi bạn nên thánh trong niềm vui đón nhận nhau, hy sinh cho nhau và cùng nhau đi đến cuối con đường.</label>
+                    <label><input type="radio" name="p1_q8" value="C"> C. Bí tích Hôn nhân giúp đôi bạn nên thánh nhờ sự hy sinh và hiến thân cho nhau, để cùng nhau đi đến cuối con đường.</label>
+                    <label><input type="radio" name="p1_q8" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 9: Muốn giáo dục thành công, cha mẹ phải thế nào ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q9" value="A"> A. Muốn giáo dục thành công, cha mẹ phải: Thăng tiến và thánh hóa bản thân.</label>
+                    <label><input type="radio" name="p1_q9" value="B"> B. Muốn giáo dục thành công, cha mẹ phải: Nhất trí với nhau trong đường hướng và cách thức giáo dục.</label>
+                    <label><input type="radio" name="p1_q9" value="C"> C. Muốn giáo dục thành công, cha mẹ phải: Tạo bầu khí gia đình hòa thuận, thánh thiện và tín nhiệm nhau.</label>
+                    <label><input type="radio" name="p1_q9" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 10: Luân lý tính dục trong đời sống Hôn nhân là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q10" value="A"> A. Là những lời dạy dỗ và giáo huấn của Giáo Hội, giúp cho đôi vợ chồng sống sao cho xứng với ơn gọi của họ.</label>
+                    <label><input type="radio" name="p1_q10" value="B"> B. Là tính cách hợp pháp do chính Thiên Chúa thiết lập cho đời sống vợ chồng.</label>
+                    <label><input type="radio" name="p1_q10" value="C"> C. Là những điều răn và giới luật, giúp cho đôi vợ chồng sống sao cho đúng với giáo huấn của Giáo Hội.</label>
+                    <label><input type="radio" name="p1_q10" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 11: Để có quyết định đúng đắn về việc điều hòa sinh sản, đôi bạn phải có những yếu tố nào ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q11" value="A"> A. Lương tâm ngay thẳng và tinh thần trách nhiệm cao.</label>
+                    <label><input type="radio" name="p1_q11" value="B"> B. Lương tâm ngay thẳng, chân chính. Tinh thần trách nhiệm cao. Tuân giữ giáo huấn của Hội Thánh về việc điều hòa sinh sản.</label>
+                    <label><input type="radio" name="p1_q11" value="C"> C. Tinh thần trách nhiệm cao. Tuân giữ giáo huấn của Hội Thánh về việc điều hòa sinh sản.</label>
+                    <label><input type="radio" name="p1_q11" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 12: Các Bí tích giúp gì cho đời sống đôi bạn ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q12" value="A"> A. Thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng, giúp đôi bạn chu toàn trách nhiệm đối với nhau và đối với con cái.</label>
+                    <label><input type="radio" name="p1_q12" value="B"> B. Thánh hóa loài người, xây dựng nhiệm thể Chúa Ki-tô và thờ phượng Thiên Chúa. Riêng đối với đôi bạn, thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng...</label>
+                    <label><input type="radio" name="p1_q12" value="C"> C. Thánh hóa loài người. Riêng đối với đôi bạn, các Bí tích còn thánh hóa tình yêu vợ chồng, ban nhiều ơn sủng...</label>
+                    <label><input type="radio" name="p1_q12" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 13: Hôn nhân liên hệ với Bí tích Rửa tội thế nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q13" value="A"> A. Hôn nhân có liên hệ, vì cha mẹ phải lo liệu cho con cái được rửa tội theo qui định của Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q13" value="B"> B. Hôn nhân có liên hệ, vì chỉ những ai đã rửa tội mới có thể cử hành Bí tích Hôn nhân.</label>
+                    <label><input type="radio" name="p1_q13" value="C"> C. Có liên hệ cơ bản, vì chỉ những ai đã rửa tội mới có thể cử hành Bí tích Hôn nhân. Hơn nữa cha mẹ phải lo liệu cho con cái được rửa tội.</label>
+                    <label><input type="radio" name="p1_q13" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 14: Cha mẹ phải lo liệu việc Rửa tội cho con cái thế nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q14" value="A"> A. Lúc bình thường: Sau khi sinh con khoảng 1 tháng, đem con đến nhà thờ để linh mục rửa tội.</label>
+                    <label><input type="radio" name="p1_q14" value="B"> B. Khi nguy tử: Cha mẹ hoặc người khác rửa tội cho con.</label>
+                    <label><input type="radio" name="p1_q14" value="C"> C. Trường hợp sẩy thai bất cứ vào giai đoạn nào cũng phải rửa tội.</label>
+                    <label><input type="radio" name="p1_q14" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 15: Đọc Lời Chúa trong gia đình thì được những ích lợi gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q15" value="A"> A. Mọi người được hướng dẫn bởi cùng một giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.</label>
+                    <label><input type="radio" name="p1_q15" value="B"> B. Mọi người cùng được nghe, chính Lời Chúa sẽ hướng dẫn từng thành viên, giúp họ biến đổi con người mình.</label>
+                    <label><input type="radio" name="p1_q15" value="C"> C. Mọi người không những được thánh hóa, nuôi dưỡng, mà còn được hướng dẫn bởi cùng một giáo huấn nên dễ giúp nhau thực hành Lời Chúa hơn.</label>
+                    <label><input type="radio" name="p1_q15" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 16: Kinh nguyện trong gia đình có cần thiết không ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q16" value="A"> A. Rất cần thiết, vì qua giờ kinh gia đình, mọi thành viên có cơ hội ngồi lại bên nhau.</label>
+                    <label><input type="radio" name="p1_q16" value="B"> B. Rất cần thiết, vì Kinh nguyện chung giúp gia đình sống tốt đẹp ơn gọi Ki-tô hữu và dạy con cái biết cầu nguyện.</label>
+                    <label><input type="radio" name="p1_q16" value="C"> C. Rất cần thiết, vì nhờ ánh sáng Lời Chúa soi chiếu, giúp các thành viên sống tốt ơn gọi của mỗi người.</label>
+                    <label><input type="radio" name="p1_q16" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 17: Hội Thánh liên hệ thế nào với gia đình ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q17" value="A"> A. Hội Thánh sinh ra, dưỡng dục và xây dựng gia đình Công Giáo.</label>
+                    <label><input type="radio" name="p1_q17" value="B"> B. Hội Thánh sinh ra gia đình, gia đình là con cái và là một thành phần của Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q17" value="C"> C. Gia đình là một thành phần của Hội Thánh, nên cả hai bên đều phụ thuộc lẫn nhau.</label>
+                    <label><input type="radio" name="p1_q17" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 18: Gia đình liên hệ thế nào với Hội Thánh ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q18" value="A"> A. Gia đình là một thành phần của Hội Thánh, gia đình dự phần vào sứ mệnh cứu rỗi của Hội Thánh theo cách thức riêng.</label>
+                    <label><input type="radio" name="p1_q18" value="B"> B. Gia đình là một thành phần của Hội Thánh, nên gia đình và Hội Thánh có mối quan hệ hỗ tương với nhau.</label>
+                    <label><input type="radio" name="p1_q18" value="C"> C. Gia đình dự phần vào sứ mệnh cứu rỗi của Hội Thánh theo cách thức riêng của mình.</label>
+                    <label><input type="radio" name="p1_q18" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 19: Gia đình có nghĩa vụ gì đối với Hội Thánh ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q19" value="A"> A. Hiệp thông với Hội Thánh, đồng thời tuân giữ các giáo huấn của Hội Thánh.</label>
+                    <label><input type="radio" name="p1_q19" value="B"> B. Hiệp thông với Hội Thánh; tuân giữ các giáo huấn; thi hành 3 chức năng Tư tế, Ngôn sứ và Vương giả theo cách thức riêng của mình.</label>
+                    <label><input type="radio" name="p1_q19" value="C"> C. Hiệp thông với Hội Thánh, tuân giữ và thi hành 3 chức năng Tư tế, Ngôn sứ và Vương giả.</label>
+                    <label><input type="radio" name="p1_q19" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 20: Gia đình và xã hội có liên hệ gì với nhau ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q20" value="A"> A. Gia đình là khung cảnh đầu tiên thể hiện tính xã hội của con người và tập dấn thân hoạt động xã hội.</label>
+                    <label><input type="radio" name="p1_q20" value="B"> B. Gia đình và xã hội là hai thực thể riêng biệt và độc lập với nhau.</label>
+                    <label><input type="radio" name="p1_q20" value="C"> C. Gia đình và xã hội có liên quan mật thiết với nhau vì: Gia đình là nền tảng của xã hội.</label>
+                    <label><input type="radio" name="p1_q20" value="D"> D. Cả A và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 21. Sinh sản có trách nhiệm nghĩa là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q21" value="A"> A. Chỉ cần sinh con theo mong muốn.</label>
+                    <label><input type="radio" name="p1_q21" value="B"> B. Khi sinh con, cha mẹ phải lo nuôi dưỡng và giáo dục con nên người.</label>
+                    <label><input type="radio" name="p1_q21" value="C"> C. Sinh càng nhiều con càng tốt.</label>
+                    <label><input type="radio" name="p1_q21" value="D"> D. Không cần quan tâm đến việc giáo dục con.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 22. Vì sao vợ chồng cần sinh sản có trách nhiệm?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q22" value="A"> A. Để có nhiều con hơn.</label>
+                    <label><input type="radio" name="p1_q22" value="B"> B. Để tránh mọi khó khăn trong gia đình.</label>
+                    <label><input type="radio" name="p1_q22" value="C"> C. Để thi hành đúng ý định của Thiên Chúa và đáp ứng tình yêu vợ chồng.</label>
+                    <label><input type="radio" name="p1_q22" value="D"> D. Để gia đình được giàu có.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 23. Một trong những thái độ cần có của vợ chồng Kitô hữu khi sinh sản có trách nhiệm là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q23" value="A"> A. Làm chủ bản năng tính dục.</label>
+                    <label><input type="radio" name="p1_q23" value="B"> B. Luôn sinh thật nhiều con.</label>
+                    <label><input type="radio" name="p1_q23" value="C"> C. Chỉ quyết định một mình.</label>
+                    <label><input type="radio" name="p1_q23" value="D"> D. Không cần quan tâm hoàn cảnh gia đình.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 24. Khi quyết định sinh con hay tạm ngừng, vợ chồng cần làm gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q24" value="A"> A. Người chồng tự quyết định.</label>
+                    <label><input type="radio" name="p1_q24" value="B"> B. Người vợ tự quyết định.</label>
+                    <label><input type="radio" name="p1_q24" value="C"> C. Cùng nhau xem xét hoàn cảnh cụ thể và quyết định.</label>
+                    <label><input type="radio" name="p1_q24" value="D"> D. Nhờ người khác quyết định thay.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 25. Cách thức ngừa thai tự nhiên là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q25" value="A"> A. Dùng thuốc tránh thai.</label>
+                    <label><input type="radio" name="p1_q25" value="B"> B. Dùng bao cao su.</label>
+                    <label><input type="radio" name="p1_q25" value="C"> C. Tiết dục định kỳ, kiêng cữ trong thời kỳ người vợ dễ thụ thai.</label>
+                    <label><input type="radio" name="p1_q25" value="D"> D. Thắt ống dẫn tinh.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 26. Phương pháp Ogino dựa vào yếu tố nào để xác định ngày trứng rụng?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q26" value="A"> A. Chu kỳ kinh nguyệt.</label>
+                    <label><input type="radio" name="p1_q26" value="B"> B. Chất nhờn.</label>
+                    <label><input type="radio" name="p1_q26" value="C"> C. Nhiệt độ cơ thể.</label>
+                    <label><input type="radio" name="p1_q26" value="D"> D. Nhịp tim.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 27. Phương pháp Billings dựa vào hiện tượng nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q27" value="A"> A. Chu kỳ kinh nguyệt.</label>
+                    <label><input type="radio" name="p1_q27" value="B"> B. Chất nhờn.</label>
+                    <label><input type="radio" name="p1_q27" value="C"> C. Nhiệt độ cơ thể.</label>
+                    <label><input type="radio" name="p1_q27" value="D"> D. Huyết áp.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 28. Người Công giáo được sử dụng cách thức nào để ngừa thai?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q28" value="A"> A. Ngừa thai nhân tạo.</label>
+                    <label><input type="radio" name="p1_q28" value="B"> B. Ngừa thai bằng thuốc.</label>
+                    <label><input type="radio" name="p1_q28" value="C"> C. Cách thức ngừa thai tự nhiên khi có lý do chính đáng.</label>
+                    <label><input type="radio" name="p1_q28" value="D"> D. Bất kỳ phương pháp nào.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 29. Phương pháp nào sau đây là cách thức ngừa thai nhân tạo?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q29" value="A"> A. Tiết dục định kỳ.</label>
+                    <label><input type="radio" name="p1_q29" value="B"> B. Phương pháp Ogino.</label>
+                    <label><input type="radio" name="p1_q29" value="C"> C. Phương pháp Billings.</label>
+                    <label><input type="radio" name="p1_q29" value="D"> D. Dùng bao cao su.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 30. Phá thai được nhìn nhận như thế nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p1_q30" value="A"> A. Là việc không có vấn đề về luân lý.</label>
+                    <label><input type="radio" name="p1_q30" value="B"> B. Là tội nhẹ.</label>
+                    <label><input type="radio" name="p1_q30" value="C"> C. Là tội rất nặng vì đây là tội giết người.</label>
+                    <label><input type="radio" name="p1_q30" value="D"> D. Chỉ là vấn đề cá nhân.</label>
+                </div>
+            </div>
 
             <!-- PHẦN II: TRẮC NGHIỆM GIÁO LÝ CĂN BẢN -->
-            <h3>PHẦN II. TRẮC NGHIỆM GIÁO LÝ CĂN BẢN (30 điểm)</h3>
+            <h3>PHẦN II. TRẮC NGHIỆM GIÁO LÝ CĂN BẢN<br><span style="font-size:14px; font-weight:normal">(30 câu – 30 điểm - Mỗi câu 1đ)</span></h3>
+            
             <div class="question-block mcq" data-answer="B" data-points="1">
                 <div class="question-title">Câu 1: Thiên Chúa là Đấng nào?</div>
                 <div class="options">
@@ -94,10 +347,272 @@
                     <label><input type="radio" name="p2_q1" value="D"> D. Cả A, B và C</label>
                 </div>
             </div>
-            <!-- BẠN THÊM CÁC CÂU CÒN LẠI CỦA PHẦN II Ở ĐÂY -->
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 2: Con người còn dùng nhiều danh xứng khác để gọi Thiên Chúa, là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q2" value="A"> A. Đức Chúa Trời</label>
+                    <label><input type="radio" name="p2_q2" value="B"> B. Thượng Đế</label>
+                    <label><input type="radio" name="p2_q2" value="C"> C. Tạo Hóa, Hóa Công, Đấng Tối Cao…</label>
+                    <label><input type="radio" name="p2_q2" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 3: Thiên Chúa dùng cách thức nào để tỏ mình cho loài người?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q3" value="A"> A. Qua các trật tự lạ lùng trong vũ trụ, qua tiếng lương tâm.</label>
+                    <label><input type="radio" name="p2_q3" value="B"> B. Qua Đức Giê-su, Ngài là mặc khải trọn vẹn và viên mãn.</label>
+                    <label><input type="radio" name="p2_q3" value="C"> C. Qua Thánh Kinh, qua đời sống phụng vụ của Hội Thánh, và qua các biến cố trong đời sống.</label>
+                    <label><input type="radio" name="p2_q3" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 4: Thánh Kinh là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q4" value="A"> A. Lời của Thiên Chúa nói với con người. Thánh Kinh gồm 46 cuốn Cựu Ước và 27 cuốn Tân Ước.</label>
+                    <label><input type="radio" name="p2_q4" value="B"> B. Bộ sách được linh ứng ghi chép ý định và hành động cứu chuộc loài người của Thiên Chúa. Thánh Kinh gồm 46 cuốn Cựu Ước và 27 cuốn Tân Ước.</label>
+                    <label><input type="radio" name="p2_q4" value="C"> C. Bộ sách được linh ứng. Thánh Kinh gồm 27 cuốn Cựu Ước và 46 cuốn Tân Ước.</label>
+                    <label><input type="radio" name="p2_q4" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 5: Ơn Chúa là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q5" value="A"> A. Ơn Chúa là sức mạnh Chúa ban, để ta sống hạnh phúc ở đời này và đời sau.</label>
+                    <label><input type="radio" name="p2_q5" value="B"> B. Ơn Chúa là sự sống và sức mạnh Chúa ban để ta sống hạnh phúc đời này và đời sau.</label>
+                    <label><input type="radio" name="p2_q5" value="C"> C. Ơn Chúa là những ơn lành Thiên Chúa ban, để giúp ta làm điều lành và tránh điều dữ.</label>
+                    <label><input type="radio" name="p2_q5" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 6: Bí tích là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q6" value="A"> A. Bí tích là những điều bí nhiệm do Chúa Giê-su thiết lập.</label>
+                    <label><input type="radio" name="p2_q6" value="B"> B. Bí tích là dấu chỉ bên ngoài Chúa dùng để diễn tả và thông ban ơn bên trong cho loài người.</label>
+                    <label><input type="radio" name="p2_q6" value="C"> C. Bí tích là những điều bí nhiệm mà Chúa Giê-su đã thiết lập, để thông ban những ơn cần thiết cho con người.</label>
+                    <label><input type="radio" name="p2_q6" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 7: Có mấy Bí tích ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q7" value="A"> A. Có 7 Bí tích là : Rửa tội, Thêm sức, Giải tội, Thánh Thể, An táng, Hôn phối và Truyền Chức thánh.</label>
+                    <label><input type="radio" name="p2_q7" value="B"> B. Có 7 Bí tích là : Rửa tội, Thêm sức, Giải tội, Chầu Thánh Thể, Xức dầu bệnh nhân, Hôn phối và Truyền Chức thánh.</label>
+                    <label><input type="radio" name="p2_q7" value="C"> C. Có 7 Bí tích là : Rửa tội, Thêm sức, Giải tội, Thánh Thể, Xức dầu bệnh nhân, Hôn phối và Truyền Chức thánh.</label>
+                    <label><input type="radio" name="p2_q7" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 8: Bí tích Rửa tội có cần thiết không ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q8" value="A"> A. Rất cần thiết như lời Chúa phán: “Không ai có thể vào Nước Thiên Chúa nếu không sinh ra bởi nước và Thần Khí”</label>
+                    <label><input type="radio" name="p2_q8" value="B"> B. Rất cần thiết. Vì đây được coi như cửa ngõ để dẫn đưa ta vào Hội Thánh của Chúa Giê-su.</label>
+                    <label><input type="radio" name="p2_q8" value="C"> C. Cả A và B đều đúng.</label>
+                    <label><input type="radio" name="p2_q8" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 9: Bí tích Thánh Thể là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q9" value="A"> A. Là Bí tích Chúa Giê-su đã lập để biến bánh rượu nên Mình Máu Người làm lương thực nuôi sống ta phần hồn.</label>
+                    <label><input type="radio" name="p2_q9" value="B"> B. Là Bí tích Chúa Giê-su đã lập để ban dồi dào ơn Chúa Thánh Thần cho người lãnh nhận.</label>
+                    <label><input type="radio" name="p2_q9" value="C"> C. Là Bí tích Chúa Giê-su đã lập để ban dồi dào ơn Chúa Thánh Thần cho người lãnh nhận. Cùng ban Mình Máu Người...</label>
+                    <label><input type="radio" name="p2_q9" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 10: Thiên Chúa đã ban cho nguyên tổ cuộc sống nào?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q10" value="A"> A. Sống thân tình với Ngài, sống hòa hợp với bản thân, với mọi người mọi vật, không phải đau khổ và không phải chết.</label>
+                    <label><input type="radio" name="p2_q10" value="B"> B. Các ngài được Chúa cho coi sóc và hướng dẫn muôn loài muôn vật.</label>
+                    <label><input type="radio" name="p2_q10" value="C"> C. Được làm con Chúa và nhiều đặc ân khác.</label>
+                    <label><input type="radio" name="p2_q10" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 11: Tội là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q11" value="A"> A. Tội là sự lỗi luật Chúa và Hội Thánh trong tư tưởng, lời nói, việc làm và những điều thiếu sót.</label>
+                    <label><input type="radio" name="p2_q11" value="B"> B. Tội là phạm phải những điều xấu mà lương tâm không cho phép.</label>
+                    <label><input type="radio" name="p2_q11" value="C"> C. Tội là phạm phải những điều xấu trong tư tưởng cũng như trong hành động, mà lương tâm không cho phép.</label>
+                    <label><input type="radio" name="p2_q11" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 12: Tội tổ tông là gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q12" value="A"> A. Là tội dám cãi lời Thiên Chúa mà ăn trái cấm</label>
+                    <label><input type="radio" name="p2_q12" value="B"> B. Là tội lạm dụng tự do, không tin tưởng và tuân phục Thiên Chúa</label>
+                    <label><input type="radio" name="p2_q12" value="C"> C. Là tội tin lời ma quỷ cám dỗ và nghe theo lời người phụ nữ</label>
+                    <label><input type="radio" name="p2_q12" value="D"> D. Là tội nhận ra mình trần truồng và trốn tránh Thiên Chúa</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 13: Thiên Chúa có thái độ nào khi nguyên tổ phạm tội?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q13" value="A"> A. Thiên Chúa tỏ ra buồn bực, vì nguyên tổ đã không nghe theo lời của Ngài.</label>
+                    <label><input type="radio" name="p2_q13" value="B"> B. Cất đi khỏi họ những đặc quyền đặc lợi họ vẫn được hưởng và đuổi họ ra khỏi vườn địa đàng.</label>
+                    <label><input type="radio" name="p2_q13" value="C"> C. Thiên Chúa đã nghiêm phạt nguyên tổ, nhưng vẫn một lòng thương xót, hứa ban ơn cứu độ.</label>
+                    <label><input type="radio" name="p2_q13" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 14: Mầu nhiệm Một Chúa Ba Ngôi dạy ta điều gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q14" value="A"> A. Mầu nhiệm Một Chúa Ba Ngôi dạy ta biết có một Thiên Chúa mà Người có Ba Ngôi.</label>
+                    <label><input type="radio" name="p2_q14" value="B"> B. Biết có một Thiên Chúa mà Người có Ba Ngôi: Ngôi thứ Nhất là Cha, Ngôi thứ Hai là Con, Ngôi thứ Ba là Thiên Thần.</label>
+                    <label><input type="radio" name="p2_q14" value="C"> C. Biết có một Thiên Chúa mà Người có Ba Ngôi: Ngôi thứ Nhất là Cha, Ngôi thứ Hai là Con, Ngôi thứ Ba là Thánh Thần.</label>
+                    <label><input type="radio" name="p2_q14" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 15: Điều răn thứ nhất dạy ta sự gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q15" value="A"> A. Dạy ta thờ phượng một Thiên Chúa và chỉ một mình Ngài mà thôi.</label>
+                    <label><input type="radio" name="p2_q15" value="B"> B. Dạy ta thờ phượng một Thiên Chúa là Chúa Cha, Chúa Con và Chúa Thánh Thần.</label>
+                    <label><input type="radio" name="p2_q15" value="C"> C. Dạy ta thờ phượng một Thiên Chúa là Chúa Cha, Chúa Con và Các Thiên Thần.</label>
+                    <label><input type="radio" name="p2_q15" value="D"> D. Dạy ta thờ phượng một Thiên Chúa và kính mến Người trên hết mọi sự.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 16: Điều răn thứ hai dạy ta sự gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q16" value="A"> A. Dạy ta tôn kính Danh Thiên Chúa.</label>
+                    <label><input type="radio" name="p2_q16" value="B"> B. Dạy ta tôn kính Danh Thiên Chúa trên hết mọi sự.</label>
+                    <label><input type="radio" name="p2_q16" value="C"> C. Vì dưới gầm trời này, không có danh nào khác mang lại cho ta ơn cứu độ.</label>
+                    <label><input type="radio" name="p2_q16" value="D"> D. Dạy ta tôn kính Chúa, vì tên Người là thánh và là chính Người.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 17: Điều răn thứ ba dạy ta sự gì?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q17" value="A"> A. Dạy ta cử hành ngày Chúa Nhật bằng việc tham dự Thánh lễ, kiêng việc xác và làm các việc đạo đức, bái ái.</label>
+                    <label><input type="radio" name="p2_q17" value="B"> B. Dạy ta thánh hóa ngày Chúa Nhật, tức là làm cho ngày này trở nên một ngày thánh.</label>
+                    <label><input type="radio" name="p2_q17" value="C"> C. Dạy ta thánh hóa ngày Chúa Nhật, tức là thánh hóa mọi hành vi cử chỉ của ta, để làm cho ngày này trở nên một ngày thánh.</label>
+                    <label><input type="radio" name="p2_q17" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 18: Đức tin là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q18" value="A"> A. Đức tin là nhân đức siêu nhiên, giúp ta tin tưởng vào một mình Thiên Chúa.</label>
+                    <label><input type="radio" name="p2_q18" value="B"> B. Đức tin là nhân đức siêu nhiên, giúp ta tin tưởng, trông cậy và phó thác vào một mình Thiên Chúa.</label>
+                    <label><input type="radio" name="p2_q18" value="C"> C. Đức tin là nhân đức siêu nhiên, giúp ta vững lòng phó thác vào Chúa mà chấp nhận những điều Chúa dạy và nhờ Hội Thánh truyền lại cho ta.</label>
+                    <label><input type="radio" name="p2_q18" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 19: Đức cậy là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q19" value="A"> A. Là nhân đức siêu nhiên, giúp ta cậy dựa vào Chúa trong mọi hoàn cảnh vui buồn của cuộc sống.</label>
+                    <label><input type="radio" name="p2_q19" value="B"> B. Là nhân đức siêu nhiên, giúp ta trông cậy vững vàng vào những điều Chúa truyền dạy và tín thác vào Chúa.</label>
+                    <label><input type="radio" name="p2_q19" value="C"> C. Là nhân đức siêu nhiên, giúp ta trông đợi vững vàng, nhờ công nghiệp Chúa Giê-su, ta sẽ được Chúa ban ơn đầy đủ để sống xứng đáng là con cái Chúa ở đời này, và đời sau được hưởng phúc vô cùng.</label>
+                    <label><input type="radio" name="p2_q19" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 20: Đức mến là gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q20" value="A"> A. Đức mến là nhân đức siêu nhiên, giúp ta yêu mến Chúa hết lòng hết sức trên hết mọi sự.</label>
+                    <label><input type="radio" name="p2_q20" value="B"> B. Đức mến là nhân đức siêu nhiên làm cho ta kính mến Thiên Chúa trên hết mọi sự và thương yêu mọi người như Chúa yêu ta.</label>
+                    <label><input type="radio" name="p2_q20" value="C"> C. Đức mến là nhân đức siêu nhiên, giúp ta yêu mến Chúa hết lòng hết sức trên hết mọi sự, cùng thực thi giáo huấn của Ngài.</label>
+                    <label><input type="radio" name="p2_q20" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 21: Điều răn thứ bốn dạy ta những gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q21" value="A"> A. Điều răn thứ bốn dạy ta hiếu thảo với tổ tiên, ông bà, cha mẹ trong lời nói cũng như trong hành động.</label>
+                    <label><input type="radio" name="p2_q21" value="B"> B. Hiếu thảo với tổ tiên, ông bà, cha mẹ trong lời nói cũng như trong hành động, lúc các ngài còn sống cũng như khi các ngài đã qua đời.</label>
+                    <label><input type="radio" name="p2_q21" value="C"> C. Cả A và B</label>
+                    <label><input type="radio" name="p2_q21" value="D"> D. Điều răn thứ bốn dạy ta hiếu thảo với cha mẹ, ông bà, tổ tiên, cũng dạy ta những bổn phận cha mẹ đối với con cái.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 22: Điều răn thứ 5, 6 và 9 dạy ta những gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q22" value="A"> A. Điều răn thứ 5, 6 và 9 dạy ta sống chung thủy, một vợ một chồng.</label>
+                    <label><input type="radio" name="p2_q22" value="B"> B. Điều răn thứ 5, 6 và 9 dạy ta sống chung thủy, một vợ một chồng. Đồng thời, biết tôn trọng sự sống của mọi người.</label>
+                    <label><input type="radio" name="p2_q22" value="C"> C. Điều răn thứ 5, 6 và 9 dạy ta quí trọng sự sống thể xác, tinh thần và siêu nhiên của mình và của người khác.</label>
+                    <label><input type="radio" name="p2_q22" value="D"> D. Cả A và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 23: Tại sao ta phải quí trọng sự sống thể xác ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q23" value="A"> A. Vì sự sống thể xác mỗi người chỉ có một. Quí trọng thân xác của mình sẽ giúp chúng ta biết tôn trọng thân xác người khác.</label>
+                    <label><input type="radio" name="p2_q23" value="B"> B. Vì thân xác là kỳ công của Thiên Chúa, là Đền thờ Chúa Thánh Thần và ngày sau sẽ sống lại.</label>
+                    <label><input type="radio" name="p2_q23" value="C"> C. Vì sự sống thể xác mỗi người chỉ có một, do Thiên Chúa dựng nên.</label>
+                    <label><input type="radio" name="p2_q23" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 24: Điều răn thứ 7 và thứ 10 dạy ta những gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q24" value="A"> A. Dạy ta sống công bằng, không tham lam của cải của người khác.</label>
+                    <label><input type="radio" name="p2_q24" value="B"> B. Dạy ta tôn trọng của cải của người khác trong hành động cũng như trong tư tưởng.</label>
+                    <label><input type="radio" name="p2_q24" value="C"> C. Dạy ta sống công bằng, không tham lam của cải của người khác. Không tự ý chiếm đoạt, cũng không làm thiệt hại của người ta.</label>
+                    <label><input type="radio" name="p2_q24" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="D" data-points="1">
+                <div class="question-title">Câu 25: Điều răn thứ 8 dạy ta những gì ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q25" value="A"> A. Dạy ta không được làm chứng dối để hại người.</label>
+                    <label><input type="radio" name="p2_q25" value="B"> B. Dạy ta không được nói những lời gian dối cũng như không được làm chứng dối để hại người.</label>
+                    <label><input type="radio" name="p2_q25" value="C"> C. Cả B và D</label>
+                    <label><input type="radio" name="p2_q25" value="D"> D. Điều răn thứ 8 dạy ta tôn trọng sự thật và danh giá của người khác.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 26: Chúa Giê-su đã làm gì để cứu chuộc loài người ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q26" value="A"> A. Chúa Giê-su trước khi chịu chết, trên Thánh giá, Ngài đã xin cùng Chúa Cha tha cho họ, vì họ không biết việc họ làm.</label>
+                    <label><input type="radio" name="p2_q26" value="B"> B. Chúa Giê-su đã tự hiến đời mình, chịu đau khổ, chịu chết trên thập giá và sống lại để cứu chuộc loài người.</label>
+                    <label><input type="radio" name="p2_q26" value="C"> C. Chúa Giê-su đã tự nguyện hiến đời mình để cứu chuộc nhân loại.</label>
+                    <label><input type="radio" name="p2_q26" value="D"> D. Cả A và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 27: Chúa Thánh Thần làm gì cho Hội Thánh ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q27" value="A"> A. Chúa Thánh Thần hằng gìn giữ, hướng dẫn, thánh hóa và canh tân Hội Thánh ở thế gian này.</label>
+                    <label><input type="radio" name="p2_q27" value="B"> B. Chúa Thánh Thần hằng thánh hóa và canh tân Hội Thánh. Làm cho Hội Thánh trở nên tinh tuyền, không vết nhăn, không tì ố.</label>
+                    <label><input type="radio" name="p2_q27" value="C"> C. Chúa Thánh Thần hằng thánh hóa và canh tân Hội Thánh. Làm cho Hội Thánh trở nên tinh tuyền, xứng đáng là Bạn trăm năm của Đức Ki-tô.</label>
+                    <label><input type="radio" name="p2_q27" value="D"> D. Cả A và C</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="B" data-points="1">
+                <div class="question-title">Câu 28: Chúa Thánh Thần làm gì cho người tín hữu ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q28" value="A"> A. Chúa Thánh Thần làm cho các tín hữu trở nên can trường, vững mạnh trong đức tin và bền tâm trong đức ái.</label>
+                    <label><input type="radio" name="p2_q28" value="B"> B. Chúa Thánh Thần thánh hóa và làm cho người tín hữu trở nên chứng nhân của Chúa Ki-tô.</label>
+                    <label><input type="radio" name="p2_q28" value="C"> C. Chúa Thánh Thần làm cho các tín hữu trở nên can trường, vững mạnh trong đức tin, đức cậy, đức mến và bền tâm trong đức ái.</label>
+                    <label><input type="radio" name="p2_q28" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="1">
+                <div class="question-title">Câu 29: Hội Thánh Chúa Ki-tô có mấy đặc tính ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q29" value="A"> A. Hội Thánh có 4 đặc tính là: Duy nhất, Thánh thiện, Công giáo và Tông truyền.</label>
+                    <label><input type="radio" name="p2_q29" value="B"> B. Hội Thánh có 4 đặc tính này là: Duy nhất, Thánh thiện, Công giáo và Thông truyền.</label>
+                    <label><input type="radio" name="p2_q29" value="C"> C. Hội Thánh có 4 đặc tính này là: Hiệp nhất, Thánh thiện, Công giáo và Thông truyền.</label>
+                    <label><input type="radio" name="p2_q29" value="D"> D. Tất cả đều đúng.</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="1">
+                <div class="question-title">Câu 30: Đức Maria có cần được cứu độ không ?</div>
+                <div class="options">
+                    <label><input type="radio" name="p2_q30" value="A"> A. Thưa không. Vì Đức Mẹ là Mẹ Thiên Chúa.</label>
+                    <label><input type="radio" name="p2_q30" value="B"> B. Thưa Đức Maria cũng cần được cứu độ như bất cứ ai. Tuy nhiên, cách thức Mẹ được cứu độ không giống với chúng ta.</label>
+                    <label><input type="radio" name="p2_q30" value="C"> C. Đức Maria cũng cần được cứu độ như mọi người, nhưng cách thức Mẹ được cứu độ thì khác: Chúa gìn giữ Mẹ khỏi mắc tội Tổ tông. Ta gọi đó là đặc ân Vô nhiễm nguyên tội.</label>
+                    <label><input type="radio" name="p2_q30" value="D"> D. Cả A, B và C</label>
+                </div>
+            </div>
+
 
             <!-- PHẦN III: TRẮC NGHIỆM KINH BỔN -->
-            <h3>PHẦN III. TRẮC NGHIỆM KINH BỔN (12 điểm - Mỗi câu 2đ)</h3>
+            <h3>PHẦN III. TRẮC NGHIỆM KINH BỔN<br><span style="font-size:14px; font-weight:normal">(6 câu – 12 điểm - Mỗi câu 2đ)</span></h3>
+            
             <div class="question-block mcq" data-answer="A" data-points="2">
                 <div class="question-title">Câu 1: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Đức Chúa Thánh Thần : «Chúng con lạy ơn Đức Chúa Thánh Thần… sáng láng vô cùng»</div>
                 <div class="options">
@@ -107,10 +622,55 @@
                     <label><input type="radio" name="p3_q1" value="D"> D. Tất cả đều đúng</label>
                 </div>
             </div>
-            <!-- BẠN THÊM CÁC CÂU CÒN LẠI CỦA PHẦN III Ở ĐÂY -->
+            <div class="question-block mcq" data-answer="B" data-points="2">
+                <div class="question-title">Câu 2: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Lạy Cha: “Xin chớ để chúng con … cám dỗ nhưng cứu chúng con cho khỏi sự dữ”</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q2" value="A"> A. Xa chước</label>
+                    <label><input type="radio" name="p3_q2" value="B"> B. Sa chước</label>
+                    <label><input type="radio" name="p3_q2" value="C"> C. Xa trước</label>
+                    <label><input type="radio" name="p3_q2" value="D"> D. Tất cả đều sai</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="2">
+                <div class="question-title">Câu 3: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Tin : “Bấy nhiêu điều ấy, cùng các điều Hội Thánh dạy, thì con …”</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q3" value="A"> A. Xin vững vàng</label>
+                    <label><input type="radio" name="p3_q3" value="B"> B. Tin chắc rằng</label>
+                    <label><input type="radio" name="p3_q3" value="C"> C. Tin vững vàng</label>
+                    <label><input type="radio" name="p3_q3" value="D"> D. Tất cả đều đúng</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="2">
+                <div class="question-title">Câu 4: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Ăn năn tội: “Lạy Chúa, Chúa là Đấng trọn tốt trọn lành vô cùng, Chúa đã dựng nên con, mà cho Con Chúa …”</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q4" value="A"> A. Xuống trần</label>
+                    <label><input type="radio" name="p3_q4" value="B"> B. Xuống đời</label>
+                    <label><input type="radio" name="p3_q4" value="C"> C. Ra đời</label>
+                    <label><input type="radio" name="p3_q4" value="D"> D. Tất cả đều đúng</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="C" data-points="2">
+                <div class="question-title">Câu 5: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Mười Điều răn: “Thứ bảy: … của người”</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q5" value="A"> A. Cứ lấy</label>
+                    <label><input type="radio" name="p3_q5" value="B"> B. Hãy lấy</label>
+                    <label><input type="radio" name="p3_q5" value="C"> C. Chớ lấy</label>
+                    <label><input type="radio" name="p3_q5" value="D"> D. Tất cả đều sai</label>
+                </div>
+            </div>
+            <div class="question-block mcq" data-answer="A" data-points="2">
+                <div class="question-title">Câu 6: Anh (chị) hãy hoàn tất lời kinh sau đây trong Kinh Tám mối Phúc thật: « Thứ tư : Ai khao khát nhân đức trọn lành, ấy là phúc thật, vì chưng sẽ được… »</div>
+                <div class="options">
+                    <label><input type="radio" name="p3_q6" value="A"> A. No đủ vậy</label>
+                    <label><input type="radio" name="p3_q6" value="B"> B. Yên ủi vậy</label>
+                    <label><input type="radio" name="p3_q6" value="C"> C. Gọi là Con Đức Chúa Trời vậy</label>
+                    <label><input type="radio" name="p3_q6" value="D"> D. Tất cả đều sai</label>
+                </div>
+            </div>
 
             <!-- PHẦN IV: TỰ LUẬN -->
-            <h3>PHẦN IV – TỰ LUẬN (8 điểm)</h3>
+            <h3>PHẦN IV – TỰ LUẬN<br><span style="font-size:14px; font-weight:normal">(Điền đáp án vào chỗ trống - 4 câu – 8 điểm)</span></h3>
+            
             <div class="question-block">
                 <label class="question-title">Câu 1: Anh (chị) hãy điền vào chỗ trống hoàn tất câu Kinh Thánh sau: "Lạy Cha, xin cho họ được hoàn toàn ...; như vậy, thế gian sẽ nhận biết là chính Cha đã sai Con và đã yêu thương họ như đã yêu thương Con." (Ga 17, 23)</label>
                 <textarea id="tl_p4_1" placeholder="Nhập câu trả lời của bạn..."></textarea>
@@ -129,7 +689,8 @@
             </div>
 
             <!-- PHẦN V: TỰ LUẬN - SỐNG HÔN NHÂN -->
-            <h3>PHẦN V – TỰ LUẬN - SỐNG HÔN NHÂN (20 điểm)</h3>
+            <h3>PHẦN V – TỰ LUẬN - SỐNG HÔN NHÂN<br><span style="font-size:14px; font-weight:normal">(Điền đáp án vào chỗ trống - 20 điểm)</span></h3>
+            
             <div class="question-block">
                 <label class="question-title">Câu 1: Mục đích chính yếu của Hôn nhân công giáo là gì? (2 điểm)</label>
                 <textarea id="tl_p5_1" placeholder="Nhập câu trả lời của bạn..."></textarea>
@@ -155,14 +716,16 @@
     <div id="result-section">
         <h3>Nộp bài thành công!</h3>
         <p>Cảm ơn bạn: <strong id="res-name"></strong></p>
-        <p>Điểm Trắc Nghiệm của bạn là: <strong id="res-score" style="color: #e74c3c; font-size: 24px;"></strong> / 72 điểm</p>
-        <p><em>(Phần tự luận sẽ được quý thầy chấm điểm và cộng vào sau).</em></p>
+        <p class="score-info">Điểm Trắc Nghiệm của bạn là: <strong id="res-score" style="color: #e74c3c; font-size: 24px;"></strong> / 72 điểm</p>
+        <p style="text-align:center;"><em>(Phần tự luận sẽ được quý thầy chấm điểm và cộng vào sau).</em></p>
     </div>
 </div>
 
 <script>
-    // BẠN HÃY DÁN URL ỨNG DỤNG WEB (APP SCRIPT) VÀO ĐÂY:
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzcmSCoPCUJTAbESTzou9Q_Md8vo6FOeYfLB3aLjMXuj6ZizcY2XOJGDn1TjAfK06xn5Q/exec';
+    // =======================================================================
+    // BẠN HÃY DÁN URL ỨNG DỤNG WEB (APP SCRIPT) VÀO CHỖ CHỮ IN HOA BÊN DƯỚI:
+    const GOOGLE_SCRIPT_URL = 'DÁN_LINK_WEB_APP_CỦA_BẠN_VÀO_ĐÂY';
+    // =======================================================================
 
     const TOTAL_TIME = 90 * 60; // 90 phút (tính bằng giây)
     const MINIMUM_TIME = 45 * 60; // 45 phút (tính bằng giây)
@@ -228,7 +791,12 @@
             return;
         }
 
-        document.getElementById('btnSubmit').innerText = "Đang lưu kết quả...";
+        if (GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbzcmSCoPCUJTAbESTzou9Q_Md8vo6FOeYfLB3aLjMXuj6ZizcY2XOJGDn1TjAfK06xn5Q/exec') {
+            alert("BẠN CHƯA DÁN LINK GOOGLE SCRIPT! Hãy dán link vào trong file code trước khi sử dụng.");
+            return;
+        }
+
+        document.getElementById('btnSubmit').innerText = "Đang lưu kết quả, vui lòng đợi...";
         document.getElementById('btnSubmit').disabled = true;
         clearInterval(timerInterval);
 
@@ -238,7 +806,6 @@
         mcqBlocks.forEach(block => {
             const correctAnswer = block.getAttribute('data-answer');
             const points = parseInt(block.getAttribute('data-points'));
-            // Tìm thẻ input được check trong block này
             const checkedOption = block.querySelector('input[type="radio"]:checked');
             
             if (checkedOption && checkedOption.value === correctAnswer) {
@@ -246,7 +813,7 @@
             }
         });
 
-        // THU THẬP DỮ LIỆU
+        // THU THẬP DỮ LIỆU GỬI LÊN GOOGLE SHEETS
         const payload = {
             hoTen: document.getElementById('hoTen').value,
             ngaySinh: document.getElementById('ngaySinh').value,
@@ -279,6 +846,9 @@
             
             document.getElementById('res-name').innerText = payload.hoTen;
             document.getElementById('res-score').innerText = score;
+            
+            // Cuộn lên đầu trang để xem kết quả
+            window.scrollTo(0, 0);
         })
         .catch(error => {
             console.error('Error!', error.message);
